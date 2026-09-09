@@ -1,0 +1,23 @@
+# System & OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor & IDE
+.claude/
+.gemini/
+.vscode/
+.idea/
+*.tmp
+*.bak
+*.swp
+*.log
+
+# Python cache & build
+__pycache__/
+*.pyc
+*.pyo
+
+# Staging/temporary folders
+repo/
+tmp/
