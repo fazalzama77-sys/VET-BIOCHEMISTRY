@@ -7,8 +7,22 @@
 <meta name="description" content="A complete study companion for B.V.Sc second-year Veterinary Biochemistry: three theory units, three practical units, question bank, quizzes and progress dashboard. Works offline.">
 <meta name="theme-color" content="#1565c0">
 
+<!-- Mobile & PWA Optimization -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Vet Biochem">
+<meta name="application-name" content="Vet Biochem Studio">
+<meta name="format-detection" content="telephone=no">
+
+<!-- App Icons & Manifest -->
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%231565c0'/><text x='16' y='22' font-size='16' font-family='monospace' font-weight='bold' fill='white' text-anchor='middle'>VB</text></svg>">
+<link rel="icon" type="image/svg+xml" href="images/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="images/icon-512.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 
 <!-- Theme must be applied before first paint to avoid a white flash -->
 <script>
@@ -273,11 +287,28 @@
     }, { passive: true });
   })();
 
-  /* ---- Service worker: offline support.
-         Only registers over http/https — not from file:// ---- */
+  /* ---- Service worker: offline PWA support.
+         Registers over http/https and localhost — not from file:// ---- */
   if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
     window.addEventListener("load", function () {
-      navigator.serviceWorker.register("service-worker.js").catch(function () {});
+      navigator.serviceWorker.register("service-worker.js", { scope: "./" })
+        .then(function (reg) {
+          reg.onupdatefound = function () {
+            var installingWorker = reg.installing;
+            if (installingWorker) {
+              installingWorker.onstatechange = function () {
+                if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  if (window.app && app.toast) {
+                    app.toast("Updated offline content ready! Reload to view.");
+                  }
+                }
+              };
+            }
+          };
+        })
+        .catch(function (err) {
+          console.warn("ServiceWorker registration:", err);
+        });
     });
   }
 </script>

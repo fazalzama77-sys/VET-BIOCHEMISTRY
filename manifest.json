@@ -1,15 +1,19 @@
 {
+  "id": "vet-biochemistry-studio",
   "name": "Veterinary Biochemistry Studio",
-  "short_name": "Vet Biochemistry",
-  "description": "B.V.Sc second-year Veterinary Biochemistry — notes, question bank, quizzes and progress dashboard. Works offline.",
-  "start_url": "./index.html#/",
+  "short_name": "Vet Biochem",
+  "description": "B.V.Sc second-year Veterinary Biochemistry — notes, question bank, quizzes and progress dashboard. 100% offline companion.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
+  "display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
+  "orientation": "any",
   "background_color": "#f0f4f8",
   "theme_color": "#1565c0",
-  "categories": ["education", "medical"],
+  "categories": ["education", "medical", "books"],
   "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "images/icon-192.png",
@@ -28,6 +32,42 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Theory Lessons",
+      "short_name": "Theory",
+      "description": "55 VCI Theory topics across 3 units",
+      "url": "./index.html#/theory",
+      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Practical Labs",
+      "short_name": "Practical",
+      "description": "22 Laboratory practical procedures and tests",
+      "url": "./index.html#/practical",
+      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Quiz & Exam Hub",
+      "short_name": "Quiz",
+      "description": "Annual Exam Mode and Spaced Repetition",
+      "url": "./index.html#/quiz",
+      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Progress Dashboard",
+      "short_name": "Dashboard",
+      "description": "Study streak, accuracy and coverage stats",
+      "url": "./index.html#/dashboard",
+      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

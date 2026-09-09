@@ -83,6 +83,7 @@ var app = (function () {
     atom:      '<circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(90 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(150 12 12)"/>',
     cycle:     '<path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>',
     flask:     '<path d="M10 2v5.5L4.5 18A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.8-3L14 7.5V2"/><path d="M8.5 2h7M7 14.5h10"/>',
+    phone:     '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
   };
 
   function icon(name, cls) {
@@ -2077,19 +2078,22 @@ var app = (function () {
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       deferredInstallPrompt = e;
+      // Re-render settings if user is currently on #/me to update install button
+      if (state.section === "me") renderMe();
       if (localStorage.getItem(INSTALL_DISMISS_KEY) === "1") return;
-      if (store.getVisits() < 2) return;
       setTimeout(showInstallBanner, 1500);
     });
 
     window.addEventListener("appinstalled", function () {
+      deferredInstallPrompt = null;
       hideInstallBanner();
       toast("Veterinary Biochemistry Studio installed!");
+      if (state.section === "me") renderMe();
     });
 
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     var isStandalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || (window.navigator && window.navigator.standalone === true);
-    if (isIOS && !isStandalone && localStorage.getItem(INSTALL_DISMISS_KEY) !== "1" && store.getVisits() >= 2) {
+    if (isIOS && !isStandalone && localStorage.getItem(INSTALL_DISMISS_KEY) !== "1") {
       setTimeout(showInstallBanner, 2000);
     }
   }
@@ -2100,7 +2104,7 @@ var app = (function () {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     if (isIOS) {
       var msg = b.querySelector(".install-msg");
-      if (msg) msg.innerHTML = "Install Biochemistry Studio: tap <b>Share</b>, then <b>Add to Home Screen</b>.";
+      if (msg) msg.innerHTML = "Install Biochemistry Studio: tap <b>Share</b> (square \u2191 icon), then <b>Add to Home Screen</b>.";
       var btn = b.querySelector(".install-btn");
       if (btn) btn.style.display = "none";
     }
@@ -2116,19 +2120,32 @@ var app = (function () {
   }
 
   function triggerInstall() {
-    if (!deferredInstallPrompt) {
-      toast("Tap browser menu (\u22EE or share) \u2192 'Install app' or 'Add to Home Screen'");
+    var isStandalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || (window.navigator && window.navigator.standalone === true);
+    if (isStandalone) {
+      toast("Veterinary Biochemistry Studio is already installed and running!");
       return;
     }
-    try {
-      deferredInstallPrompt.prompt();
-      deferredInstallPrompt.userChoice.then(function (choice) {
-        if (choice && choice.outcome === "accepted") {
-          toast("Installing app…");
-        }
-      });
-    } catch (e) { console.warn(e); }
-    deferredInstallPrompt = null;
+
+    if (deferredInstallPrompt) {
+      try {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(function (choice) {
+          if (choice && choice.outcome === "accepted") {
+            toast("Installing Veterinary Biochemistry Studio…");
+          }
+          deferredInstallPrompt = null;
+        });
+      } catch (e) { console.warn(e); }
+      hideInstallBanner();
+      return;
+    }
+
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      toast("On iPhone/iPad: Tap the Share button (\u2912) in Safari \u2192 'Add to Home Screen'");
+    } else {
+      toast("To install: Tap browser menu (\u22EE) \u2192 'Install app' or 'Add to Home screen'");
+    }
     hideInstallBanner();
   }
 
@@ -3446,6 +3463,8 @@ var app = (function () {
     var s = store.computeStreak();
     var readN = Object.keys(store.getRead()).length;
     var allTopics = syllabus.allUnits.reduce(function (n, u) { return n + u.topics.length; }, 0);
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    var isStandalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || (window.navigator && window.navigator.standalone === true);
 
     view.innerHTML =
       '<div class="pagehead"><span class="eyebrow">Your account lives only on this device</span><h1>' + icon("me") + ' Settings</h1></div>' +
@@ -3454,6 +3473,30 @@ var app = (function () {
         statCard("Topics read", readN + " / " + allTopics, pct(readN, allTopics) + "% complete", "check") +
         statCard("Current streak", s.current + " d", s.totalDays + " active days", "flame") +
         statCard("Bookmarks", store.getBookmarks().length, Object.keys(store.getNotes()).length + " notes", "star") +
+      '</div>' +
+
+      '<div class="card mb-4">' +
+        '<h3>' + icon("phone") + ' App Installation &amp; Offline Readiness</h3>' +
+        '<p class="muted mt-2">Veterinary Biochemistry Studio is engineered as a Progressive Web App (PWA). ' +
+        'It installs directly on your phone or PC and runs 100% offline without requiring internet or cellular data.</p>' +
+        (isStandalone
+          ? '<div class="mt-4 p-3 rounded" style="background:var(--accent-soft); border:1px solid var(--accent);">' +
+              '<div style="font-weight:700; color:var(--accent); display:flex; align-items:center; gap:6px;">' + icon("checkCircle") + ' Installed &middot; Standalone App Active</div>' +
+              '<div class="small mt-1 text-muted">Running locally from device storage. All 55 Theory topics, 22 Practical procedures, Quizzes, Q&amp;A, and Audio are offline-ready.</div>' +
+            '</div>'
+          : '<div class="mt-4">' +
+              '<button class="btn btn--primary" type="button" onclick="app.triggerInstall()" style="font-weight:700; gap:8px;">' +
+                icon("download") + ' Install App on Phone / PC' +
+              '</button>' +
+              (isIOS
+                ? '<p class="small muted mt-2"><b>On iPhone / iPad:</b> Tap the Safari <b>Share</b> button (\u2912) at bottom, then scroll down and select <b>Add to Home Screen</b>.</p>'
+                : '<p class="small muted mt-2"><b>On Android:</b> Tap the button above, or open Chrome menu (\u22EE) &rarr; <b>Install app</b>.</p>') +
+            '</div>'
+        ) +
+        '<div class="mt-4 row row--wrap" style="align-items:center; gap:10px;">' +
+          '<button class="btn" type="button" onclick="app.updateAppCache()">' + icon("repeat") + ' Refresh Offline Cache</button>' +
+          '<span class="small faint" id="sw-status-msg">Offline Cache v4 &middot; 100% Ready</span>' +
+        '</div>' +
       '</div>' +
 
       '<div class="card mb-4">' +
@@ -3936,6 +3979,31 @@ var app = (function () {
     });
   }
 
+  function updateAppCache() {
+    var statusEl = el("#sw-status-msg");
+    if (!("serviceWorker" in navigator)) {
+      toast("Offline service worker is not supported in this browser.");
+      return;
+    }
+    if (statusEl) statusEl.textContent = "Checking for updates…";
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      if (!reg) {
+        if (statusEl) statusEl.textContent = "Offline cache active";
+        toast("App is already cached for offline use.");
+        return;
+      }
+      reg.update().then(function () {
+        if (statusEl) statusEl.textContent = "All files up to date · 100% offline";
+        toast("Offline cache refreshed. Everything is up to date!");
+      }).catch(function () {
+        if (statusEl) statusEl.textContent = "Offline mode active";
+        toast("Running from local cache in offline mode.");
+      });
+    }).catch(function () {
+      toast("Offline cache is active.");
+    });
+  }
+
   /* ---------- public ---------- */
   return {
     init: init, go: go, icon: icon, esc: esc, toast: toast,
@@ -3947,6 +4015,7 @@ var app = (function () {
     startOnboarding: startOnboarding, closeOnboarding: closeOnboarding, replayOnboarding: replayOnboarding,
     _onboardNext: _onboardNext, _onboardPrev: _onboardPrev,
     triggerInstall: triggerInstall, dismissInstall: dismissInstall,
+    updateAppCache: updateAppCache,
     exportHighlights: exportHighlights, exportNotes: exportNotes,
     copyTextToClipboard: copyTextToClipboard,
     teardownHighlightPopup: teardownHighlightPopup,

@@ -1,18 +1,18 @@
 /* ============================================================
-   service-worker.js  —  Offline support
+   service-worker.js  —  Offline PWA engine
    Veterinary Biochemistry Studio
    ------------------------------------------------------------
    Strategy:
-     - App shell (HTML, CSS, JS, data files): cache first, then
-       update in the background. The site opens instantly and
-       works with no signal.
-     - Images: cache as they are used, up to a sensible limit.
+     - Navigation requests (HTML): Cache-first with background
+       refresh, with robust fallback to cached app shell when offline.
+     - Static assets (CSS, JS, data files, icons): Cache-first with
+       background update so the app launches instantaneously offline.
+     - Dynamic assets & images: Stored on demand in image cache.
 
-   IMPORTANT: bump CACHE_VERSION whenever you change any file in
-   PRECACHE, otherwise students keep seeing the old version.
+   IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v3";
+var CACHE_VERSION = "vbioc-v4";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -21,6 +21,15 @@ var PRECACHE = [
   "index.html",
   "manifest.json",
 
+  // App Icons
+  "images/icon-192.png",
+  "images/icon-512.png",
+  "images/icon-maskable-512.png",
+  "images/apple-touch-icon.png",
+  "images/favicon-32x32.png",
+  "images/icon.svg",
+
+  // Stylesheets
   "assets/css/tokens.css",
   "assets/css/main.css",
   "assets/css/sections.css",
@@ -28,6 +37,7 @@ var PRECACHE = [
   "assets/css/events.css",
   "assets/css/animations.css",
 
+  // Data & Syllabus
   "data/data-syllabus.JS",
   "data/data-theory-unit1.JS",
   "data/data-theory-unit2.JS",
@@ -38,6 +48,7 @@ var PRECACHE = [
   "data/data-quiz.JS",
   "data/events-data.js",
 
+  // Application Logic
   "js/store.js",
   "js/quiz.js",
   "js/dashboard.js",
@@ -48,67 +59,142 @@ var PRECACHE = [
   "js/app.js"
 ];
 
+// Normalize request matching for root vs index.html
+function matchPrecache(req) {
+  return caches.match(req).then(function (hit) {
+    if (hit) return hit;
+    var url = new URL(req.url);
+    if (url.pathname.endsWith("/") || url.pathname.endsWith("/index.html")) {
+      return caches.match("index.html").then(function (c) {
+        return c || caches.match("./");
+      });
+    }
+    return null;
+  });
+}
+
+// Install event — precache all critical shell assets
 self.addEventListener("install", function (e) {
   e.waitUntil(
     caches.open(SHELL_CACHE)
-      .then(function (c) {
-        // addAll fails entirely if one file 404s, so add them one by one.
-        return Promise.all(PRECACHE.map(function (url) {
-          return c.add(url).catch(function () { /* skip missing file */ });
-        }));
+      .then(function (cache) {
+        return Promise.all(
+          PRECACHE.map(function (url) {
+            return fetch(new Request(url, { cache: "reload" }))
+              .then(function (response) {
+                if (response && response.ok) {
+                  return cache.put(url, response);
+                }
+              })
+              .catch(function () {
+                // If an individual asset fails, continue caching others
+              });
+          })
+        );
       })
-      .then(function () { return self.skipWaiting(); })
+      .then(function () {
+        return self.skipWaiting();
+      })
   );
 });
 
+// Activate event — clean up any outdated caches
 self.addEventListener("activate", function (e) {
   e.waitUntil(
     caches.keys().then(function (keys) {
-      return Promise.all(keys.map(function (k) {
-        if (k.indexOf(CACHE_VERSION) !== 0) return caches.delete(k);
-      }));
-    }).then(function () { return self.clients.claim(); })
+      return Promise.all(
+        keys.map(function (k) {
+          if (k.indexOf(CACHE_VERSION) !== 0) {
+            return caches.delete(k);
+          }
+        })
+      );
+    }).then(function () {
+      return self.clients.claim();
+    })
   );
 });
 
+// Fetch event — offline-first with background revalidation
 self.addEventListener("fetch", function (e) {
   var req = e.request;
   if (req.method !== "GET") return;
 
   var url = new URL(req.url);
-  if (url.origin !== location.origin) return;   // never touch third-party requests
 
-  // ---- Images: cache on first use ----
-  if (/\.(png|jpg|jpeg|webp|gif|svg)$/i.test(url.pathname)) {
+  // Never intercept cross-origin / third-party requests
+  if (url.origin !== location.origin) return;
+
+  // 1. Navigation requests (Opening the site / refreshing in browser / PWA launch)
+  if (req.mode === "navigate") {
     e.respondWith(
-      caches.open(IMG_CACHE).then(function (c) {
-        return c.match(req).then(function (hit) {
-          if (hit) return hit;
-          return fetch(req).then(function (res) {
-            if (res && res.status === 200) c.put(req, res.clone());
-            return res;
-          }).catch(function () { return hit; });
+      fetch(req)
+        .then(function (networkRes) {
+          if (networkRes && networkRes.ok) {
+            var copy = networkRes.clone();
+            caches.open(SHELL_CACHE).then(function (cache) {
+              cache.put(req, copy);
+            });
+          }
+          return networkRes;
+        })
+        .catch(function () {
+          // Offline fallback — return cached index.html or shell root
+          return matchPrecache(req).then(function (cached) {
+            return cached || caches.match("index.html") || caches.match("./");
+          });
+        })
+    );
+    return;
+  }
+
+  // 2. Images — Cache first, fetch and store on demand
+  if (/\.(png|jpg|jpeg|webp|gif|svg|ico)$/i.test(url.pathname)) {
+    e.respondWith(
+      caches.match(req).then(function (hit) {
+        if (hit) return hit;
+        return caches.open(IMG_CACHE).then(function (imgCache) {
+          return imgCache.match(req).then(function (imgHit) {
+            if (imgHit) return imgHit;
+            return fetch(req).then(function (res) {
+              if (res && res.ok) {
+                imgCache.put(req, res.clone());
+              }
+              return res;
+            }).catch(function () {
+              return null;
+            });
+          });
         });
       })
     );
     return;
   }
 
-  // ---- Everything else: cache first, refresh in background ----
+  // 3. Static shell resources (CSS, JS, data files, manifest)
+  // Cache-first for lightning instant offline loading, revalidate in background
   e.respondWith(
-    caches.match(req).then(function (hit) {
-      var network = fetch(req).then(function (res) {
-        if (res && res.status === 200) {
-          var copy = res.clone();
-          caches.open(SHELL_CACHE).then(function (c) { c.put(req, copy); });
+    caches.match(req).then(function (cachedRes) {
+      var fetchPromise = fetch(req).then(function (netRes) {
+        if (netRes && netRes.ok) {
+          var copy = netRes.clone();
+          caches.open(SHELL_CACHE).then(function (cache) {
+            cache.put(req, copy);
+          });
         }
-        return res;
+        return netRes;
       }).catch(function () {
-        // Offline and not cached: fall back to the app shell so
-        // hash routes still resolve.
-        return hit || caches.match("index.html");
+        return cachedRes;
       });
-      return hit || network;
+
+      return cachedRes || fetchPromise;
     })
   );
+});
+
+// Listen for message events (e.g. from in-app update trigger)
+self.addEventListener("message", function (e) {
+  if (e.data && e.data.action === "skipWaiting") {
+    self.skipWaiting();
+  }
 });

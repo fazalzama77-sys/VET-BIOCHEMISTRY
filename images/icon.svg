@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="vb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1976d2"/>
+      <stop offset="100%" stop-color="#0a3c8c"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#vb-grad)"/>
+  <polygon points="256,92 398,174 398,338 256,420 114,338 114,174" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="8"/>
+  <circle cx="256" cy="92" r="12" fill="#ffffff"/>
+  <circle cx="398" cy="174" r="12" fill="#ffffff"/>
+  <circle cx="398" cy="338" r="12" fill="#ffffff"/>
+  <circle cx="256" cy="420" r="12" fill="#ffffff"/>
+  <circle cx="114" cy="338" r="12" fill="#ffffff"/>
+  <circle cx="114" cy="174" r="12" fill="#ffffff"/>
+  <text x="256" y="278" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="170" font-weight="800" fill="#ffffff" text-anchor="middle">VB</text>
+  <rect x="146" y="340" width="220" height="38" rx="19" fill="#0a2d6e" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="256" y="365" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#e6f2ff" text-anchor="middle">BIOCHEMISTRY</text>
+</svg>
