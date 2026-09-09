@@ -687,7 +687,7 @@ var app = (function () {
       '<div class="home-why-body mt-3">' + w.why + '</div>' +
       (w.clinical ? '<div class="home-why-clinical mt-3"><b>' + icon("check") + ' Clinical Rule of Thumb:</b> ' + esc(w.clinical) + '</div>' : '') +
       '<div class="row mt-4">' +
-        '<a class="btn btn--sm btn--soft" href="#/why">' + icon("why") + ' Browse 100 WHY Mechanisms →</a>' +
+        '<a class="btn btn--sm btn--soft" href="#/why">' + icon("why") + ' Browse ' + ((window.whyData || []).filter(function (w) { return w && w.title; }).length || 40) + ' WHY Mechanisms →</a>' +
         '<button class="btn btn--sm btn--subtle push" onclick="app.shuffleWhyMechanism()">' + icon("sparkle") + ' Shuffle Mechanism</button>' +
       '</div>' +
     '</div>';
@@ -2309,7 +2309,7 @@ var app = (function () {
         '<span class="eyebrow">Mechanism first</span>' +
         '<h1>' + icon("why") + ' WHY</h1>' +
         '<p class="lede">Veterinary Biochemistry is only memorisable once it stops being an arbitrary list. ' +
-        'Each card here explains the microbial physiology, virulence determinants, or immunological mechanism behind clinical and diagnostic hallmarks.</p>' +
+        'Each card here explains the comparative metabolic pathways, enzyme differences, and molecular mechanisms behind species-specific clinical and diagnostic hallmarks.</p>' +
       '</div>';
 
     if (!data.length) {
