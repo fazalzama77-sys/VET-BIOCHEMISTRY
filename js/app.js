@@ -254,6 +254,13 @@ var app = (function () {
      RENDER DISPATCH
      ============================================================ */
   function render() {
+    // Clean up any open WHY modal when navigating away
+    var existingModal = document.getElementById("why-modal-overlay");
+    if (existingModal && existingModal.parentNode && state.section !== "why") {
+      existingModal.parentNode.removeChild(existingModal);
+      document.body.style.overflow = "";
+    }
+
     var fn = {
       home: renderHome,
       theory: function () { renderStream("theory"); },
@@ -2426,10 +2433,19 @@ var app = (function () {
         '</article>';
       }).join("");
 
-      // Bind card clicks
+      // Bind card and analyze button clicks
       els(".why-card").forEach(function (card) {
         card.addEventListener("click", function (e) {
           var id = card.getAttribute("data-id");
+          var item = data.find(function (x) { return String(x.id) === String(id); });
+          if (item) openModal(item);
+        });
+      });
+
+      els(".why-card-analyze-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var id = btn.getAttribute("data-analyze");
           var item = data.find(function (x) { return String(x.id) === String(id); });
           if (item) openModal(item);
         });
@@ -2547,10 +2563,13 @@ var app = (function () {
         });
       }
 
+      if (modalOverlay && modalOverlay.parentNode !== document.body) {
+        document.body.appendChild(modalOverlay);
+      }
       modalOverlay.style.display = "flex";
-      setTimeout(function () {
-        modalOverlay.classList.add("open");
-      }, 10);
+      // Trigger reflow for smooth animation
+      void modalOverlay.offsetHeight;
+      modalOverlay.classList.add("open");
       document.body.style.overflow = "hidden";
     }
 
