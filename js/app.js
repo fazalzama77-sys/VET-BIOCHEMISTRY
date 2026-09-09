@@ -2299,89 +2299,351 @@ var app = (function () {
   }
 
   /* ============================================================
-     WHY
+     WHY (COMPACT MECHANISM CARDS & DIAGNOSTIC ANALYZER MODAL)
      ============================================================ */
   function renderWhy() {
-    var data = (window.whyData || []).filter(function (w) { return w.title; });
+    var data = (window.whyData || []).filter(function (w) { return w && w.title; });
 
     var head =
       '<div class="pagehead">' +
-        '<span class="eyebrow">Mechanism first</span>' +
-        '<h1>' + icon("why") + ' WHY</h1>' +
+        '<span class="eyebrow">Mechanism First</span>' +
+        '<h1>' + icon("why") + ' Comparative WHY &amp; Pathophysiology</h1>' +
         '<p class="lede">Veterinary Biochemistry is only memorisable once it stops being an arbitrary list. ' +
-        'Each card here explains the comparative metabolic pathways, enzyme differences, and molecular mechanisms behind species-specific clinical and diagnostic hallmarks.</p>' +
+        'Each card below reveals the comparative enzymatic adaptations, metabolic divergences, and molecular mechanisms behind species-specific clinical hallmarks.</p>' +
       '</div>';
 
     if (!data.length) {
       view.innerHTML = head +
         '<div class="empty"><div class="empty__icon">' + icon("why") + '</div>' +
         '<h3>No WHY entries yet</h3>' +
-        '<p>Add them in <b>data/data-why.JS</b>. Copy the template block that is already in the file, ' +
-        'fill in <span class="mono">title</span>, <span class="mono">why</span> and ' +
+        '<p>Add them in <b>data/data-why.JS</b>. Fill in <span class="mono">title</span>, <span class="mono">why</span> and ' +
         '<span class="mono">clinical</span>, and they will appear here automatically.</p></div>';
       return;
     }
 
-    var catIcons = {
-      all: "sparkle",
-      mechanism: "pulse",
-      lesion: "microscope",
-      species: "target",
-      diagnostic: "clipboard",
-      clinical: "shield"
-    };
+    function getUnitBadge(u) {
+      if (u === "unit-1") return "Unit 1 · General";
+      if (u === "unit-2") return "Unit 2 · Metabolism";
+      if (u === "unit-3") return "Unit 3 · Analytical";
+      return (u || "Biochemistry").toUpperCase().replace(/-/g, ' ');
+    }
 
-    var cats = ["all", "mechanism", "lesion", "species", "diagnostic", "clinical"];
-    var chips = cats.map(function (c) {
-      return '<button class="tab' + (c === "all" ? " is-active" : "") + '" data-cat="' + c + '">' +
-        icon(catIcons[c] || "sparkle") + ' ' +
-        (c === "all" ? "All" : c.charAt(0).toUpperCase() + c.slice(1)) + '</button>';
-    }).join("");
+    function getPreview(text) {
+      var clean = (text || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+      return clean.length > 180 ? clean.slice(0, 180) + "…" : clean;
+    }
 
-    view.innerHTML = head + '<div class="tabs">' + chips + '</div><div id="whygrid" class="grid grid--auto"></div>';
+    var countAll = data.length;
+    var countU1 = data.filter(function (w) { return w.unit === "unit-1"; }).length;
+    var countU2 = data.filter(function (w) { return w.unit === "unit-2"; }).length;
+    var countU3 = data.filter(function (w) { return w.unit === "unit-3"; }).length;
 
-    function paint(cat) {
-      el("#whygrid").innerHTML = data
-        .filter(function (w) { return cat === "all" || w.category === cat; })
-        .map(function (w) {
-          var catIco = catIcons[w.category] || "pulse";
-          return '<article class="card whycard" id="why-' + w.id + '">' +
-            '<div class="row row--wrap">' +
-              '<span class="chip chip--accent">' + icon(catIco) + ' ' + esc(w.category || "mechanism") + '</span>' +
-              (w.comparison ? '<span class="chip">' + icon("target") + ' ' + esc(w.comparison) + '</span>' : '') +
-              (w.unit ? '<span class="chip chip--muted">' + esc(w.unit.toUpperCase().replace('-', ' ')) + '</span>' : '') +
+    var toolbarHtml =
+      '<div class="why-toolbar">' +
+        '<div class="why-search-wrap">' +
+          '<span class="why-search-icon">' + icon("search") + '</span>' +
+          '<input type="search" id="why-search" class="why-search-input" placeholder="Search structure, species, mechanism..." autocomplete="off">' +
+          '<button id="why-search-clear" class="why-search-clear" title="Clear search">' + icon("close") + '</button>' +
+        '</div>' +
+        '<div class="why-filter-chips">' +
+          '<button class="why-filter-chip is-active" data-unit="all">All Units <span class="chip-count">' + countAll + '</span></button>' +
+          '<button class="why-filter-chip" data-unit="unit-1">Unit 1 · General <span class="chip-count">' + countU1 + '</span></button>' +
+          '<button class="why-filter-chip" data-unit="unit-2">Unit 2 · Metabolism <span class="chip-count">' + countU2 + '</span></button>' +
+          '<button class="why-filter-chip" data-unit="unit-3">Unit 3 · Analytical <span class="chip-count">' + countU3 + '</span></button>' +
+          '<button class="why-challenge-btn" id="why-challenge-btn">' + icon("sparkle") + ' Challenge Me</button>' +
+        '</div>' +
+      '</div>';
+
+    var modalHtml =
+      '<div id="why-modal-overlay" class="why-modal-overlay" style="display:none;" role="dialog" aria-modal="true">' +
+        '<div class="why-modal-scrim" id="why-modal-scrim"></div>' +
+        '<div class="why-modal-container" id="why-modal-container">' +
+          '<button class="why-modal-close" id="why-modal-close" title="Close analysis (Esc)">&times;</button>' +
+          '<div class="why-modal-header" id="why-modal-header"></div>' +
+          '<div class="why-modal-body" id="why-modal-body"></div>' +
+          '<div class="why-modal-footer" id="why-modal-footer"></div>' +
+        '</div>' +
+      '</div>';
+
+    // Remove any modal overlay from a previous render from document.body
+    var oldModal = document.getElementById("why-modal-overlay");
+    if (oldModal && oldModal.parentNode) {
+      oldModal.parentNode.removeChild(oldModal);
+    }
+
+    view.innerHTML = head + toolbarHtml + '<div id="whygrid" class="why-grid"></div>' + modalHtml;
+
+    var currentUnit = "all";
+    var currentQuery = "";
+    var currentFilteredList = data.slice();
+    var currentModalItem = null;
+
+    function renderCards() {
+      var filtered = data.filter(function (w) {
+        var matchUnit = (currentUnit === "all" || w.unit === currentUnit);
+        if (!matchUnit) return false;
+        if (!currentQuery) return true;
+        var q = currentQuery.toLowerCase();
+        return (w.title && w.title.toLowerCase().indexOf(q) !== -1) ||
+               (w.comparison && w.comparison.toLowerCase().indexOf(q) !== -1) ||
+               (w.why && w.why.toLowerCase().indexOf(q) !== -1) ||
+               (w.clinical && w.clinical.toLowerCase().indexOf(q) !== -1);
+      });
+
+      currentFilteredList = filtered;
+      var grid = el("#whygrid");
+      if (!grid) return;
+
+      if (!filtered.length) {
+        grid.innerHTML =
+          '<div class="empty" style="grid-column: 1 / -1;">' +
+            '<div class="empty__icon">' + icon("search") + '</div>' +
+            '<h3>No comparative mechanisms found</h3>' +
+            '<p>Try adjusting your search keywords or switching back to "All Units".</p>' +
+          '</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(function (w) {
+        return '<article class="why-card ' + esc(w.unit || '') + '" id="why-' + w.id + '" data-id="' + w.id + '">' +
+          '<div class="why-card-top">' +
+            '<div class="why-card-header">' +
+              '<span class="why-card-category">' + esc(getUnitBadge(w.unit)) + '</span>' +
+              '<span class="why-card-arrow">&rarr;</span>' +
             '</div>' +
-            '<h3 class="card__title mt-3">' + esc(w.title) + '</h3>' +
-            '<div class="card__desc">' + (w.why || "") + '</div>' +
-            (w.mechanism && w.mechanism.length
-              ? '<ol class="chain mt-4">' + w.mechanism.map(function (s) { return '<li>' + s + '</li>'; }).join("") + '</ol>'
-              : '') +
-            (w.clinical ? '<div class="callout mt-4"><div class="callout__title">' + icon("shield") + ' At the clinic</div>' + w.clinical + '</div>' : '') +
-          '</article>';
-        }).join("") || '<div class="empty"><p>Nothing in this category yet.</p></div>';
+            '<h3 class="why-card-title">' + esc(w.title) + '</h3>' +
+            '<div class="why-card-comparison">' +
+              '<span class="why-card-comparison-icon">⚖️</span>' +
+              '<span>' + esc(w.comparison || "Species Comparison") + '</span>' +
+            '</div>' +
+            '<p class="why-card-preview">' + esc(getPreview(w.why)) + '</p>' +
+          '</div>' +
+          '<div class="why-card-footer">' +
+            '<button class="why-card-analyze-btn" data-analyze="' + w.id + '">' +
+              'Analyze ' + icon("microscope") +
+            '</button>' +
+          '</div>' +
+        '</article>';
+      }).join("");
+
+      // Bind card clicks
+      els(".why-card").forEach(function (card) {
+        card.addEventListener("click", function (e) {
+          var id = card.getAttribute("data-id");
+          var item = data.find(function (x) { return String(x.id) === String(id); });
+          if (item) openModal(item);
+        });
+      });
     }
 
-    paint("all");
-    if (state.params.a) {
-      setTimeout(function () {
-        var targetCard = el("#why-" + state.params.a);
-        if (targetCard) {
-          targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
-          targetCard.style.outline = "2px solid var(--color-accent)";
-          targetCard.style.outlineOffset = "4px";
-        }
-      }, 80);
+    renderCards();
+
+    /* ---------- ANALYZE MODAL CONTROLLER ---------- */
+    var modalOverlay = el("#why-modal-overlay");
+    if (modalOverlay) {
+      // Append directly to document.body so position:fixed is never trapped by #view
+      document.body.appendChild(modalOverlay);
     }
-    els("[data-cat]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        els("[data-cat]").forEach(function (x) { x.classList.remove("is-active"); });
-        b.classList.add("is-active");
-        paint(b.getAttribute("data-cat"));
+    var modalHeader = el("#why-modal-header");
+    var modalBody = el("#why-modal-body");
+    var modalFooter = el("#why-modal-footer");
+    var modalClose = el("#why-modal-close");
+    var modalScrim = el("#why-modal-scrim");
+
+    function openModal(item, isChallenge) {
+      if (!item) return;
+      currentModalItem = item;
+
+      // Find position in list
+      var currentIndex = currentFilteredList.findIndex(function (x) { return String(x.id) === String(item.id); });
+      if (currentIndex === -1) currentIndex = data.findIndex(function (x) { return String(x.id) === String(item.id); });
+      var totalInList = currentFilteredList.length || data.length;
+      var posDisplay = (currentIndex >= 0 ? (currentIndex + 1) : 1) + " of " + totalInList;
+
+      var challengeHtml = isChallenge
+        ? '<div class="why-modal-challenge-banner">' +
+            icon("sparkle") + ' <span><strong>Active Recall Challenge:</strong> Test your memory! Can you explain the comparative enzyme or metabolic difference before reading the breakdown below?</span>' +
+          '</div>'
+        : '';
+
+      modalHeader.innerHTML =
+        '<div class="why-modal-meta">' +
+          '<span class="why-card-category">' + esc(getUnitBadge(item.unit)) + '</span>' +
+          '<span class="chip chip--muted">Mechanism ' + posDisplay + '</span>' +
+        '</div>' +
+        '<h2 class="why-modal-title">' + esc(item.title) + '</h2>' +
+        '<div class="why-modal-comparison">' +
+          '<span class="why-card-comparison-icon">⚖️</span>' +
+          '<span><strong>Comparison:</strong> ' + esc(item.comparison || "Species Comparison") + '</span>' +
+        '</div>' +
+        challengeHtml;
+
+      var chainHtml = (item.mechanism && item.mechanism.length)
+        ? '<div class="why-modal-section">' +
+            '<div class="why-modal-section-title">' + icon("cycle") + ' Biochemical Reaction Sequence</div>' +
+            '<ol class="chain">' + item.mechanism.map(function (s) { return '<li>' + s + '</li>'; }).join("") + '</ol>' +
+          '</div>'
+        : '';
+
+      var clinicalHtml = item.clinical
+        ? '<div class="callout mt-4">' +
+            '<div class="callout__title">' + icon("shield") + ' At the Clinic &amp; Diagnostic Implication</div>' +
+            '<p>' + item.clinical + '</p>' +
+          '</div>'
+        : '';
+
+      modalBody.innerHTML =
+        '<div class="why-modal-section">' +
+          '<div class="why-modal-section-title">' + icon("pulse") + ' Comparative Biochemical Mechanism</div>' +
+          '<div class="why-modal-prose">' + (item.why || "") + '</div>' +
+        '</div>' +
+        chainHtml +
+        clinicalHtml;
+
+      var hasPrev = currentIndex > 0;
+      var hasNext = currentIndex >= 0 && currentIndex < (currentFilteredList.length - 1);
+
+      modalFooter.innerHTML =
+        '<div class="why-modal-nav-group">' +
+          '<button class="btn btn--sm btn--ghost" id="why-modal-btn-prev"' + (hasPrev ? '' : ' disabled') + '>&larr; Previous</button>' +
+          '<button class="btn btn--sm btn--ghost" id="why-modal-btn-next"' + (hasNext ? '' : ' disabled') + '>Next &rarr;</button>' +
+        '</div>' +
+        '<div class="why-modal-action-group">' +
+          '<button class="btn btn--sm btn--ghost" id="why-modal-btn-copy">' + icon("copy") + ' Copy Mechanism</button>' +
+          '<button class="btn btn--sm btn--primary" id="why-modal-btn-done">Done</button>' +
+        '</div>';
+
+      // Attach Footer Listeners
+      var btnPrev = el("#why-modal-btn-prev");
+      var btnNext = el("#why-modal-btn-next");
+      var btnCopy = el("#why-modal-btn-copy");
+      var btnDone = el("#why-modal-btn-done");
+
+      if (btnPrev && hasPrev) {
+        btnPrev.addEventListener("click", function () {
+          openModal(currentFilteredList[currentIndex - 1]);
+        });
+      }
+      if (btnNext && hasNext) {
+        btnNext.addEventListener("click", function () {
+          openModal(currentFilteredList[currentIndex + 1]);
+        });
+      }
+      if (btnDone) {
+        btnDone.addEventListener("click", closeModal);
+      }
+      if (btnCopy) {
+        btnCopy.addEventListener("click", function () {
+          var copyText = item.title + "\n\nComparison: " + (item.comparison || "") + "\n\nBiochemical Mechanism:\n" +
+            (item.why || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "") + "\n\nClinical Application:\n" +
+            (item.clinical || "").replace(/<[^>]+>/g, "");
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyText).then(function () {
+              toast("Mechanism copied to clipboard!");
+            });
+          } else {
+            toast("Mechanism ready to copy!");
+          }
+        });
+      }
+
+      modalOverlay.style.display = "flex";
+      setTimeout(function () {
+        modalOverlay.classList.add("open");
+      }, 10);
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      if (!modalOverlay) return;
+      modalOverlay.classList.remove("open");
+      setTimeout(function () {
+        modalOverlay.style.display = "none";
+        document.body.style.overflow = "";
+      }, 250);
+    }
+
+    if (modalClose) modalClose.addEventListener("click", closeModal);
+    if (modalScrim) modalScrim.addEventListener("click", closeModal);
+
+    // Keyboard support for modal
+    function onModalKey(e) {
+      if (state.section !== "why") {
+        document.removeEventListener("keydown", onModalKey);
+        return;
+      }
+      if (!modalOverlay || !modalOverlay.classList.contains("open")) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeModal();
+      } else if (e.key === "ArrowLeft") {
+        var prevBtn = el("#why-modal-btn-prev");
+        if (prevBtn && !prevBtn.disabled) prevBtn.click();
+      } else if (e.key === "ArrowRight") {
+        var nextBtn = el("#why-modal-btn-next");
+        if (nextBtn && !nextBtn.disabled) nextBtn.click();
+      }
+    }
+    document.addEventListener("keydown", onModalKey);
+
+    /* ---------- SEARCH & FILTERS ---------- */
+    var searchInput = el("#why-search");
+    var searchClear = el("#why-search-clear");
+    var challengeBtn = el("#why-challenge-btn");
+
+    if (searchInput) {
+      searchInput.addEventListener("input", function (e) {
+        currentQuery = e.target.value.trim();
+        if (searchClear) searchClear.style.display = currentQuery ? "block" : "none";
+        renderCards();
+      });
+    }
+
+    if (searchClear) {
+      searchClear.addEventListener("click", function () {
+        if (searchInput) searchInput.value = "";
+        currentQuery = "";
+        searchClear.style.display = "none";
+        renderCards();
+        if (searchInput) searchInput.focus();
+      });
+    }
+
+    els(".why-filter-chip").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        els(".why-filter-chip").forEach(function (b) { b.classList.remove("is-active"); });
+        btn.classList.add("is-active");
+        currentUnit = btn.getAttribute("data-unit") || "all";
+        renderCards();
       });
     });
+
+    if (challengeBtn) {
+      challengeBtn.addEventListener("click", function () {
+        var pool = currentFilteredList.length ? currentFilteredList : data;
+        var randomIndex = Math.floor(Math.random() * pool.length);
+        var randomItem = pool[randomIndex];
+        if (randomItem) openModal(randomItem, true);
+      });
+    }
+
+    // Direct deep-link via URL #/why/:id
+    if (state.params.a) {
+      var paramId = state.params.a;
+      var targetItem = data.find(function (w) {
+        return String(w.id) === String(paramId) ||
+               (w.title && w.title.toLowerCase().indexOf(paramId.toLowerCase()) !== -1);
+      });
+      if (targetItem) {
+        setTimeout(function () {
+          openModal(targetItem);
+        }, 120);
+      }
+    }
   }
 
   /* ============================================================
+     Q & A  /* ============================================================
      Q & A (WRITTEN EXAM SUITE)
      ============================================================ */
   function renderQa() {
