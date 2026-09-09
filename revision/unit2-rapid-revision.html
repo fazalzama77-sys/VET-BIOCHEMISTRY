@@ -1,0 +1,975 @@
+<title>Unit 2 Sixty-Minute Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --ink:#0e1c29; --ink-2:#33465a; --muted:#63758a; --faint:#8a9aab;
+  --ground:#eef3f8; --surface:#ffffff; --surface-2:#f6f9fc;
+  --rule:rgba(21,101,192,.18); --rule-soft:rgba(21,101,192,.10);
+  --blue:#1565c0; --teal:#00897b; --purple:#6a48b5; --amber:#b25e00;
+  --coral:#d84315; --sage:#2e7d32;
+  --blue-w:rgba(21,101,192,.07); --teal-w:rgba(0,137,123,.07);
+  --purple-w:rgba(106,72,181,.07); --amber-w:rgba(178,94,0,.08);
+  --coral-w:rgba(216,67,21,.07); --sage-w:rgba(46,125,50,.07);
+  --shadow:0 1px 2px rgba(14,28,41,.05), 0 10px 30px rgba(14,28,41,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+    --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+    --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+    --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+    --coral:#f5825c; --sage:#68c46d;
+    --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+    --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+    --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+  --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+  --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+  --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+  --coral:#f5825c; --sage:#68c46d;
+  --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+  --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+  --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Inter",system-ui,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; padding:22px 14px 60px;
+}
+.wrap{max-width:210mm;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* ---------- top bar (screen only) ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;
+  padding:12px 16px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.bar h1{margin:0;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.bar p{margin:0;font-size:11.5px;color:var(--muted);flex:1 1 240px;line-height:1.45}
+.bar .go{
+  font:600 11px/1 "Inter",sans-serif;letter-spacing:.04em;
+  border:1px solid var(--blue);color:var(--blue);background:transparent;
+  padding:7px 12px;border-radius:6px;cursor:pointer;
+}
+.bar .go:hover{background:var(--blue-w)}
+.bar .go:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* ---------- sheet ---------- */
+.sheet{
+  width:210mm;min-height:297mm;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);
+  padding:11mm 10mm 8mm;position:relative;
+  display:flex;flex-direction:column;gap:3.6mm;
+}
+.head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+  border-bottom:2px solid var(--blue);padding-bottom:4px;
+}
+.head .l{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.head .unit{
+  font:800 9px/1 "Inter",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:var(--blue);padding:4px 7px;border-radius:3px;
+}
+.head h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.015em}
+.head .sub{font-size:9.5px;color:var(--muted);font-weight:500}
+.head .pg{font:700 9px/1 "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.06em;white-space:nowrap}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:3.2mm;align-content:start}
+.grid.thirds{grid-template-columns:1fr 1fr 1fr}
+.span2{grid-column:1/-1}
+
+/* ---------- module ---------- */
+.mod{
+  border:1px solid var(--rule-soft);border-left:2.5px solid var(--blue);
+  border-radius:3px;background:var(--surface-2);padding:5px 7px 6px;
+  display:flex;flex-direction:column;gap:3.5px;break-inside:avoid;
+}
+.mod>h3{
+  margin:0;font:800 8.6px/1.2 "Inter",sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--blue);display:flex;gap:6px;align-items:center;
+}
+.mod>h3 .n{
+  font:700 7.6px/1 "JetBrains Mono",monospace;color:var(--surface);
+  background:var(--blue);border-radius:2px;padding:2.5px 3.5px;letter-spacing:0;
+}
+.mod.t{border-left-color:var(--teal);background:var(--teal-w)}
+.mod.t>h3{color:var(--teal)} .mod.t>h3 .n{background:var(--teal)}
+.mod.p{border-left-color:var(--purple);background:var(--purple-w)}
+.mod.p>h3{color:var(--purple)} .mod.p>h3 .n{background:var(--purple)}
+.mod.a{border-left-color:var(--amber);background:var(--amber-w)}
+.mod.a>h3{color:var(--amber)} .mod.a>h3 .n{background:var(--amber)}
+.mod.c{border-left-color:var(--coral);background:var(--coral-w)}
+.mod.c>h3{color:var(--coral)} .mod.c>h3 .n{background:var(--coral)}
+.mod.s{border-left-color:var(--sage);background:var(--sage-w)}
+.mod.s>h3{color:var(--sage)} .mod.s>h3 .n{background:var(--sage)}
+.mod.b{background:var(--blue-w)}
+
+/* ---------- text primitives ---------- */
+p.l{margin:0;font-size:8.7px;line-height:1.42;color:var(--ink-2)}
+ul.l{margin:0;padding-left:11px;display:flex;flex-direction:column;gap:1.8px}
+ul.l li{font-size:8.7px;line-height:1.38;color:var(--ink-2)}
+ul.l li::marker{color:var(--faint)}
+b,strong{color:var(--ink);font-weight:700}
+em{font-style:normal;color:var(--coral);font-weight:700}
+code,.m{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:8.1px;font-weight:600;color:var(--ink)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:1.8px 7px;font-size:8.7px;line-height:1.35}
+.dl dt{font-weight:700;color:var(--ink);white-space:nowrap}
+.dl dd{margin:0;color:var(--ink-2)}
+
+/* ---------- table ---------- */
+table{border-collapse:collapse;width:100%;font-size:8.3px;line-height:1.3}
+th,td{border:1px solid var(--rule-soft);padding:2.6px 4px;text-align:left;vertical-align:top;color:var(--ink-2)}
+th{background:var(--blue-w);color:var(--ink);font-weight:700;font-size:7.9px;letter-spacing:.03em;text-transform:uppercase}
+td.k{font-weight:700;color:var(--ink);white-space:nowrap}
+td .m{font-size:7.9px}
+.scroll{overflow-x:auto}
+
+/* ---------- chips / callouts ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{
+  font:600 7.9px/1.25 "Inter",sans-serif;border:1px solid var(--rule);
+  background:var(--surface);border-radius:9px;padding:2.4px 6px;color:var(--ink-2);
+}
+.chip b{color:var(--ink)}
+.mnem{
+  border:1px dashed var(--amber);background:var(--amber-w);border-radius:3px;
+  padding:4px 6px;font-size:8.5px;line-height:1.35;color:var(--ink-2);
+}
+.mnem u{text-decoration:none;color:var(--amber);font-weight:800}
+.hook{
+  border-left:2.5px solid var(--coral);background:var(--coral-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.hook b{color:var(--coral)}
+.trap{
+  border-left:2.5px solid var(--purple);background:var(--purple-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.trap b{color:var(--purple)}
+
+/* value strip */
+.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:3px}
+.val{border:1px solid var(--rule-soft);background:var(--surface);border-radius:3px;padding:3px 4px;text-align:center}
+.val .v{font:700 10px/1.1 "JetBrains Mono",monospace;color:var(--blue);font-variant-numeric:tabular-nums}
+.val .c{font-size:7.4px;color:var(--muted);line-height:1.25;margin-top:1.5px;display:block}
+
+/* flow arrows */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:3px;font-size:8.3px;color:var(--ink-2)}
+.flow .s{border:1px solid var(--rule);background:var(--surface);border-radius:3px;padding:2.4px 5px;font-weight:600;color:var(--ink)}
+.flow .ar{color:var(--faint);font-weight:700}
+.flow .cond{font:600 7.4px/1 "Inter",sans-serif;color:var(--teal)}
+
+svg{display:block;width:100%;height:auto}
+.cap{font-size:7.4px;color:var(--faint);line-height:1.3}
+
+/* recall grid p5 */
+.qa{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden}
+.qa div{display:grid;grid-template-columns:1.15fr 1fr;font-size:8.3px;line-height:1.32}
+.qa div:nth-child(odd){background:var(--surface)}
+.qa div>span{padding:2.4px 5px;border-bottom:1px solid var(--rule-soft)}
+.qa div>span:first-child{color:var(--ink-2);border-right:1px solid var(--rule-soft)}
+.qa div>span:last-child{font-weight:700;color:var(--ink)}
+.qa div:last-child>span{border-bottom:0}
+
+.foot{
+  margin-top:auto;border-top:1px solid var(--rule-soft);padding-top:3.5px;
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:7.4px;color:var(--faint);letter-spacing:.02em;
+}
+.foot .m{font-size:7.4px;color:var(--faint);font-weight:600}
+
+@media print{
+  body{background:#fff;padding:0}
+  .bar{display:none}
+  .wrap{max-width:none;gap:0}
+  .sheet{box-shadow:none;border:0;border-radius:0;break-after:page;page-break-after:always;min-height:297mm}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
+}
+@page{size:A4;margin:0}
+@media (max-width:230mm){
+  .wrap,.sheet{width:100%;min-width:0}
+  .sheet{padding:14px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<div class="bar">
+  <h1>Unit&nbsp;2 · Sixty-Minute Sheet</h1>
+  <p>Intermediary Metabolism, VCI 2+1 syllabus, compressed to 6 printable A4 sides — the widest unit, so it earns the extra sheet. Coral = examiner's favourite. Purple = the trap that costs marks. Amber = mnemonic or number bank.</p>
+  <button class="go" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ═══════════════════════ SHEET 1 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Enzymes I — Nature, Classification, Cofactors, Active Site</h2>
+      <span class="sub">Syllabus lines 1–3</span>
+    </div>
+    <span class="pg">SHEET 1 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2 b">
+      <h3><span class="n">01</span> Definition, properties &amp; IUB classification</h3>
+      <p class="l"><b>Enzymes</b> are biocatalysts — proteins (except <em>ribozymes</em>, catalytic RNA) elaborated by living cells that <b>accelerate a reaction by lowering its activation energy</b>, without being consumed and <em>without altering ΔG or the equilibrium constant</em>. They only make equilibrium arrive sooner.</p>
+      <div class="chips">
+        <span class="chip"><b>Protein nature</b> — thermolabile, denatured by pH extremes, non-dialysable</span>
+        <span class="chip"><b>Efficiency</b> 10⁶–10¹² fold acceleration</span>
+        <span class="chip"><b>Active in trace amounts</b></span>
+        <span class="chip"><b>Highly specific</b></span>
+        <span class="chip"><b>Reaction reversible</b>, enzyme unchanged</span>
+        <span class="chip"><b>Regulatable</b> — allosteric, covalent, induction</span>
+      </div>
+      <div class="scroll">
+      <table>
+        <tr><th>EC class</th><th>Reaction catalysed</th><th>Sub-groups</th><th>Veterinary example</th></tr>
+        <tr><td class="k">1 · Oxidoreductases</td><td>Transfer of electrons / hydrogen (redox)</td><td>Dehydrogenases, oxidases, peroxidases, catalase, oxygenases</td><td><b>LDH, SDH, cytochrome oxidase, glutathione peroxidase</b></td></tr>
+        <tr><td class="k">2 · Transferases</td><td>Transfer of a group (other than H) between molecules</td><td>Transaminases, kinases, methyl/acyl transferases</td><td><b>AST, ALT, hexokinase, GGT</b></td></tr>
+        <tr><td class="k">3 · Hydrolases</td><td>Cleavage of a bond by addition of water</td><td>Esterases, glycosidases, peptidases, phosphatases</td><td><b>Lipase, amylase, trypsin, ALP, cholinesterase, urease</b></td></tr>
+        <tr><td class="k">4 · Lyases</td><td>Removal of a group <em>non-hydrolytically</em>, leaving a double bond (or the reverse addition)</td><td>Decarboxylases, aldolases, hydratases, synthases</td><td><b>Aldolase, fumarase, carbonic anhydrase, HMG-CoA lyase</b></td></tr>
+        <tr><td class="k">5 · Isomerases</td><td>Intramolecular rearrangement</td><td>Racemases, epimerases, mutases</td><td><b>Phosphohexose isomerase, phosphoglucomutase, methylmalonyl-CoA mutase</b></td></tr>
+        <tr><td class="k">6 · Ligases (synthetases)</td><td>Joining of two molecules, <b>coupled to ATP hydrolysis</b></td><td>C–C, C–N, C–O, C–S ligases</td><td><b>Pyruvate carboxylase, glutamine synthetase, DNA ligase, acetyl-CoA carboxylase</b></td></tr>
+      </table>
+      </div>
+      <div class="mnem"><u>Six classes in order — "Over The Hill, Little Indian Lady":</u> <b>O</b>xidoreductase · <b>T</b>ransferase · <b>H</b>ydrolase · <b>L</b>yase · <b>I</b>somerase · <b>L</b>igase. &nbsp;<b>EC number</b> has four digits: <span class="m">class . sub-class . sub-sub-class . serial no.</span> — e.g. <span class="m">EC 1.1.1.27 = lactate dehydrogenase</span>.</div>
+      <div class="trap"><b>Trap:</b> a <b>synthase</b> (lyase, class 4) needs <em>no</em> ATP; a <b>synthetase</b> (ligase, class 6) <em>must</em> use ATP. Similarly <b>oxidase</b> uses O₂ as acceptor, <b>oxygenase</b> incorporates O₂ into the product, <b>dehydrogenase</b> uses NAD/FAD and never O₂.</div>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">02</span> Cofactor · coenzyme · prosthetic group</h3>
+      <div class="flow">
+        <span class="s">Apoenzyme<br><span style="font-weight:400;font-size:7.4px">protein, inactive</span></span><span class="ar">+</span><span class="s">Cofactor<br><span style="font-weight:400;font-size:7.4px">metal or coenzyme</span></span><span class="ar">=</span><span class="s"><b>Holoenzyme</b><br><span style="font-weight:400;font-size:7.4px">active</span></span>
+      </div>
+      <div class="dl">
+        <dt>Coenzyme</dt><dd><b>Loosely, non-covalently bound</b>, dissociates freely, behaves as a <em>second substrate / co-substrate</em> and must be regenerated — NAD⁺, NADP⁺, CoA, THF.</dd>
+        <dt>Prosthetic group</dt><dd><b>Tightly or covalently bound</b>, stays with the enzyme through the cycle — FAD, biotin, haem, pyridoxal phosphate, lipoic acid.</dd>
+        <dt>Activator</dt><dd>Metal ion required for activity or for substrate binding (metal-activated enzymes); if firmly held the enzyme is a <b>metalloenzyme</b>.</dd>
+      </div>
+      <div class="scroll">
+      <table>
+        <tr><th>Vitamin</th><th>Coenzyme</th><th>Reaction type</th><th>Deficiency in animals</th></tr>
+        <tr><td class="k">B₁ Thiamine</td><td>TPP</td><td><b>Oxidative decarboxylation</b>, transketolase</td><td><b>Polioencephalomalacia</b> (thiaminase, ruminants); <b>Chastek paralysis</b> — raw fish, fox/mink/cat</td></tr>
+        <tr><td class="k">B₂ Riboflavin</td><td>FMN, FAD</td><td>Hydrogen transfer</td><td>Curled-toe paralysis in chicks</td></tr>
+        <tr><td class="k">B₃ Niacin</td><td>NAD⁺, NADP⁺</td><td>Hydride transfer</td><td><b>Black tongue</b> in dogs; from tryptophan 60 : 1</td></tr>
+        <tr><td class="k">B₅ Pantothenate</td><td>CoA, ACP</td><td>Acyl transfer</td><td>Goose-stepping in pigs, dermatitis</td></tr>
+        <tr><td class="k">B₆ Pyridoxine</td><td><b>PLP</b></td><td><b>Transamination, decarboxylation</b>, deamination, ALA synthase</td><td>Convulsions, microcytic anaemia</td></tr>
+        <tr><td class="k">B₇ Biotin</td><td>Biocytin</td><td><b>Carboxylation (CO₂ fixation)</b></td><td>Bound by <b>avidin</b> of raw egg white; foot-pad lesions in poultry</td></tr>
+        <tr><td class="k">B₉ Folate</td><td>THF</td><td><b>One-carbon transfer</b></td><td>Megaloblastic anaemia; sulphonamide target in bacteria</td></tr>
+        <tr><td class="k">B₁₂ Cobalamin</td><td>Methyl- &amp; deoxyadenosyl-cobalamin</td><td><b>Methylmalonyl-CoA mutase</b>, homocysteine methylation</td><td><b>Cobalt deficiency in ruminants</b> — blocks propionate → glucose; "pine/wasting disease"</td></tr>
+        <tr><td class="k">Lipoic acid</td><td>Lipoamide</td><td>Acyl transfer in PDH / α-KGDH</td><td>—</td></tr>
+      </table>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>Zn</b> carbonic anhydrase, carboxypeptidase, LDH</span>
+        <span class="chip"><b>Mg</b> all kinases &amp; ATP reactions</span>
+        <span class="chip"><b>Mn</b> arginase</span>
+        <span class="chip"><b>Cu</b> cytochrome oxidase, tyrosinase, SOD, ceruloplasmin</span>
+        <span class="chip"><b>Fe</b> catalase, peroxidase, cytochromes</span>
+        <span class="chip"><b>Se</b> glutathione peroxidase — <em>white muscle disease</em></span>
+        <span class="chip"><b>Mo</b> xanthine oxidase</span>
+        <span class="chip"><b>Ni</b> urease</span>
+      </div>
+    </div>
+
+    <div class="mod p">
+      <h3><span class="n">03</span> Isoenzymes (isozymes)</h3>
+      <p class="l"><b>Definition:</b> physically distinct forms of the <em>same</em> enzyme that catalyse the <em>same</em> reaction but differ in amino-acid sequence, <b>electrophoretic mobility, K<sub>m</sub>, heat stability, immunological properties and tissue distribution</b>. They arise from different genes or different subunit combinations.</p>
+      <table>
+        <tr><th>Enzyme</th><th>Structure</th><th>Diagnostic value</th></tr>
+        <tr><td class="k">LDH</td><td><b>Tetramer of H and M subunits → 5 isoenzymes</b> (H₄, H₃M, H₂M₂, HM₃, M₄)</td><td><b>LDH-1 (H₄)</b> heart &amp; RBC · <b>LDH-5 (M₄)</b> liver &amp; skeletal muscle. Haemolysis falsely raises total LDH</td></tr>
+        <tr><td class="k">CK</td><td>Dimer of M and B</td><td><b>CK-MM</b> skeletal muscle · <b>CK-MB</b> myocardium · <b>CK-BB</b> brain. Best marker of <em>acute muscle damage</em> (short half-life)</td></tr>
+        <tr><td class="k">ALP</td><td>Separate gene loci</td><td>Liver, bone (young growing animals — physiologically high), intestinal, placental and — <b>unique to the dog — corticosteroid-induced C-ALP</b></td></tr>
+        <tr><td class="k">AST</td><td>Cytosolic + mitochondrial</td><td>Mitochondrial form appears only in severe necrosis</td></tr>
+      </table>
+      <div class="hook"><b>Why it matters:</b> total enzyme activity says <em>something is damaged</em>; the isoenzyme pattern says <em>which organ</em>. This is the direct bridge to Unit 3 clinical enzymology.</div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">04</span> Enzyme–substrate complex, the modern active centre &amp; specificity</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="flow"><span class="s">E + S</span><span class="ar">⇌</span><span class="s">ES</span><span class="ar">→</span><span class="s">EP</span><span class="ar">→</span><span class="s">E + P</span></div>
+          <p class="l"><b>Two models of the active site:</b></p>
+          <div class="dl">
+            <dt>Lock &amp; key<br>(Emil Fischer, 1894)</dt><dd>Active site is a <b>rigid, pre-formed template</b> exactly complementary to the substrate. Explains <em>specificity</em> well, but not the action of enzymes on several related substrates.</dd>
+            <dt>Induced fit<br>(Koshland, 1958)</dt><dd><b>The modern concept.</b> The active site is <b>flexible</b>; the approaching substrate <em>induces a conformational change</em> that brings the catalytic groups into correct alignment — like a hand entering a glove. Explains allosteric regulation, competitive inhibition and non-productive binding.</dd>
+          </div>
+          <p class="l"><b>Features of the active centre:</b> ① a small region — only <em>3–5 % of the total enzyme volume</em>; ② a <b>crevice or cleft</b> from which water is largely excluded; ③ built from amino-acid residues that are <b>far apart in the primary sequence but brought together by folding</b>; ④ has a <b>substrate-binding (contact) site</b> and a <b>catalytic site</b>; ⑤ binding is by weak, non-covalent forces — H-bond, ionic, hydrophobic, van der Waals; ⑥ residues commonly involved: <b>serine, histidine, cysteine, aspartate, glutamate, lysine, tyrosine</b> (the <em>Ser–His–Asp catalytic triad</em> of trypsin and chymotrypsin); ⑦ the shape complements the <b>transition state</b>, not the ground-state substrate.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <table>
+            <tr><th>Type of specificity</th><th>Meaning</th><th>Example</th></tr>
+            <tr><td class="k">Absolute</td><td>Acts on <b>one substrate only</b></td><td><b>Urease → urea</b>; carbonic anhydrase; lactase</td></tr>
+            <tr><td class="k">Substrate<br>(relative)</td><td>Acts on a group of closely related substrates</td><td>Alcohol dehydrogenase on several alcohols; hexokinase on glucose, fructose, mannose</td></tr>
+            <tr><td class="k">Group</td><td>Acts on a particular chemical <b>group</b> next to the bond</td><td><b>Trypsin</b> — carboxyl side of <em>lysine &amp; arginine</em>; <b>chymotrypsin</b> — aromatic residues; <b>pepsin</b> — aromatic</td></tr>
+            <tr><td class="k">Bond</td><td>Acts on a bond type regardless of the rest</td><td>Esterases (ester), glycosidases (glycosidic), peptidases (peptide), lipases</td></tr>
+            <tr><td class="k">Stereo /<br>optical</td><td>Acts on only <b>one optical or geometric isomer</b></td><td><b>L-amino acid oxidase</b> vs D-amino acid oxidase; α- vs β-glycosidase; <b>fumarase acts on <em>trans</em>-fumarate but not <em>cis</em>-maleate</b>; only <em>D</em>-sugars are used</td></tr>
+            <tr><td class="k">Dual / co-substrate</td><td>Two substrates required</td><td>Transaminases (amino acid + keto acid); dehydrogenases (substrate + NAD⁺)</td></tr>
+          </table>
+          <div class="hook"><b>Most-asked one-liner:</b> "<em>Stereospecificity of fumarase</em>" — it hydrates fumarate (trans) but never maleate (cis). This one example answers both "optical specificity" and "why enzymes are more selective than chemical catalysts".</div>
+          <div class="trap"><b>Trap:</b> <b>zymogens / proenzymes</b> are catalytically inactive precursors activated by <em>limited proteolysis</em>: pepsinogen → pepsin (HCl, then autocatalysis), <b>trypsinogen → trypsin by enteropeptidase</b>, chymotrypsinogen, procarboxypeptidase, prothrombin, plasminogen. Premature activation inside the pancreas = <b>acute pancreatitis</b>.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Enzymes I</span><span class="m">APOENZYME + COFACTOR = HOLOENZYME</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 2 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Enzymes II — Kinetics, Units, Inhibition, Allostery</h2>
+      <span class="sub">The most heavily examined page of the unit</span>
+    </div>
+    <span class="pg">SHEET 2 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2 c">
+      <h3><span class="n">05</span> Factors influencing enzyme action</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>① Substrate concentration.</b> At low [S] the rate is <b>first order</b> (∝[S]); as [S] rises the curve flattens to a <b>rectangular hyperbola</b> and becomes <b>zero order</b> at saturation, when every active site is occupied → <b>V<sub>max</sub></b>.</p>
+          <div class="mnem"><u>Michaelis–Menten</u> <span class="m">v = V<sub>max</sub>[S] / (K<sub>m</sub> + [S])</span><br><b>K<sub>m</sub> = the substrate concentration at which v = ½V<sub>max</sub></b> (units of concentration, mol/L).</div>
+          <ul class="l">
+            <li><b>Low K<sub>m</sub> = high affinity</b> for the substrate (hexokinase K<sub>m</sub> 0.1 mM) and vice versa (glucokinase 10 mM).</li>
+            <li>K<sub>m</sub> is a <b>constant characteristic of the enzyme–substrate pair</b> and is <em>independent of enzyme concentration</em>; V<sub>max</sub> is <em>directly proportional</em> to it.</li>
+            <li><b>Lineweaver–Burk (double reciprocal) plot</b> linearises the curve: <span class="m">1/v = (K<sub>m</sub>/V<sub>max</sub>)(1/[S]) + 1/V<sub>max</sub></span> — y-intercept <span class="m">1/V<sub>max</sub></span>, x-intercept <span class="m">−1/K<sub>m</sub></span>, slope <span class="m">K<sub>m</sub>/V<sub>max</sub></span>.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>② Enzyme concentration.</b> With substrate in excess the velocity is <b>directly proportional to [E]</b> — a straight line through the origin. This linearity is the basis of every enzyme assay in the clinical laboratory.</p>
+          <p class="l"><b>③ Temperature.</b> Rate roughly <b>doubles for each 10 °C rise (Q₁₀ ≈ 2)</b> up to the <b>optimum (≈ 37–40 °C in mammals, 41–42 °C in birds)</b>, beyond which thermal denaturation causes a sharp fall. The curve is therefore <b>bell-shaped, but asymmetrical</b>. Enzymes are inactivated above ~60 °C; hence samples are refrigerated.</p>
+          <p class="l"><b>④ pH.</b> Bell-shaped curve; extremes alter the ionisation of the active site and of the substrate, and finally denature the enzyme.</p>
+          <div class="chips">
+            <span class="chip"><b>Pepsin</b> 1.5–2.0</span>
+            <span class="chip"><b>Acid phosphatase</b> 5</span>
+            <span class="chip"><b>Salivary amylase</b> 6.8</span>
+            <span class="chip"><b>Trypsin / lipase</b> 8</span>
+            <span class="chip"><b>ALP</b> 9–10</span>
+            <span class="chip"><b>Arginase</b> 9.5</span>
+          </div>
+          <p class="l"><b>⑤ Others:</b> time of incubation, accumulation of product (product inhibition), activators (metal ions, bile salts for lipase), inhibitors, light and UV/ionising radiation.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Enzyme units — learn all four definitions verbatim.</b></p>
+          <div class="dl">
+            <dt>International Unit (IU)</dt><dd>The amount of enzyme that converts <b>1 µmol of substrate per minute</b> under defined optimum conditions of temperature, pH and substrate concentration.</dd>
+            <dt>Katal (SI unit)</dt><dd>The amount of enzyme that converts <b>1 mole of substrate per second</b>. <span class="m">1 katal = 6 × 10⁷ IU; 1 IU = 16.67 nkat</span>.</dd>
+            <dt>Specific activity</dt><dd><b>Units of enzyme activity per milligram of protein</b> — the index of <em>purity</em>; it rises at every purification step.</dd>
+            <dt>Turnover number<br>(k<sub>cat</sub>, molecular activity)</dt><dd>The <b>number of substrate molecules converted per molecule of enzyme (or per active site) per unit time when the enzyme is fully saturated</b>. Highest known: <b>carbonic anhydrase ≈ 600 000 per second</b>.</dd>
+          </div>
+          <div class="trap"><b>Trap:</b> specific activity measures <em>purity</em>; turnover number measures <em>catalytic efficiency</em> of a single molecule. Students routinely swap the two — a guaranteed one-mark loss.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod span2 p">
+      <h3><span class="n">06</span> Enzyme inhibition — the four types, decided by the Lineweaver–Burk plot</h3>
+      <svg viewBox="0 0 700 118" role="img" aria-label="Lineweaver-Burk plots for competitive, non-competitive and uncompetitive inhibition">
+        <g font-family="Inter" font-size="7.4" fill="var(--muted)">
+          <!-- plot 1 -->
+          <text x="105" y="10" text-anchor="middle" font-size="8.4" font-weight="700" fill="var(--coral)">COMPETITIVE</text>
+          <line x1="35" y1="100" x2="185" y2="100" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="90" y1="18" x2="90" y2="108" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="42" y1="96" x2="180" y2="30" stroke="var(--ink-2)" stroke-width="1.3"/>
+          <line x1="55" y1="103" x2="180" y2="22" stroke="var(--coral)" stroke-width="1.3" stroke-dasharray="3 2"/>
+          <circle cx="90" cy="72" r="2" fill="var(--blue)"/>
+          <text x="188" y="103" text-anchor="end">1/[S]</text>
+          <text x="94" y="24">1/v</text>
+          <text x="105" y="114" text-anchor="middle" fill="var(--ink-2)">same y-intercept · <tspan font-weight="700">K m ↑, V max same</tspan></text>
+          <!-- plot 2 -->
+          <text x="350" y="10" text-anchor="middle" font-size="8.4" font-weight="700" fill="var(--purple)">NON-COMPETITIVE</text>
+          <line x1="280" y1="100" x2="430" y2="100" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="335" y1="18" x2="335" y2="108" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="287" y1="96" x2="425" y2="30" stroke="var(--ink-2)" stroke-width="1.3"/>
+          <line x1="287" y1="103" x2="425" y2="14" stroke="var(--purple)" stroke-width="1.3" stroke-dasharray="3 2"/>
+          <circle cx="300" cy="90" r="2" fill="var(--blue)"/>
+          <text x="433" y="103" text-anchor="end">1/[S]</text>
+          <text x="339" y="24">1/v</text>
+          <text x="350" y="114" text-anchor="middle" fill="var(--ink-2)">same x-intercept · <tspan font-weight="700">V max ↓, K m same</tspan></text>
+          <!-- plot 3 -->
+          <text x="595" y="10" text-anchor="middle" font-size="8.4" font-weight="700" fill="var(--teal)">UNCOMPETITIVE</text>
+          <line x1="525" y1="100" x2="675" y2="100" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="580" y1="18" x2="580" y2="108" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="532" y1="96" x2="670" y2="30" stroke="var(--ink-2)" stroke-width="1.3"/>
+          <line x1="532" y1="80" x2="670" y2="14" stroke="var(--teal)" stroke-width="1.3" stroke-dasharray="3 2"/>
+          <text x="678" y="103" text-anchor="end">1/[S]</text>
+          <text x="584" y="24">1/v</text>
+          <text x="595" y="114" text-anchor="middle" fill="var(--ink-2)"><tspan font-weight="700">parallel lines</tspan> · both K m and V max ↓</text>
+        </g>
+      </svg>
+      <div class="scroll">
+      <table>
+        <tr><th>Type</th><th>Binds to</th><th>K<sub>m</sub></th><th>V<sub>max</sub></th><th>Reversed by ↑[S]?</th><th>Classic examples</th></tr>
+        <tr><td class="k">Competitive</td><td><b>Active site</b> of free enzyme; inhibitor is a <em>structural analogue</em> of the substrate</td><td><b>↑</b></td><td>Unchanged</td><td><b>Yes</b></td><td><b>Malonate on succinate dehydrogenase</b> · sulphonamides vs PABA · allopurinol on xanthine oxidase · ethanol on alcohol dehydrogenase in <b>ethylene-glycol poisoning</b> · neostigmine on cholinesterase</td></tr>
+        <tr><td class="k">Non-competitive</td><td>A site <em>other than</em> the active site, on E or ES; unrelated structurally</td><td>Unchanged</td><td><b>↓</b></td><td><b>No</b></td><td>Heavy metals (Pb²⁺, Hg²⁺, Ag⁺) on −SH groups · <b>cyanide &amp; azide on cytochrome oxidase</b> · fluoride on enolase · iodoacetate on GAPDH</td></tr>
+        <tr><td class="k">Uncompetitive</td><td><b>Only the ES complex</b>, never the free enzyme</td><td><b>↓</b></td><td><b>↓</b></td><td>No</td><td>Phenylalanine on intestinal ALP; lithium on inositol monophosphatase</td></tr>
+        <tr><td class="k">Irreversible /<br>suicide (mechanism-based)</td><td>Covalent, permanent — the enzyme <em>itself converts the inhibitor</em> into the reactive killer</td><td colspan="2">Activity lost until new enzyme is synthesised</td><td>No</td><td><b>Organophosphates &amp; carbamates on acetylcholinesterase</b> (the commonest small-animal poisoning; antidote atropine + 2-PAM) · aspirin on COX · penicillin on transpeptidase · allopurinol → alloxanthine · 5-fluorouracil on thymidylate synthase</td></tr>
+      </table>
+      </div>
+      <div class="hook"><b>The two answers examiners want in full:</b> ① <b>malonate vs succinate dehydrogenase</b> — malonate differs from succinate by one CH₂ group, occupies the active site, raises apparent K<sub>m</sub>, and inhibition is relieved by excess succinate. ② <b>Organophosphate poisoning</b> — irreversible phosphorylation of the serine of acetylcholinesterase, "ageing" of the enzyme, and the rationale of oxime therapy <em>before</em> ageing occurs.</div>
+    </div>
+
+    <div class="mod s span2">
+      <h3><span class="n">07</span> Allosteric enzymes &amp; the four modes of metabolic regulation</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Allosteric ("other site") enzymes</b> are the regulatory enzymes of a pathway. They are <b>oligomeric</b>, possess a <b>catalytic site plus a separate allosteric site</b>, and bind their effectors non-covalently and reversibly.</p>
+          <ul class="l">
+            <li>They give a <b>sigmoid (S-shaped) v vs [S] curve, not a hyperbola</b> — because subunits show <b>co-operativity</b>; they therefore <em>do not obey Michaelis–Menten kinetics</em>.</li>
+            <li><b>Positive effectors (activators)</b> shift the curve left (↑affinity); <b>negative effectors (inhibitors)</b> shift it right.</li>
+            <li><b>Homotropic</b> = the substrate is itself the effector (O₂ on haemoglobin); <b>heterotropic</b> = a different molecule (ATP on PFK-1).</li>
+            <li>Models: <b>MWC concerted / symmetry model</b> (all subunits flip T ⇌ R together) and <b>KNF sequential model</b> (one at a time).</li>
+            <li>Almost always the <b>first committed, irreversible, rate-limiting step</b> of the pathway, and usually subject to <b>feedback (end-product) inhibition</b>.</li>
+          </ul>
+          <div class="hook"><b>Learn these five allosteric enzymes with their effectors:</b> <b>PFK-1</b> (− ATP, citrate; + AMP, <b>fructose-2,6-bisphosphate</b>) · <b>pyruvate carboxylase</b> (+ acetyl-CoA) · <b>glycogen phosphorylase</b> (+ AMP in muscle; − ATP, G6P) · <b>carbamoyl phosphate synthetase I</b> (+ N-acetylglutamate) · <b>HMG-CoA reductase</b> and <b>acetyl-CoA carboxylase</b> (+ citrate, − palmitoyl-CoA).</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <table>
+            <tr><th>Mode of regulation</th><th>Speed</th><th>Mechanism &amp; example</th></tr>
+            <tr><td class="k">Allosteric<br>modulation</td><td><b>Seconds</b></td><td>Non-covalent binding of an effector; feedback inhibition. <em>PFK-1, ATCase</em></td></tr>
+            <tr><td class="k">Covalent<br>modification</td><td>Seconds–minutes</td><td><b>Phosphorylation / dephosphorylation</b> by hormone-driven kinases &amp; phosphatases. <em>Glycogen phosphorylase ON, glycogen synthase OFF when phosphorylated</em> (glucagon/adrenaline); insulin does the reverse</td></tr>
+            <tr><td class="k">Proteolytic<br>(zymogen) activation</td><td>Minutes, <b>irreversible</b></td><td>Digestive enzymes, clotting cascade, complement</td></tr>
+            <tr><td class="k">Induction /<br>repression</td><td><b>Hours–days</b></td><td>Change in the <em>amount</em> of enzyme by altered transcription. <em>Glucokinase and lipogenic enzymes induced by insulin; gluconeogenic enzymes by cortisol &amp; glucagon; cytochrome P450 induced by phenobarbitone</em></td></tr>
+            <tr><td class="k">Compartmentation</td><td>—</td><td>Opposing pathways kept apart: <b>β-oxidation in the mitochondrion, fatty-acid synthesis in the cytosol</b></td></tr>
+          </table>
+          <div class="trap"><b>Trap:</b> phosphorylation does <em>not</em> mean "activation". It activates glycogen phosphorylase and hormone-sensitive lipase but <em>inactivates</em> glycogen synthase, acetyl-CoA carboxylase and pyruvate dehydrogenase. Remember it as "<b>phosphorylation switches the body to the fasting mode</b>".</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Enzymes II</span><span class="m">Km ↑ COMPETITIVE · Vmax ↓ NON-COMPETITIVE</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 3 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Biological Oxidation · ETC · Oxidative Phosphorylation</h2>
+      <span class="sub">Redox enzymes · four complexes · chemiosmosis · inhibitors &amp; uncouplers</span>
+    </div>
+    <span class="pg">SHEET 3 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod">
+      <h3><span class="n">08</span> Enzymes &amp; coenzymes of oxidation–reduction</h3>
+      <p class="l"><b>Biological oxidation</b> = removal of electrons (usually as hydrogen atoms) from a substrate, coupled to reduction of an acceptor. It proceeds in <em>small steps down a redox-potential gradient</em> so the energy is captured, not lost as a flash of heat.</p>
+      <table>
+        <tr><th>Enzyme class</th><th>What it does</th><th>Example</th></tr>
+        <tr><td class="k">Dehydrogenases</td><td>Transfer H to <b>NAD⁺/NADP⁺ or FAD/FMN</b>, never to O₂</td><td>LDH, MDH, isocitrate DH, succinate DH</td></tr>
+        <tr><td class="k">Oxidases</td><td>Use <b>O₂ as the direct acceptor</b> → H₂O or H₂O₂</td><td><b>Cytochrome oxidase</b> (→H₂O); xanthine oxidase, D-amino acid oxidase (→H₂O₂)</td></tr>
+        <tr><td class="k">Peroxidases &amp;<br>catalase</td><td><b>Dispose of H₂O₂</b>; catalase: <span class="m">2H₂O₂ → 2H₂O + O₂</span></td><td>Glutathione peroxidase (<b>Se</b>), myeloperoxidase, catalase (Fe)</td></tr>
+        <tr><td class="k">Oxygenases</td><td><b>Dioxygenase</b> — both O atoms into substrate; <b>Monooxygenase / mixed-function oxidase</b> — one O into substrate, one into water</td><td><b>Cytochrome P450</b> (steroidogenesis, drug metabolism); homogentisate dioxygenase</td></tr>
+      </table>
+      <div class="dl">
+        <dt>NAD⁺ / NADP⁺</dt><dd>From <b>niacin</b>; accept a <b>hydride ion (2e⁻ + H⁺)</b>. <b>NADH → ETC for ATP; NADPH → reductive biosynthesis</b> and antioxidant defence.</dd>
+        <dt>FAD / FMN</dt><dd>From <b>riboflavin</b>; accept <b>2H (2e⁻ + 2H⁺)</b>; tightly bound prosthetic groups.</dd>
+        <dt>Coenzyme Q<br>(ubiquinone)</dt><dd><b>Lipid-soluble, freely mobile</b> in the membrane; the <b>collection point</b> for electrons from Complex I, Complex II, ETF of β-oxidation and glycerol-3-phosphate dehydrogenase. Not protein, not vitamin-derived.</dd>
+        <dt>Cytochromes</dt><dd>Haemoproteins; transfer <b>one electron at a time</b> by <span class="m">Fe³⁺ ⇌ Fe²⁺</span>. Order b → c₁ → c → a → a₃. <b>Cytochrome c is the only water-soluble, mobile one.</b></dd>
+        <dt>Iron–sulphur<br>proteins</dt><dd>Non-haem iron (Fe-S centres) in Complexes I, II, III; one-electron carriers.</dd>
+      </div>
+      <div class="vals">
+        <div class="val"><span class="v">−7.3</span><span class="c">ATP, kcal/mol</span></div>
+        <div class="val"><span class="v">−14.8</span><span class="c">PEP — highest</span></div>
+        <div class="val"><span class="v">−11.8</span><span class="c">1,3-BPG</span></div>
+        <div class="val"><span class="v">−10.3</span><span class="c">creatine-P</span></div>
+      </div>
+    </div>
+
+    <div class="mod c">
+      <h3><span class="n">09</span> The respiratory chain — four complexes</h3>
+      <svg viewBox="0 0 340 140" role="img" aria-label="Electron transport chain complexes I to IV with proton pumping and inhibitor sites">
+        <rect x="4" y="26" width="332" height="46" fill="var(--blue-w)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="8" y="22" font-family="Inter" font-size="7" fill="var(--muted)">INTERMEMBRANE SPACE — H⁺ accumulates (low pH, positive)</text>
+        <text x="8" y="84" font-family="Inter" font-size="7" fill="var(--muted)">MATRIX</text>
+        <g font-family="Inter" font-size="7.6" font-weight="700">
+          <rect x="14" y="30" width="52" height="38" rx="2" fill="var(--surface)" stroke="var(--coral)" stroke-width="1.2"/>
+          <text x="40" y="44" text-anchor="middle" fill="var(--coral)">I</text>
+          <text x="40" y="54" text-anchor="middle" font-size="6.2" font-weight="400" fill="var(--ink-2)">NADH-Q</text>
+          <text x="40" y="62" text-anchor="middle" font-size="6.2" font-weight="400" fill="var(--ink-2)">FMN, Fe-S</text>
+          <rect x="80" y="42" width="50" height="30" rx="2" fill="var(--surface)" stroke="var(--sage)" stroke-width="1.2"/>
+          <text x="105" y="54" text-anchor="middle" fill="var(--sage)">II</text>
+          <text x="105" y="64" text-anchor="middle" font-size="6.2" font-weight="400" fill="var(--ink-2)">SDH, FAD</text>
+          <circle cx="145" cy="50" r="9" fill="var(--amber-w)" stroke="var(--amber)" stroke-width="1.2"/>
+          <text x="145" y="53" text-anchor="middle" font-size="6.6" fill="var(--amber)">Q</text>
+          <rect x="160" y="30" width="52" height="38" rx="2" fill="var(--surface)" stroke="var(--coral)" stroke-width="1.2"/>
+          <text x="186" y="44" text-anchor="middle" fill="var(--coral)">III</text>
+          <text x="186" y="54" text-anchor="middle" font-size="6.2" font-weight="400" fill="var(--ink-2)">b, c₁, Fe-S</text>
+          <circle cx="226" cy="34" r="8" fill="var(--purple-w)" stroke="var(--purple)" stroke-width="1.2"/>
+          <text x="226" y="37" text-anchor="middle" font-size="6.4" fill="var(--purple)">c</text>
+          <rect x="240" y="30" width="52" height="38" rx="2" fill="var(--surface)" stroke="var(--coral)" stroke-width="1.2"/>
+          <text x="266" y="44" text-anchor="middle" fill="var(--coral)">IV</text>
+          <text x="266" y="54" text-anchor="middle" font-size="6.2" font-weight="400" fill="var(--ink-2)">a, a₃, Cu</text>
+          <rect x="302" y="26" width="30" height="60" rx="2" fill="var(--surface)" stroke="var(--blue)" stroke-width="1.2"/>
+          <text x="317" y="44" text-anchor="middle" fill="var(--blue)">V</text>
+          <text x="317" y="55" text-anchor="middle" font-size="6" font-weight="400" fill="var(--ink-2)">ATP</text>
+          <text x="317" y="63" text-anchor="middle" font-size="6" font-weight="400" fill="var(--ink-2)">synthase</text>
+        </g>
+        <g stroke="var(--blue)" stroke-width="1.1" fill="none">
+          <path d="M40,30 L40,18"/><path d="M186,30 L186,18"/><path d="M266,30 L266,18"/>
+        </g>
+        <g font-family="JetBrains Mono" font-size="6.4" fill="var(--blue)" font-weight="700">
+          <text x="44" y="16">4H⁺</text><text x="190" y="16">4H⁺</text><text x="270" y="16">2H⁺</text>
+        </g>
+        <path d="M317,26 L317,14" stroke="var(--blue)" stroke-width="1.1" fill="none"/>
+        <text x="321" y="13" font-family="JetBrains Mono" font-size="6.4" fill="var(--blue)" font-weight="700">H⁺ in</text>
+        <text x="317" y="80" text-anchor="middle" font-family="Inter" font-size="6.2" fill="var(--ink-2)">ADP+Pi→ATP</text>
+        <g font-family="Inter" font-size="6.6" fill="var(--ink-2)">
+          <text x="8" y="96">NADH → FMN → CoQ → cyt b → c₁ → c → a → a₃ → ½O₂ + 2H⁺ → H₂O</text>
+          <text x="8" y="106" fill="var(--coral)" font-weight="700">Rotenone/amytal ⟂ I · Malonate/carboxin ⟂ II · Antimycin A/BAL ⟂ III</text>
+          <text x="8" y="115" fill="var(--coral)" font-weight="700">Cyanide, CO, azide, H₂S ⟂ IV · Oligomycin ⟂ V · Atractyloside ⟂ ADP/ATP translocase</text>
+          <text x="8" y="127">Electrons always flow from the <tspan font-weight="700">more negative to the more positive redox potential</tspan>;</text>
+          <text x="8" y="136">Complex II pumps <tspan font-weight="700">no</tspan> protons — that is why FADH₂ yields less ATP than NADH.</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">10</span> Oxidative phosphorylation, uncouplers &amp; the shuttles</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Chemiosmotic theory — Peter Mitchell, 1961 (Nobel 1978).</b> Electron flow through Complexes I, III and IV pumps <b>H⁺ from the matrix into the intermembrane space</b>, creating a <b>proton-motive force</b> made of a pH gradient (ΔpH) plus a membrane potential (Δψ). Protons re-enter <em>only</em> through the F₀ channel of <b>ATP synthase (Complex V)</b>, and this flow drives <b>rotational catalysis</b> in F₁ (Boyer's binding-change mechanism) which releases ATP.</p>
+          <ul class="l">
+            <li><b>Prerequisite: an intact, impermeable inner mitochondrial membrane.</b> Any leak abolishes ATP synthesis while electron flow continues.</li>
+            <li><b>Respiratory control:</b> the rate of the chain is governed by the availability of <b>ADP</b> — the cell makes ATP only as fast as it spends it.</li>
+            <li><b>P : O ratio</b> = molecules of ATP formed per atom of oxygen reduced: <b>NADH = 2.5 (classically 3)</b>, <b>FADH₂ = 1.5 (classically 2)</b>.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Uncouplers</b> carry H⁺ back across the membrane, short-circuiting the gradient. <em>Electron transport continues (even accelerates) but ATP is not made — the energy appears as heat.</em> Signs: hyperthermia, tachypnoea, weight loss, no ATP gain.</p>
+          <div class="chips">
+            <span class="chip"><b>2,4-Dinitrophenol</b>, dinitro-o-cresol</span>
+            <span class="chip">CCCP, FCCP</span>
+            <span class="chip"><b>Salicylate</b> in overdose</span>
+            <span class="chip">Unconjugated <b>bilirubin</b></span>
+            <span class="chip">Excess <b>thyroxine</b>, free fatty acids</span>
+            <span class="chip"><b>Thermogenin (UCP-1)</b> — physiological</span>
+          </div>
+          <div class="hook"><b>Veterinary gold:</b> <b>brown adipose tissue</b> of the newborn lamb, piglet, kid and kitten is packed with <b>UCP-1/thermogenin</b>, a <em>deliberate, hormone-controlled uncoupler</em> that generates heat instead of ATP — <b>non-shivering thermogenesis</b>. Its failure or absence explains neonatal hypothermia and much of the "weak-neonate" complex.</div>
+          <div class="trap"><b>Trap:</b> distinguish sharply — an <b>inhibitor</b> stops electron flow <em>and</em> ATP synthesis and oxygen consumption falls; an <b>uncoupler</b> lets electron flow and O₂ consumption <em>increase</em> while ATP falls; <b>oligomycin</b> blocks the ATP synthase itself, so both stop — and adding an uncoupler <em>restores</em> respiration after oligomycin. That last sentence is a favourite viva question.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Shuttles.</b> The inner membrane is impermeable to NADH, so cytosolic NADH from glycolysis must be transferred indirectly — and the choice of shuttle decides the final ATP count for glucose.</p>
+          <table>
+            <tr><th>Shuttle</th><th>Delivers as</th><th>ATP</th><th>Tissue</th></tr>
+            <tr><td class="k">Glycerol-3-phosphate</td><td>FADH₂ (via CoQ)</td><td><b>1.5</b></td><td>Skeletal muscle, brain, insect flight muscle</td></tr>
+            <tr><td class="k">Malate–aspartate</td><td>NADH</td><td><b>2.5</b></td><td>Liver, heart, kidney — more efficient</td></tr>
+          </table>
+          <div class="vals">
+            <div class="val"><span class="v">32</span><span class="c">ATP/glucose, malate–asp</span></div>
+            <div class="val"><span class="v">30</span><span class="c">ATP/glucose, glycerol-P</span></div>
+            <div class="val"><span class="v">38 / 36</span><span class="c">classical figures</span></div>
+          </div>
+          <p class="l"><b>Other transporters of the inner membrane:</b> adenine-nucleotide translocase (ADP in / ATP out — blocked by <b>atractyloside</b>), phosphate translocase, tricarboxylate (citrate) carrier, and the <b>carnitine shuttle</b> for fatty acids.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Biological Oxidation</span><span class="m">PROTON GRADIENT → ROTATION → ATP</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 4 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Carbohydrate Metabolism</h2>
+      <span class="sub">Glycolysis · Krebs · HMP shunt · gluconeogenesis · Cori cycle · glycogen · bioenergetics</span>
+    </div>
+    <span class="pg">SHEET 4 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2">
+      <h3><span class="n">11</span> Glycolysis (Embden–Meyerhof pathway) — cytosol, every cell, aerobic or anaerobic</h3>
+      <div class="flow">
+        <span class="s">Glucose</span><span class="cond">hexokinase / glucokinase &nbsp;−1 ATP</span><span class="ar">→</span><span class="s">G-6-P</span><span class="ar">→</span><span class="s">F-6-P</span><span class="cond"><b>PFK-1</b> &nbsp;−1 ATP &nbsp;RATE-LIMITING</span><span class="ar">→</span><span class="s">F-1,6-BP</span><span class="cond">aldolase</span><span class="ar">→</span><span class="s">2 × G-3-P</span>
+      </div>
+      <div class="flow" style="margin-top:2px">
+        <span class="s">2 × G-3-P</span><span class="cond">GAPDH &nbsp;+2 NADH</span><span class="ar">→</span><span class="s">2 × 1,3-BPG</span><span class="cond">+2 ATP (SLP)</span><span class="ar">→</span><span class="s">3-PG → 2-PG</span><span class="cond">enolase</span><span class="ar">→</span><span class="s">2 × PEP</span><span class="cond"><b>pyruvate kinase</b> +2 ATP (SLP)</span><span class="ar">→</span><span class="s">2 × Pyruvate</span>
+      </div>
+      <div class="grid" style="gap:2.6mm">
+        <ul class="l">
+          <li><b>Three irreversible, regulatory steps:</b> hexokinase/glucokinase, <b>PFK-1 (the key rate-limiting enzyme)</b>, pyruvate kinase. These are exactly the three bypassed in gluconeogenesis.</li>
+          <li><b>Balance sheet:</b> 2 ATP invested, 4 ATP generated by <b>substrate-level phosphorylation</b> → <b>net 2 ATP + 2 NADH per glucose</b>. Anaerobically the 2 NADH are spent reducing pyruvate to <b>lactate (LDH)</b> to regenerate NAD⁺, so the net stays 2 ATP — the only ATP source for the <b>RBC (no mitochondria)</b>, working muscle, cornea, renal medulla and rapidly growing tissue.</li>
+          <li><b>Hexokinase vs glucokinase:</b> hexokinase is in all tissues, K<sub>m</sub> 0.1 mM, <em>inhibited by G-6-P</em>; <b>glucokinase</b> is in liver and β-cell, K<sub>m</sub> ≈ 10 mM, <em>not</em> inhibited by G-6-P and <b>induced by insulin</b> — it only works after a meal, letting the liver take up glucose <em>only when blood glucose is high</em>.</li>
+          <li><b>Rapoport–Luebering shunt</b> in the RBC diverts 1,3-BPG to <b>2,3-BPG</b>, which lowers haemoglobin's O₂ affinity and improves tissue delivery — at the cost of one ATP.</li>
+        </ul>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="hook"><b>Practical link you will be asked:</b> <b>sodium fluoride inhibits enolase</b>, so NaF-containing (grey-top) tubes are used for blood glucose collection — without it, erythrocyte glycolysis destroys ~10 % of the glucose per hour and gives a falsely low result. Also: <b>iodoacetate</b> blocks GAPDH, <b>arsenate</b> uncouples at GAPDH (glycolysis runs but makes no ATP).</div>
+          <p class="l"><b>Link reaction — pyruvate dehydrogenase complex</b> (mitochondrial matrix): <span class="m">pyruvate + CoA + NAD⁺ → acetyl-CoA + CO₂ + NADH</span>. A multienzyme complex of 3 enzymes needing <b>5 coenzymes: TPP, Lipoamide, CoA, FAD, NAD⁺</b>. <b>Irreversible</b> — this single fact is <em>why fatty acids can never be converted to glucose</em> in animals. Inhibited by <b>arsenite</b> and by mercury (bind lipoamide −SH); switched off by phosphorylation (PDH kinase, activated by ATP/NADH/acetyl-CoA) and on by dephosphorylation (PDH phosphatase, Ca²⁺, insulin).</p>
+          <div class="mnem"><u>PDH coenzymes — "Tender Loving Care For Nancy":</u> <b>T</b>PP, <b>L</b>ipoamide, <b>C</b>oA, <b>F</b>AD, <b>N</b>AD⁺. The α-ketoglutarate dehydrogenase complex uses exactly the same five.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod c">
+      <h3><span class="n">12</span> Krebs / TCA / citric acid cycle</h3>
+      <p class="l"><b>Site:</b> mitochondrial matrix (succinate dehydrogenase alone is in the inner membrane). <b>Nature:</b> the <em>final common oxidative pathway</em> for carbohydrate, fat and protein, and <b>amphibolic</b> — it both degrades and supplies precursors. Strictly <b>aerobic</b> (needs NAD⁺/FAD regenerated by the ETC), though O₂ takes no direct part.</p>
+      <table>
+        <tr><th>Step</th><th>Enzyme</th><th>Yield / note</th></tr>
+        <tr><td class="k">Acetyl-CoA + OAA</td><td>Citrate synthase</td><td>Condensation; the entry point</td></tr>
+        <tr><td class="k">Citrate → isocitrate</td><td>Aconitase</td><td><b>Blocked by fluoroacetate</b> ("1080", <em>Dichapetalum</em>/Gifblaar plant poisoning)</td></tr>
+        <tr><td class="k">Isocitrate → α-KG</td><td><b>Isocitrate DH — rate limiting</b></td><td>1st NADH + 1st CO₂</td></tr>
+        <tr><td class="k">α-KG → succinyl-CoA</td><td>α-KG dehydrogenase complex</td><td>2nd NADH + 2nd CO₂; same 5 coenzymes as PDH</td></tr>
+        <tr><td class="k">Succinyl-CoA → succinate</td><td>Succinyl-CoA synthetase</td><td><b>GTP by substrate-level phosphorylation</b> — the only one in the cycle</td></tr>
+        <tr><td class="k">Succinate → fumarate</td><td>Succinate DH (Complex II)</td><td><b>FADH₂</b>; membrane bound; <b>inhibited by malonate</b></td></tr>
+        <tr><td class="k">Fumarate → malate</td><td>Fumarase</td><td>Stereospecific hydration</td></tr>
+        <tr><td class="k">Malate → OAA</td><td>Malate DH</td><td>3rd NADH; OAA regenerated</td></tr>
+      </table>
+      <div class="vals">
+        <div class="val"><span class="v">3</span><span class="c">NADH</span></div>
+        <div class="val"><span class="v">1</span><span class="c">FADH₂</span></div>
+        <div class="val"><span class="v">1</span><span class="c">GTP</span></div>
+        <div class="val"><span class="v">10</span><span class="c">ATP per acetyl-CoA</span></div>
+        <div class="val"><span class="v">2</span><span class="c">CO₂ released</span></div>
+      </div>
+      <ul class="l">
+        <li><b>Anaplerotic ("topping-up") reactions</b> replace intermediates drained for biosynthesis: <b>pyruvate carboxylase</b> (pyruvate → OAA, biotin, activated by acetyl-CoA) — the chief one; transamination of glutamate/aspartate; and in the ruminant, <b>propionate → succinyl-CoA</b>.</li>
+        <li><b>Regulation:</b> by the <b>ATP/ADP and NADH/NAD⁺ ratios</b> at citrate synthase, isocitrate DH and α-KG DH; Ca²⁺ activates all three during muscular work.</li>
+        <li><b>Amphibolic outputs:</b> citrate → fatty acid synthesis; α-KG &amp; OAA → amino acids &amp; gluconeogenesis; succinyl-CoA → <b>haem synthesis</b>; fumarate ← urea cycle.</li>
+      </ul>
+    </div>
+
+    <div class="mod s">
+      <h3><span class="n">13</span> HMP shunt (pentose phosphate pathway)</h3>
+      <p class="l"><b>Site:</b> cytosol of <b>liver, adipose tissue, lactating mammary gland, adrenal cortex, gonads, RBC and leucocytes</b> — all tissues that need NADPH. Also called the Warburg–Dickens–Horecker or hexose monophosphate pathway. <b>It produces no ATP and consumes none.</b></p>
+      <div class="flow">
+        <span class="s">G-6-P</span><span class="cond"><b>G-6-P dehydrogenase</b> · rate-limiting · NADPH #1</span><span class="ar">→</span><span class="s">6-phosphogluconate</span><span class="cond">6-PG DH · NADPH #2 + CO₂</span><span class="ar">→</span><span class="s">Ribulose-5-P</span>
+      </div>
+      <div class="flow" style="margin-top:2px">
+        <span class="s">Ribulose-5-P</span><span class="ar">→</span><span class="s"><b>Ribose-5-P</b></span><span class="cond">non-oxidative, reversible: transketolase (TPP) &amp; transaldolase</span><span class="ar">→</span><span class="s">F-6-P + G-3-P back to glycolysis</span>
+      </div>
+      <ul class="l">
+        <li><b>Two products, both irreplaceable:</b> <b>NADPH</b> (2 per G-6-P; 12 per glucose fully cycled) and <b>ribose-5-phosphate</b> for nucleotides, ATP, NAD, FAD, CoA.</li>
+        <li><b>What NADPH is spent on:</b> ① <b>fatty acid, cholesterol and steroid-hormone synthesis</b> — hence the pathway's intense activity in adipose tissue, mammary gland and adrenal cortex; ② <b>reduction of glutathione (glutathione reductase) → GSH</b>, the RBC's shield against oxidant damage; ③ the <b>respiratory burst</b> of neutrophils via NADPH oxidase; ④ <b>cytochrome P450</b> hydroxylations in detoxification; ⑤ reduction of folate and of methaemoglobin.</li>
+      </ul>
+      <div class="hook"><b>Clinical anchor:</b> when the NADPH–glutathione shield is overwhelmed, haemoglobin is oxidised → <b>Heinz-body haemolytic anaemia and methaemoglobinaemia</b>. Classic Indian-practice causes: <b>onion and Brassica/kale poisoning in cattle and dogs, paracetamol in the cat, red maple in the horse, and phenothiazine</b>.</div>
+    </div>
+
+    <div class="mod t span2">
+      <h3><span class="n">14</span> Gluconeogenesis · Cori cycle · glycogen metabolism · bioenergetics</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Gluconeogenesis</b> — synthesis of glucose from non-carbohydrate sources. <b>Site: liver (≈90 %) and renal cortex (≈10 %)</b>; spans cytosol, mitochondrion and endoplasmic reticulum. <b>Substrates:</b> lactate, glycerol, <b>propionate (the ruminant's chief one)</b>, and glucogenic amino acids — <b>alanine above all</b>.</p>
+          <table>
+            <tr><th>Bypass enzyme</th><th>Reaction &amp; note</th></tr>
+            <tr><td class="k">Pyruvate carboxylase</td><td>Pyruvate → OAA; <b>mitochondrial, biotin, needs acetyl-CoA as obligatory activator</b></td></tr>
+            <tr><td class="k">PEP carboxykinase</td><td>OAA → PEP; uses <b>GTP</b>; induced by cortisol &amp; glucagon</td></tr>
+            <tr><td class="k">Fructose-1,6-bisphosphatase</td><td><b>Rate-limiting</b>; inhibited by AMP and by fructose-2,6-bisphosphate</td></tr>
+            <tr><td class="k">Glucose-6-phosphatase</td><td>In the ER of <b>liver and kidney only</b> — muscle lacks it, which is why muscle glycogen can never raise blood glucose</td></tr>
+          </table>
+          <div class="mnem"><u>Cost:</u> <b>6 high-energy phosphates (4 ATP + 2 GTP) plus 2 NADH per glucose</b> — gluconeogenesis is expensive, which is why the liver will not run it and glycolysis at the same time (reciprocal regulation).<br><u>Golden rule:</u> <b>acetyl-CoA (and therefore even-chain fatty acids) can never be converted to glucose</b> — the PDH step is irreversible. Only glycerol and odd-chain/propionate carbons from fat are glucogenic.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Cori cycle (lactic acid cycle).</b> Muscle glycolysis under anaerobic work → lactate → blood → liver → gluconeogenesis → glucose → back to muscle. It <b>shifts the metabolic burden of the muscle to the liver</b> and clears lactic acid, at a net cost of <b>4 ATP to the liver</b> for every 2 recovered by muscle.</p>
+          <div class="flow" style="font-size:8px">
+            <span class="s">Muscle glucose → lactate</span><span class="ar">→</span><span class="s">blood</span><span class="ar">→</span><span class="s">Liver lactate → glucose</span><span class="ar">→</span><span class="s">blood → muscle</span>
+          </div>
+          <p class="l">The parallel <b>glucose–alanine (Cahill) cycle</b> carries both the carbon <em>and</em> the amino nitrogen of muscle protein to the liver, where alanine is transaminated to pyruvate for gluconeogenesis and its nitrogen enters the urea cycle.</p>
+          <p class="l"><b>Glycogenesis.</b> <span class="m">Glucose → G-6-P → G-1-P (phosphoglucomutase) → UDP-glucose (uses UTP) → glycogen</span>. <b>Glycogen synthase</b> makes the α1→4 chain on the primer protein <b>glycogenin</b>; <b>branching enzyme</b> (amylo-4,6-transglucosidase) transfers blocks of ~7 residues to make α1→6 branches. Activated by <b>insulin</b> (dephosphorylation).</p>
+          <p class="l"><b>Glycogenolysis.</b> <b>Glycogen phosphorylase</b> (rate-limiting, needs <b>PLP</b>) carries out <em>phosphorolysis</em>, releasing <b>G-1-P</b>; the <b>debranching enzyme</b> (transferase + α1,6-glucosidase) releases the ~8 % of residues at branch points as free glucose. Driven by <b>glucagon and adrenaline via cAMP → protein kinase A</b>, which simultaneously switches synthase off — <em>one signal, opposite effects, no futile cycle</em>.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="hook"><b>Ruminant special (worth a whole long answer):</b> almost no glucose is absorbed from the gut, so the ruminant runs <b>gluconeogenesis continuously, all day</b>, mainly from <b>propionate</b>: <span class="m">propionate → propionyl-CoA → methylmalonyl-CoA →(B₁₂, mutase)→ succinyl-CoA → OAA → glucose</span>. <b>Cobalt/vitamin B₁₂ deficiency blocks this step</b> and causes wasting; and any surge in demand (peak lactation, twin pregnancy) that outruns propionate supply produces <b>ketosis and pregnancy toxaemia</b> — the whole of Unit 3's energy section rests on this paragraph.</div>
+          <table>
+            <tr><th>Process</th><th>ATP</th></tr>
+            <tr><td class="k">Glycolysis, anaerobic</td><td class="m">+2</td></tr>
+            <tr><td class="k">Glycolysis, aerobic (to pyruvate)</td><td class="m">+5 or +7</td></tr>
+            <tr><td class="k">PDH ×2</td><td class="m">+5</td></tr>
+            <tr><td class="k">TCA ×2 acetyl-CoA</td><td class="m">+20</td></tr>
+            <tr><td class="k"><b>Glucose → CO₂ + H₂O</b></td><td class="m"><b>32</b> (30 via glycerol-P shuttle)</td></tr>
+            <tr><td class="k">Gluconeogenesis, cost</td><td class="m">−6</td></tr>
+            <tr><td class="k">Glycogen → lactate (from G-1-P)</td><td class="m">+3</td></tr>
+          </table>
+          <div class="trap"><b>Trap:</b> <b>glycogen storage diseases</b> — <em>von Gierke</em> (type I, glucose-6-phosphatase; severe fasting hypoglycaemia + hepatomegaly), <em>Pompe</em> (type II, lysosomal α-glucosidase; reported in cattle and cats), <em>McArdle</em> (type V, muscle phosphorylase; exercise intolerance with <b>no</b> rise in blood lactate).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Carbohydrate Metabolism</span><span class="m">PFK-1 IN · F-1,6-BPase OUT</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 5 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Lipid Metabolism &amp; Protein Metabolism</h2>
+      <span class="sub">β-oxidation · ketogenesis · lipogenesis · transamination · urea cycle</span>
+    </div>
+    <span class="pg">SHEET 5 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod c">
+      <h3><span class="n">15</span> β-oxidation of fatty acids (Knoop)</h3>
+      <div class="flow">
+        <span class="s">Fatty acid<br><span style="font-weight:400;font-size:7.2px">cytosol</span></span><span class="cond">acyl-CoA synthetase (thiokinase) · ATP→AMP+PPi = <b>2 ~P spent</b></span><span class="ar">→</span><span class="s">Acyl-CoA</span><span class="cond"><b>carnitine shuttle</b>: CPT-I (rate-limiting, inhibited by malonyl-CoA) → translocase → CPT-II</span><span class="ar">→</span><span class="s">Matrix</span>
+      </div>
+      <p class="l"><b>Four repeating steps, each cycle shortening the chain by two carbons</b> — mnemonic <b>"Ox–Hy–Ox–Th"</b>:</p>
+      <ol style="margin:0;padding-left:13px;display:flex;flex-direction:column;gap:1.6px">
+        <li style="font-size:8.7px;line-height:1.35;color:var(--ink-2)"><b>Oxidation</b> — acyl-CoA dehydrogenase → <b>FADH₂</b></li>
+        <li style="font-size:8.7px;line-height:1.35;color:var(--ink-2)"><b>Hydration</b> — enoyl-CoA hydratase</li>
+        <li style="font-size:8.7px;line-height:1.35;color:var(--ink-2)"><b>Oxidation</b> — β-hydroxyacyl-CoA dehydrogenase → <b>NADH</b></li>
+        <li style="font-size:8.7px;line-height:1.35;color:var(--ink-2)"><b>Thiolysis</b> — thiolase → <b>acetyl-CoA</b> + acyl-CoA (n−2)</li>
+      </ol>
+      <div class="mnem"><u>Palmitate (C16) bioenergetics — memorise the arithmetic:</u> <b>7 cycles → 8 acetyl-CoA + 7 FADH₂ + 7 NADH</b>.<br><span class="m">(8 × 10) + (7 × 1.5) + (7 × 2.5) = 80 + 10.5 + 17.5 = 108 − 2 (activation) = <b>106 ATP</b></span> &nbsp;(classical figures: 129 − 2 = <b>129</b>).<br>Cycles = <span class="m">(n/2) − 1</span>; acetyl-CoA = <span class="m">n/2</span>.</div>
+      <ul class="l">
+        <li><b>Carnitine</b> is synthesised from <b>lysine + methionine</b> and is the obligatory ferry for long-chain fatty acids; short and medium chains enter freely. <b>Malonyl-CoA inhibits CPT-I</b> — the elegant switch that stops the cell burning and building fat at once.</li>
+        <li><b>Odd-chain fatty acids</b> end in <b>propionyl-CoA → methylmalonyl-CoA →(B₁₂)→ succinyl-CoA</b> — the only part of a fatty acid that is <b>glucogenic</b>. Unsaturated fatty acids need an extra <b>isomerase and reductase</b>. <b>Very-long-chain fatty acids are shortened in peroxisomes</b>; α-oxidation handles branched phytanic acid; ω-oxidation is a minor microsomal route.</li>
+      </ul>
+    </div>
+
+    <div class="mod a">
+      <h3><span class="n">16</span> Ketone-body formation &amp; fatty acid biosynthesis</h3>
+      <p class="l"><b>Ketogenesis — liver mitochondria only, by the HMG-CoA pathway.</b></p>
+      <div class="flow" style="font-size:8px">
+        <span class="s">2 Acetyl-CoA</span><span class="ar">→</span><span class="s">Acetoacetyl-CoA</span><span class="cond"><b>HMG-CoA synthase</b> — rate-limiting</span><span class="ar">→</span><span class="s">HMG-CoA</span><span class="cond">HMG-CoA lyase</span><span class="ar">→</span><span class="s"><b>Acetoacetate</b></span>
+      </div>
+      <div class="flow" style="margin-top:2px;font-size:8px">
+        <span class="s">Acetoacetate</span><span class="cond">BHB dehydrogenase, NADH</span><span class="ar">→</span><span class="s"><b>β-hydroxybutyrate</b> — the major one</span><span class="ar">·</span><span class="cond">spontaneous decarboxylation</span><span class="ar">→</span><span class="s"><b>Acetone</b> — exhaled, "sweet breath"</span>
+      </div>
+      <ul class="l">
+        <li><b>The liver makes ketones but cannot use them</b> — it lacks <b>thiophorase (succinyl-CoA : acetoacetate CoA transferase)</b>. Heart, skeletal muscle, renal cortex and, in prolonged starvation, the <b>brain</b> oxidise them; ketone bodies are water-soluble, need no carrier and <b>spare glucose</b>.</li>
+        <li><b>Trigger in every species:</b> low insulin / high glucagon → unrestrained lipolysis → acetyl-CoA floods the liver, while <b>oxaloacetate is drained away into gluconeogenesis</b>, so acetyl-CoA cannot enter the TCA cycle. Hence the classical statement — <b>"fat burns in the flame of carbohydrate."</b></li>
+        <li><b>Causes:</b> starvation, high-fat/low-carbohydrate diet, <b>diabetes mellitus</b>, <b>bovine ketosis</b> of early lactation, <b>pregnancy toxaemia</b> of the ewe and doe.</li>
+      </ul>
+      <div class="hook"><b>Ruminant twist:</b> β-hydroxybutyrate is a <em>normal</em> ruminant metabolite — the rumen epithelium converts absorbed <b>butyrate</b> to BHB during every meal. Ketosis is therefore a matter of degree, and BHB is the field test: <b>&lt;1.0 mmol/L normal · 1.2–1.4 subclinical · &gt;2.6–3.0 clinical ketosis</b>.</div>
+      <p class="l"><b>Fatty acid biosynthesis (de novo lipogenesis) — cytosol.</b> Acetyl-CoA is exported from the mitochondrion as <b>citrate</b> (ATP-citrate lyase). <b>Acetyl-CoA carboxylase is the rate-limiting enzyme</b>: it needs <b>biotin, CO₂ and ATP</b>, is <b>activated by citrate and insulin</b> and <b>inhibited by palmitoyl-CoA, glucagon and adrenaline</b>, and it makes <b>malonyl-CoA</b>. <b>Fatty acid synthase</b>, a multienzyme dimer carrying <b>ACP (phosphopantetheine, from pantothenic acid)</b>, then repeats condensation → reduction → dehydration → reduction and <b>stops at palmitate (C16)</b>. Per palmitate: <b>8 acetyl-CoA, 7 ATP, 14 NADPH</b> (from the HMP shunt and malic enzyme). Elongation and desaturation (Δ9, Δ6, Δ5 only) follow in the ER.</p>
+      <div class="trap"><b>Species trap:</b> in <b>ruminants the principal site of lipogenesis is adipose tissue and the mammary gland, not the liver</b>, and the starting material is <b>acetate absorbed from the rumen</b>, not citrate-derived acetyl-CoA. This is why a low-fibre ration (less acetate) causes <b>milk-fat depression</b>.</div>
+    </div>
+
+    <div class="mod p span2">
+      <h3><span class="n">17</span> Protein metabolism — biosynthesis, degradation and the fate of the amino group</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Amino acid pool &amp; nitrogen balance.</b> Dietary protein, tissue protein turnover and de-novo synthesis feed a common pool (≈100 g in an adult) drawn on for protein synthesis, hormones, purines, haem, creatine, and for energy. <b>Positive balance</b> = growth, pregnancy, lactation, convalescence; <b>negative balance</b> = starvation, fever, trauma, parasitism, protein-deficient ration.</p>
+          <p class="l"><b>Degradation</b> follows two routes: the <b>ATP-dependent ubiquitin–proteasome system</b> in the cytosol for short-lived and abnormal proteins (tagged by polyubiquitin), and <b>lysosomal cathepsins</b> for extracellular and membrane proteins. <b>Biosynthesis</b> is ribosomal translation of mRNA (see Sheet 6).</p>
+          <div class="dl">
+            <dt>Transamination</dt><dd>Reversible transfer of an α-amino group to an α-keto acid. Coenzyme <b>pyridoxal phosphate (B₆)</b>. <b>ALT</b>: alanine + α-KG ⇌ pyruvate + glutamate. <b>AST</b>: aspartate + α-KG ⇌ OAA + glutamate. <em>Every amino acid except lysine, threonine, proline and hydroxyproline</em> undergoes it. Its purpose is to <b>funnel all nitrogen into glutamate</b>. Leakage of ALT/AST into serum is the basis of liver and muscle profiling in Unit 3.</dd>
+            <dt>Deamination</dt><dd><b>Oxidative</b> — <b>glutamate dehydrogenase</b> (mitochondrial, NAD(P)⁺, reversible, allosterically inhibited by ATP/GTP and activated by ADP/GDP) is the chief route and the only one that liberates ammonia rapidly; L- and D-amino acid oxidases (FMN/FAD) are minor and give H₂O₂. <b>Non-oxidative</b> — serine/threonine dehydratase, cysteine desulphydrase, histidase.</dd>
+            <dt>Transdeamination</dt><dd><b>Transamination + oxidative deamination coupled</b> — the combined route by which the nitrogen of almost all amino acids finally reaches ammonia.</dd>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Decarboxylation</b> (PLP-dependent) removes −COOH as CO₂ and yields the <b>biogenic amines</b> — small marks, frequently asked:</p>
+          <table>
+            <tr><th>Amino acid</th><th>Amine</th><th>Action</th></tr>
+            <tr><td class="k">Histidine</td><td><b>Histamine</b></td><td>Allergy, gastric HCl, vasodilation</td></tr>
+            <tr><td class="k">Tryptophan</td><td><b>Serotonin</b> → melatonin</td><td>Neurotransmitter, gut motility</td></tr>
+            <tr><td class="k">Tyrosine</td><td><b>Dopamine → NA → adrenaline</b>; DOPA → melanin</td><td>Catecholamines, pigment</td></tr>
+            <tr><td class="k">Glutamate</td><td><b>GABA</b></td><td>Chief inhibitory transmitter</td></tr>
+            <tr><td class="k">Cysteine</td><td><b>Taurine</b></td><td>Bile salts; essential in the cat</td></tr>
+            <tr><td class="k">Ornithine / lysine</td><td>Putrescine, spermine, spermidine, cadaverine</td><td>Polyamines — cell proliferation</td></tr>
+            <tr><td class="k">Serine</td><td>Ethanolamine → choline</td><td>Phospholipid, acetylcholine</td></tr>
+          </table>
+          <p class="l">Amines are inactivated by <b>monoamine and diamine oxidases</b>. In the gut, bacterial decarboxylation of unabsorbed amino acids yields putrefactive amines — relevant to Unit 3 digestive disorders.</p>
+          <p class="l"><b>Ammonia transport.</b> Free NH₃ is intensely neurotoxic (it drains α-ketoglutarate from the brain's TCA cycle and swells astrocytes as glutamine accumulates). It travels in blood in two safe forms: <b>glutamine</b> (glutamine synthetase, ATP; released by glutaminase in liver and kidney) — the principal carrier — and <b>alanine</b> from muscle by the glucose–alanine cycle.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Urea cycle (Krebs–Henseleit, 1932) — liver only; steps 1–2 mitochondrial, 3–5 cytosolic.</b></p>
+          <table>
+            <tr><th>#</th><th>Enzyme</th><th>Product / note</th></tr>
+            <tr><td class="k">1</td><td><b>Carbamoyl phosphate synthetase I</b></td><td>NH₃ + CO₂ + <b>2 ATP</b>; <b>rate-limiting</b>; absolutely requires <b>N-acetylglutamate</b> as activator</td></tr>
+            <tr><td class="k">2</td><td>Ornithine transcarbamoylase</td><td>+ ornithine → <b>citrulline</b></td></tr>
+            <tr><td class="k">3</td><td>Argininosuccinate synthetase</td><td>+ <b>aspartate</b> (the 2nd nitrogen); ATP → AMP + PPi = <b>2 ~P</b></td></tr>
+            <tr><td class="k">4</td><td>Argininosuccinate lyase</td><td>→ arginine + <b>fumarate</b> — the link to the TCA cycle ("Krebs bicycle")</td></tr>
+            <tr><td class="k">5</td><td><b>Arginase</b> (Mn²⁺, liver-specific)</td><td>→ <b>UREA</b> + ornithine (recycled)</td></tr>
+          </table>
+          <div class="mnem"><u>Remember:</u> <b>Ordinarily, Careless Crappers Are Also Frivolous About Urination</b> — <b>O</b>rnithine, <b>C</b>arbamoyl-P, <b>C</b>itrulline, <b>A</b>rgininosuccinate, <b>A</b>rginine, <b>F</b>umarate, <b>U</b>rea.<br><b>Cost: 4 ATP equivalents (3 ATP molecules) per urea.</b> One nitrogen from free ammonia, one from <b>aspartate</b>; the carbon from CO₂.</div>
+          <div class="hook"><b>Clinical payoffs:</b> ① <b>Portosystemic shunt</b> in the dog — high blood ammonia, <b>low BUN</b>, ammonium biurate crystals, hepatic encephalopathy. ② <b>Urea poisoning in ruminants</b> — rumen urease liberates NH₃ faster than the liver can clear it; rumen pH rises, absorption accelerates; treat with <b>cold water + 5 % acetic acid (vinegar)</b>. ③ <b>Nitrogen recycling</b> — urea returns to the rumen in saliva and across the wall, where microbes reuse it, so ruminants thrive on non-protein nitrogen. ④ Ureotelic (mammals) vs <b>uricotelic (birds, reptiles)</b> vs ammonotelic (fish).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Lipid &amp; Protein Metabolism</span><span class="m">FAT BURNS IN THE FLAME OF CARBOHYDRATE</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 6 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 2</span>
+      <h2>Nucleotide Metabolism · DNA &amp; RNA Synthesis · Integration</h2>
+      <span class="sub">Plus the final recall bank</span>
+    </div>
+    <span class="pg">SHEET 6 / 6</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod p">
+      <h3><span class="n">18</span> Purine &amp; pyrimidine metabolism</h3>
+      <div class="dl">
+        <dt>Purine —<br>de novo</dt><dd>Built <b>on the ribose</b>: R-5-P →(PRPP synthetase)→ <b>PRPP</b> →(<b>glutamine-PRPP amidotransferase — committed, rate-limiting step, feedback-inhibited by AMP, GMP and IMP</b>)→ 11 steps → <b>IMP</b> → AMP (needs <b>GTP</b> + aspartate) or GMP (needs <b>ATP</b> + glutamine). The reciprocal ATP/GTP requirement keeps the two pools balanced. Atoms come from glycine, glutamine, aspartate, CO₂ and formyl-THF.</dd>
+        <dt>Purine —<br>salvage</dt><dd><b>HGPRT</b> (hypoxanthine, guanine) and <b>APRT</b> (adenine) reattach free bases to PRPP — energetically far cheaper, and vital in brain and bone marrow, which cannot synthesise de novo.</dd>
+        <dt>Purine —<br>catabolism</dt><dd>AMP/GMP → inosine/guanosine → <b>hypoxanthine → xanthine → uric acid</b> by <b>xanthine oxidase (a molybdenum flavoprotein of liver and intestinal mucosa)</b>. Most mammals then convert uric acid to soluble <b>allantoin</b> by <b>uricase</b>.</dd>
+        <dt>Pyrimidine</dt><dd>The <b>ring is made first and attached to PRPP afterwards</b>. <b>CPS-II</b> (cytosolic, uses glutamine, <em>needs no N-acetylglutamate</em>) is rate-limiting → carbamoyl aspartate → dihydroorotate → orotate → OMP → <b>UMP → UTP → CTP</b>. <b>dTMP</b> comes from dUMP by <b>thymidylate synthase</b> using N⁵,N¹⁰-methylene-THF.</dd>
+        <dt>Deoxy-<br>ribonucleotides</dt><dd><b>Ribonucleotide reductase</b> reduces NDP → dNDP using <b>thioredoxin</b>; allosterically regulated; inhibited by hydroxyurea.</dd>
+      </div>
+      <div class="hook"><b>The three points that always appear:</b> ① <b>Birds and reptiles are uricotelic</b> — they lack uricase and excrete uric acid as a paste; overload gives <b>avian visceral and articular gout</b> (high-protein ration, renal damage, water deprivation). ② The <b>Dalmatian dog</b> handles urate abnormally and forms <b>urate uroliths</b>. ③ <b>Allopurinol</b> is a <em>suicide inhibitor of xanthine oxidase</em>; <b>5-fluorouracil</b> blocks thymidylate synthase and <b>methotrexate</b> blocks dihydrofolate reductase — the classical antimetabolites. Pyrimidine catabolism, by contrast, gives soluble β-alanine and β-aminoisobutyrate, so <b>pyrimidines never form stones</b>.</div>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">19</span> DNA &amp; RNA biosynthesis and its regulation</h3>
+      <p class="l"><b>Replication</b> is <b>semi-conservative</b> (Meselson–Stahl), bidirectional from an origin, and every polymerase works <b>only 5′→3′</b>.</p>
+      <div class="flow" style="font-size:8px">
+        <span class="s">Helicase unwinds</span><span class="ar">→</span><span class="s">SSB + topoisomerase/gyrase</span><span class="ar">→</span><span class="s">Primase lays RNA primer</span><span class="ar">→</span><span class="s">DNA pol III extends</span><span class="ar">→</span><span class="s">Pol I removes primer</span><span class="ar">→</span><span class="s">Ligase seals</span>
+      </div>
+      <ul class="l">
+        <li><b>Leading strand continuous; lagging strand discontinuous as Okazaki fragments.</b> Fidelity comes from the <b>3′→5′ exonuclease proofreading</b> of the polymerase. Eukaryotic polymerases: α (primase), δ and ε (elongation), γ (mitochondrial); telomerase extends chromosome ends.</li>
+        <li><b>Transcription:</b> DNA-dependent RNA polymerase, <b>needs no primer</b>, reads the <b>template (antisense) strand 3′→5′</b> and builds RNA 5′→3′. Prokaryotic core α₂ββ′ω + <b>sigma factor</b> for promoter recognition (<b>Pribnow box TATAAT at −10</b>), <b>rho factor</b> for termination. Eukaryotes: <b>RNA pol I → rRNA, pol II → mRNA, pol III → tRNA &amp; 5S</b>; TATA (Hogness) box.</li>
+        <li><b>Post-transcriptional processing</b> of eukaryotic mRNA: <b>5′ capping with 7-methylguanosine, 3′ polyadenylation, and splicing out of introns by the spliceosome</b>.</li>
+        <li><b>Inhibitors worth naming:</b> <b>rifampicin</b> → bacterial RNA polymerase; <b>actinomycin D</b> → intercalates DNA; <b>α-amanitin</b> → RNA pol II (<em>Amanita</em> mushroom poisoning); <b>fluoroquinolones</b> → DNA gyrase; acyclovir/AZT → nucleoside analogues.</li>
+        <li><b>Regulation — Jacob &amp; Monod operon model.</b> <b>lac operon (inducible)</b>: allolactose inactivates the repressor, transcription begins; superimposed <b>catabolite repression</b> by glucose via cAMP–CAP. <b>trp operon (repressible)</b>: tryptophan acts as co-repressor and switches the operon off. In eukaryotes: promoters and <b>enhancers, transcription factors, steroid-hormone response elements, DNA methylation, histone acetylation and miRNA</b>.</li>
+        <li><b>Translation:</b> the genetic code is a <b>triplet, degenerate, non-overlapping, comma-less and near-universal</b>; <b>AUG</b> starts, <b>UAA/UAG/UGA</b> stop; wobble at the third base. Antibiotics: <b>streptomycin &amp; aminoglycosides (30 S, misreading), tetracycline (30 S A-site), chloramphenicol (50 S peptidyl transferase), macrolides (50 S translocation)</b>.</li>
+      </ul>
+    </div>
+
+    <div class="mod s span2">
+      <h3><span class="n">20</span> Regulation &amp; integration of metabolism</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Three junction molecules</b> decide the fate of everything: <b>glucose-6-phosphate</b> (glycogen / glycolysis / HMP shunt), <b>pyruvate</b> (lactate / acetyl-CoA / OAA / alanine) and <b>acetyl-CoA</b> — the true crossroads, from which carbon can go to <b>TCA, fatty acids, cholesterol or ketone bodies but <em>never back to glucose</em></b>.</p>
+          <table>
+            <tr><th>Organ</th><th>Metabolic character</th></tr>
+            <tr><td class="k">Liver</td><td>The <b>glucostat</b> and central processing plant — glycogen, gluconeogenesis, ketogenesis, urea, lipoproteins, detoxification</td></tr>
+            <tr><td class="k">Brain</td><td>Obligate glucose user; switches to <b>ketone bodies</b> only after days of starvation; no fuel stores</td></tr>
+            <tr><td class="k">Skeletal muscle</td><td>Glycogen <em>for its own use only</em>; the body's <b>protein reserve</b>; exports alanine and lactate</td></tr>
+            <tr><td class="k">Adipose tissue</td><td>Triacylglycerol store; hormone-sensitive lipase is the tap</td></tr>
+            <tr><td class="k">RBC</td><td><b>Anaerobic glycolysis only</b> — no mitochondria</td></tr>
+            <tr><td class="k">Kidney</td><td>Gluconeogenesis and ammoniagenesis in acidosis</td></tr>
+          </table>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Fed state (insulin dominant):</b> glucose uptake via GLUT-4, <b>glycogenesis, lipogenesis, protein synthesis</b>; glycolysis and the HMP shunt run; PDH is dephosphorylated and active.</p>
+          <p class="l"><b>Fasting and starvation (glucagon, adrenaline, cortisol, GH):</b> a strict sequence — <b>① hepatic glycogenolysis</b> (first 12–24 h) → <b>② gluconeogenesis</b> from amino acids, lactate and glycerol → <b>③ lipolysis and ketogenesis</b>, which spare glucose for the brain → <b>④ protein catabolism</b> as the last resort. Muscle switches to fatty acids and ketones within days.</p>
+          <table>
+            <tr><th>Hormone</th><th>Effect on blood glucose</th></tr>
+            <tr><td class="k"><b>Insulin</b></td><td><b>The only hypoglycaemic hormone</b> — uptake, glycogenesis, lipogenesis</td></tr>
+            <tr><td class="k">Glucagon</td><td>↑ glycogenolysis, gluconeogenesis, ketogenesis (liver only)</td></tr>
+            <tr><td class="k">Adrenaline</td><td>↑ glycogenolysis in liver <em>and</em> muscle; lipolysis</td></tr>
+            <tr><td class="k">Cortisol</td><td>↑ gluconeogenesis, protein catabolism, insulin resistance</td></tr>
+            <tr><td class="k">GH, thyroxine, ACTH</td><td>Hyperglycaemic, anti-insulin</td></tr>
+          </table>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="hook"><b>Ruminant integration — write this as your conclusion in any long answer:</b> the ruminant absorbs virtually no glucose. Instead it absorbs <b>VFAs: acetate (≈65 %) → lipogenesis and milk fat; propionate (≈20 %) → the sole major gluconeogenic precursor; butyrate (≈15 %) → converted to β-hydroxybutyrate by the rumen wall</b>. Therefore the ruminant is permanently gluconeogenic, permanently mildly ketogenic, and any negative energy balance — <b>peak lactation, twin pregnancy, transport, anorexia</b> — tips it straight into <b>ketosis or pregnancy toxaemia</b>. Everything in Unit 3's energy-disorder section is this paragraph applied clinically.</div>
+          <div class="trap"><b>Trap:</b> the ruminant's low blood glucose (45–60 mg/dL) is <em>normal</em>, not hypoglycaemia; and a "normal" glucose in a ketotic cow does not exclude ketosis — <b>BHB, not glucose, is the diagnostic analyte</b>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">21</span> Final recall bank — read these last, straight before the paper</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div class="qa">
+          <div><span>Enzyme class of transaminases</span><span>Transferases (class 2)</span></div>
+          <div><span>Enzyme class needing ATP to join</span><span>Ligases / synthetases (6)</span></div>
+          <div><span>Apoenzyme + cofactor</span><span>Holoenzyme</span></div>
+          <div><span>Coenzyme of transamination</span><span>Pyridoxal phosphate (B₆)</span></div>
+          <div><span>Coenzyme of carboxylation</span><span>Biotin</span></div>
+          <div><span>Vitamin bound by avidin</span><span>Biotin</span></div>
+          <div><span>Coenzyme of methylmalonyl-CoA mutase</span><span>Vitamin B₁₂ (cobalt)</span></div>
+          <div><span>Selenium enzyme</span><span>Glutathione peroxidase</span></div>
+          <div><span>Molybdenum enzyme</span><span>Xanthine oxidase</span></div>
+          <div><span>LDH isoenzyme of heart / liver</span><span>LDH-1 (H₄) / LDH-5 (M₄)</span></div>
+          <div><span>ALP isoenzyme unique to dogs</span><span>Corticosteroid-induced C-ALP</span></div>
+          <div><span>Modern concept of the active site</span><span>Koshland's induced fit</span></div>
+          <div><span>Enzyme with absolute specificity</span><span>Urease</span></div>
+          <div><span>Enzyme showing stereospecificity</span><span>Fumarase (trans only)</span></div>
+          <div><span>Km equals</span><span>[S] at ½ V<sub>max</sub></span></div>
+          <div><span>Low Km means</span><span>High substrate affinity</span></div>
+          <div><span>Km independent of</span><span>Enzyme concentration</span></div>
+          <div><span>Lineweaver–Burk x-intercept</span><span>−1/K<sub>m</sub></span></div>
+          <div><span>Definition of 1 katal</span><span>1 mol substrate per second</span></div>
+          <div><span>1 katal in IU</span><span>6 × 10⁷ IU</span></div>
+          <div><span>Index of enzyme purity</span><span>Specific activity</span></div>
+          <div><span>Highest turnover number</span><span>Carbonic anhydrase</span></div>
+          <div><span>Malonate inhibits</span><span>Succinate DH — competitive</span></div>
+          <div><span>Cyanide inhibits</span><span>Cytochrome oxidase (Complex IV)</span></div>
+          <div><span>Organophosphates inhibit</span><span>Acetylcholinesterase — irreversible</span></div>
+          <div><span>Inhibition with parallel LB lines</span><span>Uncompetitive</span></div>
+          <div><span>Kinetics of allosteric enzymes</span><span>Sigmoid, not Michaelis–Menten</span></div>
+          <div><span>Chemiosmotic theory given by</span><span>Peter Mitchell, 1961</span></div>
+          <div><span>Complex that pumps no protons</span><span>Complex II (SDH)</span></div>
+          <div><span>Inhibitor of ATP synthase</span><span>Oligomycin</span></div>
+          <div><span>Classical uncoupler</span><span>2,4-Dinitrophenol</span></div>
+          <div><span>Physiological uncoupler</span><span>Thermogenin (UCP-1), brown fat</span></div>
+          <div><span>P : O ratio of NADH / FADH₂</span><span>2.5 / 1.5</span></div>
+        </div>
+        <div class="qa">
+          <div><span>Rate-limiting enzyme of glycolysis</span><span>Phosphofructokinase-1</span></div>
+          <div><span>Glycolysis inhibitor used in glucose tubes</span><span>Sodium fluoride (enolase)</span></div>
+          <div><span>Liver glucose sensor enzyme</span><span>Glucokinase (high K<sub>m</sub>)</span></div>
+          <div><span>Net ATP of anaerobic glycolysis</span><span>2</span></div>
+          <div><span>Coenzymes of the PDH complex</span><span>TPP, lipoamide, CoA, FAD, NAD⁺</span></div>
+          <div><span>Rate-limiting enzyme of TCA</span><span>Isocitrate dehydrogenase</span></div>
+          <div><span>Only substrate-level phosphorylation in TCA</span><span>Succinyl-CoA synthetase (GTP)</span></div>
+          <div><span>Fluoroacetate poisoning blocks</span><span>Aconitase</span></div>
+          <div><span>ATP per acetyl-CoA in TCA</span><span>10</span></div>
+          <div><span>Total ATP per glucose</span><span>32 (30 via glycerol-P shuttle)</span></div>
+          <div><span>Rate-limiting enzyme of HMP shunt</span><span>Glucose-6-P dehydrogenase</span></div>
+          <div><span>Two products of the HMP shunt</span><span>NADPH + ribose-5-phosphate</span></div>
+          <div><span>Enzyme absent in muscle</span><span>Glucose-6-phosphatase</span></div>
+          <div><span>Chief gluconeogenic substrate in ruminants</span><span>Propionate</span></div>
+          <div><span>ATP cost of gluconeogenesis</span><span>6 per glucose</span></div>
+          <div><span>Muscle lactate → liver glucose</span><span>Cori cycle</span></div>
+          <div><span>Glycogen synthesis donor</span><span>UDP-glucose</span></div>
+          <div><span>Glycogen primer protein</span><span>Glycogenin</span></div>
+          <div><span>Coenzyme of glycogen phosphorylase</span><span>Pyridoxal phosphate</span></div>
+          <div><span>Rate-limiting step of β-oxidation entry</span><span>Carnitine palmitoyl transferase-I</span></div>
+          <div><span>CPT-I is inhibited by</span><span>Malonyl-CoA</span></div>
+          <div><span>ATP from complete oxidation of palmitate</span><span>106</span></div>
+          <div><span>Rate-limiting enzyme of ketogenesis</span><span>HMG-CoA synthase</span></div>
+          <div><span>Major ketone body</span><span>β-hydroxybutyrate</span></div>
+          <div><span>Enzyme the liver lacks for ketone use</span><span>Thiophorase</span></div>
+          <div><span>Rate-limiting enzyme of lipogenesis</span><span>Acetyl-CoA carboxylase (biotin)</span></div>
+          <div><span>Fatty acid synthase stops at</span><span>Palmitate, C16</span></div>
+          <div><span>NADPH needed per palmitate</span><span>14</span></div>
+          <div><span>Chief oxidative deamination enzyme</span><span>Glutamate dehydrogenase</span></div>
+          <div><span>Chief transporter of ammonia</span><span>Glutamine</span></div>
+          <div><span>Rate-limiting enzyme of urea cycle</span><span>CPS-I (needs N-acetylglutamate)</span></div>
+          <div><span>ATP spent per molecule of urea</span><span>4 high-energy equivalents</span></div>
+          <div><span>Liver-specific urea cycle enzyme</span><span>Arginase (Mn²⁺)</span></div>
+          <div><span>Committed step of purine synthesis</span><span>PRPP amidotransferase</span></div>
+          <div><span>Enzyme inhibited by allopurinol</span><span>Xanthine oxidase</span></div>
+          <div><span>Operon model proposed by</span><span>Jacob &amp; Monod</span></div>
+        </div>
+      </div>
+      <div class="mnem" style="margin-top:2px"><u>Thirty-second closing sweep:</u> <b>OTHLIL six classes</b> · <b>Km = [S] at ½Vmax; competitive raises Km, non-competitive lowers Vmax</b> · <b>1 katal = 6×10⁷ IU</b> · <b>malonate ⟂ SDH, cyanide ⟂ complex IV, oligomycin ⟂ complex V, DNP uncouples</b> · <b>PFK-1 in, F-1,6-BPase out</b> · <b>isocitrate DH is TCA's rate-limiter; 10 ATP per acetyl-CoA</b> · <b>G-6-PD makes NADPH; onion &amp; paracetamol break the shield</b> · <b>CPT-I blocked by malonyl-CoA; palmitate = 106 ATP</b> · <b>HMG-CoA synthase makes ketones, liver lacks thiophorase</b> · <b>CPS-I needs N-acetylglutamate; 4 ~P per urea</b> · <b>acetyl-CoA can never become glucose</b> · <b>propionate is the ruminant's glucose</b>.</div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 2 · Nucleotides, Nucleic Acids &amp; Integration</span><span class="m">END OF UNIT 2 — 6 SHEETS</span></div>
+</section>
+
+</div>

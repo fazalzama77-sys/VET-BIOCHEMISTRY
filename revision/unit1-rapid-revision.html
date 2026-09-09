@@ -1,0 +1,887 @@
+<title>Unit 1 Sixty-Minute Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --ink:#0e1c29; --ink-2:#33465a; --muted:#63758a; --faint:#8a9aab;
+  --ground:#eef3f8; --surface:#ffffff; --surface-2:#f6f9fc;
+  --rule:rgba(21,101,192,.18); --rule-soft:rgba(21,101,192,.10);
+  --blue:#1565c0; --teal:#00897b; --purple:#6a48b5; --amber:#b25e00;
+  --coral:#d84315; --sage:#2e7d32;
+  --blue-w:rgba(21,101,192,.07); --teal-w:rgba(0,137,123,.07);
+  --purple-w:rgba(106,72,181,.07); --amber-w:rgba(178,94,0,.08);
+  --coral-w:rgba(216,67,21,.07); --sage-w:rgba(46,125,50,.07);
+  --shadow:0 1px 2px rgba(14,28,41,.05), 0 10px 30px rgba(14,28,41,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+    --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+    --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+    --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+    --coral:#f5825c; --sage:#68c46d;
+    --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+    --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+    --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+  --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+  --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+  --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+  --coral:#f5825c; --sage:#68c46d;
+  --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+  --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+  --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Inter",system-ui,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; padding:22px 14px 60px;
+}
+.wrap{max-width:210mm;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* ---------- top bar (screen only) ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;
+  padding:12px 16px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.bar h1{margin:0;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.bar p{margin:0;font-size:11.5px;color:var(--muted);flex:1 1 240px;line-height:1.45}
+.bar .go{
+  font:600 11px/1 "Inter",sans-serif;letter-spacing:.04em;
+  border:1px solid var(--blue);color:var(--blue);background:transparent;
+  padding:7px 12px;border-radius:6px;cursor:pointer;
+}
+.bar .go:hover{background:var(--blue-w)}
+.bar .go:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* ---------- sheet ---------- */
+.sheet{
+  width:210mm;min-height:297mm;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);
+  padding:11mm 10mm 8mm;position:relative;
+  display:flex;flex-direction:column;gap:3.6mm;
+}
+.head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+  border-bottom:2px solid var(--blue);padding-bottom:4px;
+}
+.head .l{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.head .unit{
+  font:800 9px/1 "Inter",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:var(--blue);padding:4px 7px;border-radius:3px;
+}
+.head h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.015em}
+.head .sub{font-size:9.5px;color:var(--muted);font-weight:500}
+.head .pg{font:700 9px/1 "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.06em;white-space:nowrap}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:3.2mm;align-content:start}
+.grid.thirds{grid-template-columns:1fr 1fr 1fr}
+.span2{grid-column:1/-1}
+
+/* ---------- module ---------- */
+.mod{
+  border:1px solid var(--rule-soft);border-left:2.5px solid var(--blue);
+  border-radius:3px;background:var(--surface-2);padding:5px 7px 6px;
+  display:flex;flex-direction:column;gap:3.5px;break-inside:avoid;
+}
+.mod>h3{
+  margin:0;font:800 8.6px/1.2 "Inter",sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--blue);display:flex;gap:6px;align-items:center;
+}
+.mod>h3 .n{
+  font:700 7.6px/1 "JetBrains Mono",monospace;color:var(--surface);
+  background:var(--blue);border-radius:2px;padding:2.5px 3.5px;letter-spacing:0;
+}
+.mod.t{border-left-color:var(--teal);background:var(--teal-w)}
+.mod.t>h3{color:var(--teal)} .mod.t>h3 .n{background:var(--teal)}
+.mod.p{border-left-color:var(--purple);background:var(--purple-w)}
+.mod.p>h3{color:var(--purple)} .mod.p>h3 .n{background:var(--purple)}
+.mod.a{border-left-color:var(--amber);background:var(--amber-w)}
+.mod.a>h3{color:var(--amber)} .mod.a>h3 .n{background:var(--amber)}
+.mod.c{border-left-color:var(--coral);background:var(--coral-w)}
+.mod.c>h3{color:var(--coral)} .mod.c>h3 .n{background:var(--coral)}
+.mod.s{border-left-color:var(--sage);background:var(--sage-w)}
+.mod.s>h3{color:var(--sage)} .mod.s>h3 .n{background:var(--sage)}
+.mod.b{background:var(--blue-w)}
+
+/* ---------- text primitives ---------- */
+p.l{margin:0;font-size:8.7px;line-height:1.42;color:var(--ink-2)}
+ul.l{margin:0;padding-left:11px;display:flex;flex-direction:column;gap:1.8px}
+ul.l li{font-size:8.7px;line-height:1.38;color:var(--ink-2)}
+ul.l li::marker{color:var(--faint)}
+b,strong{color:var(--ink);font-weight:700}
+em{font-style:normal;color:var(--coral);font-weight:700}
+code,.m{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:8.1px;font-weight:600;color:var(--ink)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:1.8px 7px;font-size:8.7px;line-height:1.35}
+.dl dt{font-weight:700;color:var(--ink);white-space:nowrap}
+.dl dd{margin:0;color:var(--ink-2)}
+
+/* ---------- table ---------- */
+table{border-collapse:collapse;width:100%;font-size:8.3px;line-height:1.3}
+th,td{border:1px solid var(--rule-soft);padding:2.6px 4px;text-align:left;vertical-align:top;color:var(--ink-2)}
+th{background:var(--blue-w);color:var(--ink);font-weight:700;font-size:7.9px;letter-spacing:.03em;text-transform:uppercase}
+td.k{font-weight:700;color:var(--ink);white-space:nowrap}
+td .m{font-size:7.9px}
+.scroll{overflow-x:auto}
+
+/* ---------- chips / callouts ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{
+  font:600 7.9px/1.25 "Inter",sans-serif;border:1px solid var(--rule);
+  background:var(--surface);border-radius:9px;padding:2.4px 6px;color:var(--ink-2);
+}
+.chip b{color:var(--ink)}
+.mnem{
+  border:1px dashed var(--amber);background:var(--amber-w);border-radius:3px;
+  padding:4px 6px;font-size:8.5px;line-height:1.35;color:var(--ink-2);
+}
+.mnem u{text-decoration:none;color:var(--amber);font-weight:800}
+.hook{
+  border-left:2.5px solid var(--coral);background:var(--coral-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.hook b{color:var(--coral)}
+.trap{
+  border-left:2.5px solid var(--purple);background:var(--purple-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.trap b{color:var(--purple)}
+
+/* value strip */
+.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:3px}
+.val{border:1px solid var(--rule-soft);background:var(--surface);border-radius:3px;padding:3px 4px;text-align:center}
+.val .v{font:700 10px/1.1 "JetBrains Mono",monospace;color:var(--blue);font-variant-numeric:tabular-nums}
+.val .c{font-size:7.4px;color:var(--muted);line-height:1.25;margin-top:1.5px;display:block}
+
+/* flow arrows */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:3px;font-size:8.3px;color:var(--ink-2)}
+.flow .s{border:1px solid var(--rule);background:var(--surface);border-radius:3px;padding:2.4px 5px;font-weight:600;color:var(--ink)}
+.flow .ar{color:var(--faint);font-weight:700}
+.flow .cond{font:600 7.4px/1 "Inter",sans-serif;color:var(--teal)}
+
+svg{display:block;width:100%;height:auto}
+.cap{font-size:7.4px;color:var(--faint);line-height:1.3}
+
+/* recall grid p5 */
+.qa{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden}
+.qa div{display:grid;grid-template-columns:1.15fr 1fr;font-size:8.3px;line-height:1.32}
+.qa div:nth-child(odd){background:var(--surface)}
+.qa div>span{padding:2.4px 5px;border-bottom:1px solid var(--rule-soft)}
+.qa div>span:first-child{color:var(--ink-2);border-right:1px solid var(--rule-soft)}
+.qa div>span:last-child{font-weight:700;color:var(--ink)}
+.qa div:last-child>span{border-bottom:0}
+
+.foot{
+  margin-top:auto;border-top:1px solid var(--rule-soft);padding-top:3.5px;
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:7.4px;color:var(--faint);letter-spacing:.02em;
+}
+.foot .m{font-size:7.4px;color:var(--faint);font-weight:600}
+
+@media print{
+  body{background:#fff;padding:0}
+  .bar{display:none}
+  .wrap{max-width:none;gap:0}
+  .sheet{box-shadow:none;border:0;border-radius:0;break-after:page;page-break-after:always;min-height:297mm}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
+}
+@page{size:A4;margin:0}
+@media (max-width:230mm){
+  .wrap,.sheet{width:100%;min-width:0}
+  .sheet{padding:14px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<div class="bar">
+  <h1>Unit&nbsp;1 · Sixty-Minute Sheet</h1>
+  <p>General Veterinary Biochemistry, VCI 2+1 syllabus, compressed to 5 printable A4 sides. Read left column then right, page by page. Coral = examiner's favourite. Purple = the trap that costs marks.</p>
+  <button class="go" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ═══════════════════════ SHEET 1 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 1</span>
+      <h2>Membranes · Transport · Donnan · pH &amp; Buffers</h2>
+      <span class="sub">Syllabus lines 1–4</span>
+    </div>
+    <span class="pg">SHEET 1 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2 b">
+      <h3><span class="n">01</span> Scope &amp; the fluid-mosaic membrane</h3>
+      <p class="l"><b>Biochemistry</b> = chemistry of life processes. In veterinary practice it supplies the <b>diagnostic</b> (serum enzymes, BUN), <b>nutritional</b> (limiting amino acid, EFA), <b>therapeutic</b> (fluid therapy, PGF<sub>2α</sub>) and <b>toxicological</b> (xenobiotic, P450) framework.</p>
+      <p class="l"><b>Fluid mosaic model — Singer &amp; Nicolson, 1972.</b> A fluid lipid bilayer in which globular proteins float like icebergs. Bilayer = amphipathic phospholipids (polar head out, acyl tails in) + cholesterol + glycolipids. Proteins are <b>integral/intrinsic</b> (span bilayer, need detergent, e.g. Na⁺/K⁺-ATPase, glycophorin) or <b>peripheral/extrinsic</b> (surface, salt extractable, e.g. spectrin, cyt c).</p>
+      <div class="vals">
+        <div class="val"><span class="v">7–10</span><span class="c">nm thickness</span></div>
+        <div class="val"><span class="v">18%</span><span class="c">protein — myelin (lowest)</span></div>
+        <div class="val"><span class="v">76%</span><span class="c">protein — inner mito (highest)</span></div>
+        <div class="val"><span class="v">50:50</span><span class="c">lipid:protein, RBC ghost</span></div>
+      </div>
+      <ul class="l">
+        <li><b>Asymmetry:</b> outer leaflet = phosphatidylcholine, sphingomyelin, <em>all glycolipids &amp; glycoproteins</em>; inner leaflet = phosphatidylethanolamine, phosphatidylserine, PIP<sub>2</sub>. <b>PS flipped outward = "eat-me" apoptosis signal</b> (basis of Annexin-V assay).</li>
+        <li><b>Movement of lipids:</b> lateral diffusion &amp; flexion are <em>fast</em>; transverse flip-flop is <em>very slow</em> and needs enzymes — <b>flippase</b> (inward, ATP), <b>floppase</b> (outward, ATP), <b>scramblase</b> (both ways, Ca²⁺-activated, no ATP).</li>
+        <li><b>Fluidity ↑</b> by unsaturated &amp; short-chain fatty acids and ↑ temperature; <b>↓</b> by saturated/long chains. <b>Cholesterol is a fluidity buffer</b> — below transition temp it prevents crystalline packing (↑fluidity); above it restrains chains (↓fluidity).</li>
+        <li><b>Functions:</b> selective permeability, compartmentation, electrical excitability, receptor &amp; signal transduction, cell recognition (glycocalyx), antigenicity (blood groups), cell adhesion, energy transduction (mitochondrial inner membrane).</li>
+      </ul>
+      <div class="trap"><b>Trap:</b> the bilayer is freely permeable to <em>small uncharged</em> molecules (O₂, CO₂, N₂, urea, ethanol, steroids). It is essentially impermeable to <em>ions and to glucose</em> — even Na⁺ and K⁺, being small, are blocked because of their large hydration shells.</div>
+    </div>
+
+    <div class="mod t span2">
+      <h3><span class="n">02</span> Transport across membranes — the master map</h3>
+      <svg viewBox="0 0 700 132" role="img" aria-label="Classification of membrane transport into passive and active pathways">
+        <defs>
+          <marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 z" fill="#8a9aab"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="130" fill="none"/>
+        <rect x="255" y="4" width="190" height="19" rx="3" fill="var(--blue-w)" stroke="var(--blue)" stroke-width="1"/>
+        <text x="350" y="17" text-anchor="middle" font-family="Inter" font-size="10" font-weight="700" fill="var(--blue)">MEMBRANE TRANSPORT</text>
+        <path d="M350,23 L350,32 M175,32 L525,32 M175,32 L175,41 M525,32 L525,41" fill="none" stroke="#8a9aab" stroke-width="1"/>
+        <rect x="85" y="41" width="180" height="17" rx="3" fill="var(--sage-w)" stroke="var(--sage)" stroke-width="1"/>
+        <text x="175" y="53" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="var(--sage)">PASSIVE — down gradient, no ATP</text>
+        <rect x="435" y="41" width="180" height="17" rx="3" fill="var(--coral-w)" stroke="var(--coral)" stroke-width="1"/>
+        <text x="525" y="53" text-anchor="middle" font-family="Inter" font-size="9" font-weight="700" fill="var(--coral)">ACTIVE — uphill, energy needed</text>
+        <path d="M175,58 L175,66 M105,66 L245,66 M105,66 L105,74 M245,66 L245,74" fill="none" stroke="#8a9aab" stroke-width="1"/>
+        <path d="M525,58 L525,66 M455,66 L595,66 M455,66 L455,74 M595,66 L595,74" fill="none" stroke="#8a9aab" stroke-width="1"/>
+        <rect x="25" y="74" width="160" height="52" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="33" y="86" font-family="Inter" font-size="8.5" font-weight="700" fill="var(--ink)">Simple diffusion</text>
+        <text x="33" y="96" font-family="Inter" font-size="7.6" fill="var(--ink-2)">no carrier · non-saturable</text>
+        <text x="33" y="105" font-family="Inter" font-size="7.6" fill="var(--ink-2)">linear with gradient</text>
+        <text x="33" y="114" font-family="Inter" font-size="7.6" fill="var(--ink-2)">O₂, CO₂, urea, steroids</text>
+        <text x="33" y="123" font-family="Inter" font-size="7.6" fill="var(--ink-2)">+ aquaporins for H₂O</text>
+        <rect x="195" y="74" width="160" height="52" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="203" y="86" font-family="Inter" font-size="8.5" font-weight="700" fill="var(--ink)">Facilitated diffusion</text>
+        <text x="203" y="96" font-family="Inter" font-size="7.6" fill="var(--ink-2)">carrier · saturable (Vmax)</text>
+        <text x="203" y="105" font-family="Inter" font-size="7.6" fill="var(--ink-2)">specific · inhibitable</text>
+        <text x="203" y="114" font-family="Inter" font-size="7.6" fill="var(--ink-2)">GLUT 1–5, urea &amp; anion</text>
+        <text x="203" y="123" font-family="Inter" font-size="7.6" fill="var(--ink-2)">exchanger (band 3)</text>
+        <rect x="375" y="74" width="150" height="52" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="383" y="86" font-family="Inter" font-size="8.5" font-weight="700" fill="var(--ink)">Primary active</text>
+        <text x="383" y="96" font-family="Inter" font-size="7.6" fill="var(--ink-2)">ATP hydrolysed directly</text>
+        <text x="383" y="105" font-family="Inter" font-size="7.6" fill="var(--ink-2)">Na⁺/K⁺-ATPase (3Na out:2K in)</text>
+        <text x="383" y="114" font-family="Inter" font-size="7.6" fill="var(--ink-2)">Ca²⁺-ATPase, H⁺/K⁺-ATPase</text>
+        <text x="383" y="123" font-family="Inter" font-size="7.6" fill="var(--ink-2)">P-, F-, V-, ABC types</text>
+        <rect x="535" y="74" width="160" height="52" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="543" y="86" font-family="Inter" font-size="8.5" font-weight="700" fill="var(--ink)">Secondary active</text>
+        <text x="543" y="96" font-family="Inter" font-size="7.6" fill="var(--ink-2)">rides the Na⁺ gradient</text>
+        <text x="543" y="105" font-family="Inter" font-size="7.6" fill="var(--ink-2)">symport: SGLT-1 (2Na:1glc)</text>
+        <text x="543" y="114" font-family="Inter" font-size="7.6" fill="var(--ink-2)">antiport: Na⁺/Ca²⁺, Na⁺/H⁺</text>
+        <text x="543" y="123" font-family="Inter" font-size="7.6" fill="var(--ink-2)">stops if ATPase poisoned</text>
+      </svg>
+      <div class="chips">
+        <span class="chip"><b>Uniport</b> one solute, one way — GLUT1</span>
+        <span class="chip"><b>Symport</b> two solutes, same way — SGLT-1</span>
+        <span class="chip"><b>Antiport</b> two solutes, opposite — Cl⁻/HCO₃⁻</span>
+        <span class="chip"><b>Bulk</b> endo/exo/pinocytosis, phagocytosis</span>
+        <span class="chip"><b>Ionophores</b> valinomycin (K⁺ carrier) · gramicidin (channel)</span>
+      </div>
+      <div class="hook"><b>Most-asked:</b> Na⁺/K⁺-ATPase — electrogenic (net +1 out), consumes <em>≈30 % of basal ATP</em>, inhibited by <b>ouabain / digitalis / cardiac glycosides</b> and by K⁺-free medium; it creates the Na⁺ gradient that powers <em>all</em> secondary active transport, and maintains cell volume against Donnan swelling.</div>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">03</span> GLUT family — one line each</h3>
+      <table>
+        <tr><th>Carrier</th><th>Site</th><th>Point that scores</th></tr>
+        <tr><td class="k">GLUT-1</td><td>RBC, brain, BBB</td><td>Low K<sub>m</sub> ≈ 1 mM — basal uptake</td></tr>
+        <tr><td class="k">GLUT-2</td><td>Liver, β-cell, kidney, gut basolateral</td><td><b>High K<sub>m</sub> ≈ 15–20 mM</b> = the glucose <em>sensor</em>; bidirectional</td></tr>
+        <tr><td class="k">GLUT-3</td><td>Neurons, placenta</td><td>Lowest K<sub>m</sub> — neuron gets first claim</td></tr>
+        <tr><td class="k">GLUT-4</td><td>Skeletal &amp; cardiac muscle, adipose</td><td><b>Only insulin-dependent one</b> — vesicle recruitment</td></tr>
+        <tr><td class="k">GLUT-5</td><td>Intestinal brush border, sperm</td><td>Fructose transporter</td></tr>
+        <tr><td class="k">SGLT-1/2</td><td>Gut / renal PCT</td><td>Secondary active, Na⁺-coupled; <b>phlorizin</b> inhibits</td></tr>
+      </table>
+    </div>
+
+    <div class="mod p">
+      <h3><span class="n">04</span> Gibbs–Donnan membrane equilibrium</h3>
+      <p class="l"><b>Statement.</b> When a <b>non-diffusible charged ion</b> (plasma protein anion, Pr⁻) is confined to one side of a semipermeable membrane, the diffusible ions redistribute <em>unequally</em> so that the <b>product of diffusible ion concentrations is equal on both sides</b>, while electroneutrality holds on each side.</p>
+      <div class="mnem"><span class="m">[Na⁺]<sub>i</sub> × [Cl⁻]<sub>i</sub> = [Na⁺]<sub>o</sub> × [Cl⁻]<sub>o</sub></span> &nbsp;·&nbsp; Donnan ratio <span class="m">r = [Na⁺]<sub>i</sub>/[Na⁺]<sub>o</sub> = [Cl⁻]<sub>o</sub>/[Cl⁻]<sub>i</sub> ≈ 0.95</span></div>
+      <ul class="l">
+        <li><b>Three consequences:</b> ① the protein side holds <em>more diffusible cations, fewer anions</em>; ② total osmotically active particles are higher on the protein side → water pulled in (<b>Donnan effect adds ≈ 1/3 extra to colloid osmotic pressure</b>); ③ a <b>Donnan potential</b> develops across the membrane.</li>
+        <li><b>Veterinary significance:</b> plasma vs interstitial fluid ion split; contribution to resting membrane potential; the <b>chloride shift (Hamburger phenomenon)</b> in RBC; oedema of hypoproteinaemia (parasitism, PLE, liver failure) — falling albumin collapses both oncotic and Donnan pressure; behaviour of colloids (dextran, plasma) in fluid therapy; ultrafiltration in the glomerulus.</li>
+        <li><b>Double Donnan / pump-leak:</b> if Donnan forces acted alone the cell would swell and burst. Na⁺/K⁺-ATPase keeps Na⁺ functionally impermeant outside, opposing it — cell volume is a <em>steady state, not equilibrium</em>.</li>
+      </ul>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">05</span> Dissociation of acids · pH · buffers · Henderson–Hasselbalch</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Brønsted–Lowry:</b> acid = proton donor, base = proton acceptor. Strength of a weak acid is its <b>pK<sub>a</sub></b> = pH at which it is exactly <em>half dissociated</em>. Lower pK<sub>a</sub> = stronger acid. <span class="m">pH = −log[H⁺]</span>; blood [H⁺] ≈ 40 nmol/L.</p>
+          <p class="l"><b>Buffer</b> = weak acid + its conjugate base; resists pH change on adding acid/alkali. <b>Buffer capacity is maximal at pH = pK<sub>a</sub></b> and useful only within <em>pK<sub>a</sub> ± 1</em> — this is why the flat middle of a titration curve is the buffering zone.</p>
+          <div class="mnem"><u>Henderson–Hasselbalch</u> &nbsp;<span class="m">pH = pK<sub>a</sub> + log ([salt]/[acid]) = pK<sub>a</sub> + log ([A⁻]/[HA])</span><br>For blood: <span class="m">pH = 6.1 + log (HCO₃⁻ / 0.03 × pCO₂) = 6.1 + log (24/1.2) = 6.1 + log 20 = 7.4</span></div>
+          <div class="hook"><b>The 20 : 1 ratio is the single most examined number in the unit.</b> pH depends on the <em>ratio</em>, not absolute values — which is why compensation (renal HCO₃⁻ retention, respiratory CO₂ blow-off) restores pH by restoring the ratio.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <table>
+            <tr><th>Buffer system</th><th>pK<sub>a</sub></th><th>Where it matters</th></tr>
+            <tr><td class="k">HCO₃⁻ / H₂CO₃</td><td class="m">6.1</td><td><b>Chief ECF buffer</b> — weak pK but an <em>open system</em>: lungs dump CO₂, kidney regenerates HCO₃⁻</td></tr>
+            <tr><td class="k">Haemoglobin</td><td class="m">~7.9 / 6.7</td><td>Chief <b>intra-erythrocyte</b> buffer; deoxy-Hb is the better buffer → isohydric CO₂ carriage</td></tr>
+            <tr><td class="k">Protein (imidazole of His)</td><td class="m">6.0</td><td>Main intracellular buffer; also plasma albumin</td></tr>
+            <tr><td class="k">HPO₄²⁻ / H₂PO₄⁻</td><td class="m">6.8</td><td>Intracellular + <b>urinary titratable acidity</b>; bone reservoir</td></tr>
+            <tr><td class="k">Ammonia (NH₃/NH₄⁺)</td><td class="m">9.2</td><td>Renal tubular acid excretion in chronic acidosis</td></tr>
+          </table>
+          <div class="vals">
+            <div class="val"><span class="v">7.35–7.45</span><span class="c">arterial blood pH</span></div>
+            <div class="val"><span class="v">24</span><span class="c">mM HCO₃⁻</span></div>
+            <div class="val"><span class="v">40</span><span class="c">mmHg pCO₂</span></div>
+            <div class="val"><span class="v">6.2–7.0</span><span class="c">rumen pH (SARA &lt; 5.6)</span></div>
+            <div class="val"><span class="v">2–3</span><span class="c">abomasum / gastric</span></div>
+            <div class="val"><span class="v">6.6–6.8</span><span class="c">milk (↑ in mastitis)</span></div>
+          </div>
+          <div class="trap"><b>Trap:</b> herbivore urine is normally <em>alkaline</em> (7.5–8.5), carnivore urine <em>acidic</em> (5.5–7.0) — a "normal" pH 8 urine in a dog is abnormal (urease-positive infection).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 1 · General Veterinary Biochemistry</span><span class="m">MEMBRANE → TRANSPORT → DONNAN → BUFFERS</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 2 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 1</span>
+      <h2>Biochemistry of Carbohydrates</h2>
+      <span class="sub">Mono → di → poly → mucopolysaccharides</span>
+    </div>
+    <span class="pg">SHEET 2 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2">
+      <h3><span class="n">06</span> Definition, classification &amp; isomerism</h3>
+      <p class="l"><b>Carbohydrates = polyhydroxy aldehydes or ketones</b>, or substances yielding them on hydrolysis; empirical formula (CH₂O)<sub>n</sub>. Classified as <b>monosaccharides</b> (cannot be hydrolysed), <b>disaccharides</b>, <b>oligosaccharides</b> (2–10), <b>polysaccharides</b> (homo- vs hetero-).</p>
+      <div class="chips">
+        <span class="chip"><b>Aldose</b> −CHO (glucose)</span>
+        <span class="chip"><b>Ketose</b> C=O (fructose)</span>
+        <span class="chip"><b>Epimers</b> differ at ONE C: glucose↔galactose at <b>C-4</b>, glucose↔mannose at <b>C-2</b></span>
+        <span class="chip"><b>Anomers</b> α/β at C-1 (anomeric carbon)</span>
+        <span class="chip"><b>Enantiomers</b> D/L — mirror at penultimate C; body sugars are <b>D</b></span>
+        <span class="chip"><b>Mutarotation</b> α +112° → <b>+52.7°</b> → β +18.7°</span>
+      </div>
+      <ul class="l">
+        <li><b>Reducing sugars</b> have a free anomeric −OH → reduce Benedict's/Fehling's. <em>All monosaccharides</em>, maltose, isomaltose, lactose, cellobiose are reducing. <b>Sucrose and trehalose are non-reducing</b> (both anomeric carbons locked).</li>
+        <li><b>Ring forms:</b> pyranose (6-membered) &amp; furanose (5-membered); Haworth projection; chair form of β-D-glucopyranose is the most stable sugar because <em>all bulky groups are equatorial</em>.</li>
+        <li><b>Derivatives:</b> sugar acids (gluconic, glucuronic — conjugation &amp; detoxification, ascorbic acid), sugar alcohols (sorbitol → cataract in diabetes, glycerol, inositol), deoxy sugars (deoxyribose, fucose), <b>amino sugars</b> (glucosamine, galactosamine, <em>N-acetylneuraminic acid = sialic acid</em>), sugar esters (glucose-6-P).</li>
+      </ul>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">07</span> Monosaccharides — biological significance</h3>
+      <table>
+        <tr><th>Sugar</th><th>Why it exists in the animal</th></tr>
+        <tr><td class="k">Ribose<br>(deoxyribose)</td><td>Backbone of <b>RNA / DNA</b>, ATP, GTP, NAD⁺, FAD, CoA, SAM. Sole source = <b>HMP shunt</b>. Ribose-5-P is the entry point of nucleotide synthesis.</td></tr>
+        <tr><td class="k">Glucose</td><td>"Blood sugar", universal fuel; the <em>only</em> fuel for brain, RBC, renal medulla under normal conditions. Stored as glycogen, converted to fat.</td></tr>
+        <tr><td class="k">Fructose</td><td>Ketohexose, <b>sweetest sugar</b>; enters glycolysis independent of insulin. <b>Chief energy source of spermatozoa</b> in bull/ram semen (fructolysis — a <em>semen-quality test</em>); high in fetal blood of ruminants.</td></tr>
+        <tr><td class="k">Galactose</td><td>Made in the udder from glucose → <b>lactose synthesis</b>; component of cerebrosides, gangliosides, glycoproteins, blood-group antigens. Galactosaemia if metabolism blocked.</td></tr>
+        <tr><td class="k">Mannose</td><td>Core sugar of N-linked <b>glycoproteins</b>; <b>mannose-6-phosphate is the address tag</b> that routes enzymes to lysosomes (I-cell disease when lost).</td></tr>
+        <tr><td class="k">Amino<br>sugars</td><td>Glucosamine &amp; galactosamine → GAGs, cartilage, chitin; <b>sialic acid</b> caps glycoproteins &amp; determines RBC lifespan and virus attachment (influenza).</td></tr>
+      </table>
+      <div class="hook"><b>Species hook:</b> ruminant blood glucose is only <em>45–60 mg/dL</em> (dog/cat 70–110) because dietary carbohydrate is fermented to VFA in the rumen — the ruminant is a <b>gluconeogenic animal living on propionate</b>. This single fact explains ketosis, pregnancy toxaemia and the whole of Unit 3.</div>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">08</span> Disaccharides — linkage is the answer</h3>
+      <table>
+        <tr><th>Sugar</th><th>Units &amp; linkage</th><th>Red.</th><th>Note</th></tr>
+        <tr><td class="k">Maltose</td><td>Glc <span class="m">α1→4</span> Glc</td><td>Yes</td><td>Malt sugar; from starch by amylase</td></tr>
+        <tr><td class="k">Isomaltose</td><td>Glc <span class="m">α1→6</span> Glc</td><td>Yes</td><td>From branch points of amylopectin</td></tr>
+        <tr><td class="k">Lactose</td><td>Gal <span class="m">β1→4</span> Glc</td><td>Yes</td><td><b>Milk sugar</b>, only in mammary gland; osmotic regulator of milk volume</td></tr>
+        <tr><td class="k">Sucrose</td><td>Glc <span class="m">α1↔2β</span> Fru</td><td><em>No</em></td><td>Cane sugar; hydrolysis → <b>invert sugar</b>; no free anomeric C</td></tr>
+        <tr><td class="k">Cellobiose</td><td>Glc <span class="m">β1→4</span> Glc</td><td>Yes</td><td>From <b>cellulose</b>; only rumen/hindgut microbes split it</td></tr>
+        <tr><td class="k">Trehalose</td><td>Glc <span class="m">α1↔1α</span> Glc</td><td><em>No</em></td><td>"Insect blood sugar"; fungal</td></tr>
+      </table>
+      <div class="vals">
+        <div class="val"><span class="v">4.7%</span><span class="c">lactose, cow milk</span></div>
+        <div class="val"><span class="v">4.9%</span><span class="c">buffalo</span></div>
+        <div class="val"><span class="v">6.2%</span><span class="c">mare — highest</span></div>
+        <div class="val"><span class="v">≈0</span><span class="c">lactase in adult cat/dog</span></div>
+      </div>
+      <div class="trap"><b>Trap:</b> lactose is the <em>only</em> sugar of purely animal origin. Adult ruminants and most adult carnivores lose intestinal lactase — feeding milk causes osmotic diarrhoea, a classic viva point.</div>
+    </div>
+
+    <div class="mod s span2">
+      <h3><span class="n">09</span> Polysaccharides — homoglycans</h3>
+      <div class="scroll">
+      <table>
+        <tr><th>Polysaccharide</th><th>Monomer &amp; linkage</th><th>Branching</th><th>Veterinary significance</th></tr>
+        <tr><td class="k">Starch — amylose</td><td>Glucose, <span class="m">α1→4</span></td><td>Unbranched helix</td><td>Stains <b>deep blue</b> with iodine; plant storage</td></tr>
+        <tr><td class="k">Starch — amylopectin</td><td>Glucose, <span class="m">α1→4</span> + <span class="m">α1→6</span></td><td>Every 24–30 residues</td><td>Stains <b>violet/purple</b>; 80 % of starch</td></tr>
+        <tr><td class="k">Dextrins</td><td>Partial hydrolysis products</td><td>—</td><td>Erythrodextrin (red with I₂) → achrodextrin (no colour); <b>limit dextrin</b> resists amylase</td></tr>
+        <tr><td class="k">Dextran</td><td>Glucose, <span class="m">α1→6</span> chief</td><td>α1→3, α1→4</td><td>Bacterial; <b>plasma volume expander (colloid)</b>; dental plaque matrix</td></tr>
+        <tr><td class="k">Glycogen</td><td>Glucose, <span class="m">α1→4</span> + <span class="m">α1→6</span></td><td><b>Every 8–12 residues</b></td><td><b>Animal storage</b>: liver 5–6 % (blood glucose homeostasis), muscle 0.7–1 % (local fuel only — no glucose-6-phosphatase). Dense branching = many non-reducing ends = rapid mobilisation. Stains red-brown with iodine.</td></tr>
+        <tr><td class="k">Cellulose</td><td>Glucose, <span class="m">β1→4</span></td><td>Linear, H-bonded fibrils</td><td><b>No mammal makes cellulase</b>; rumen/caecal microbes ferment it → VFA. Basis of herbivore nutrition &amp; crude fibre.</td></tr>
+        <tr><td class="k">Inulin</td><td>Fructose, <span class="m">β2→1</span></td><td>Linear</td><td>Freely filtered, not reabsorbed/secreted → <b>gold-standard GFR marker</b>; prebiotic</td></tr>
+        <tr><td class="k">Chitin</td><td>N-acetylglucosamine, <span class="m">β1→4</span></td><td>Linear</td><td>Arthropod exoskeleton &amp; <b>fungal cell wall</b> — target of antifungals; second most abundant polysaccharide</td></tr>
+      </table>
+      </div>
+      <div class="mnem"><u>One-line contrast:</u> <b>Starch, glycogen = α-linked = digestible by mammalian amylase.</b> <b>Cellulose, chitin = β-linked = need microbial enzymes.</b> Digestibility is decided by the anomeric configuration, not by the sugar.</div>
+    </div>
+
+    <div class="mod p span2">
+      <h3><span class="n">10</span> Mucopolysaccharides (GAGs) &amp; bacterial cell-wall polysaccharides</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>GAGs</b> = long unbranched heteropolysaccharides of a repeating disaccharide = <b>uronic acid (or galactose) + amino sugar</b>, almost all <em>sulphated</em> and strongly anionic. Bound to a core protein they form <b>proteoglycans</b> (ground substance) — a huge hydrated gel that resists compression, lubricates and traps cations and water.</p>
+          <table>
+            <tr><th>GAG</th><th>Repeating unit</th><th>Site / use</th></tr>
+            <tr><td class="k">Hyaluronic acid</td><td>GlcUA + GlcNAc — <b>only non-sulphated, no protein core</b></td><td>Synovial fluid, vitreous humour, Wharton's jelly, loose CT. <b>Hyaluronidase = "spreading factor"</b> of sperm acrosome &amp; invasive bacteria</td></tr>
+            <tr><td class="k">Chondroitin 4-/6-sulphate</td><td>GlcUA + GalNAc-SO₄</td><td>Most abundant GAG — cartilage, bone, cornea; joint supplements</td></tr>
+            <tr><td class="k">Keratan sulphate</td><td>Galactose + GlcNAc-SO₄ (<em>no uronic acid</em>)</td><td>Cornea (transparency), cartilage, intervertebral disc</td></tr>
+            <tr><td class="k">Dermatan sulphate</td><td>IdUA + GalNAc-SO₄</td><td>Skin, blood vessels, heart valves</td></tr>
+            <tr><td class="k">Heparin</td><td>IdUA-SO₄ + GlcN-SO₄</td><td><b>Most acidic / highest negative charge</b>; mast-cell granules; anticoagulant (antithrombin III); releases lipoprotein lipase — "clearing factor"</td></tr>
+            <tr><td class="k">Heparan sulphate</td><td>Similar, less sulphated</td><td>Cell surface, basement membrane — <b>glomerular charge barrier</b> (loss → proteinuria)</td></tr>
+          </table>
+          <div class="hook"><b>Clinical:</b> deficiency of lysosomal hydrolases → <b>mucopolysaccharidoses</b> (accumulation in cornea, bone, brain; reported in cats and dogs — MPS I, VI, VII). Corneal clouding + skeletal dysplasia + dwarfism is the classic triad.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Bacterial cell wall — peptidoglycan (murein).</b> Alternating <b>N-acetylglucosamine (NAG)</b> and <b>N-acetylmuramic acid (NAM)</b> joined <span class="m">β1→4</span>; NAM carries a tetrapeptide, and chains are cross-linked by <b>transpeptidase</b> (pentaglycine bridge in <i>Staphylococcus</i>).</p>
+          <div class="flow">
+            <span class="s">NAG–NAM β1→4</span><span class="ar">→</span><span class="s">tetrapeptide</span><span class="ar">→</span><span class="s">transpeptidase cross-link</span><span class="ar">→</span><span class="s">rigid sacculus</span>
+          </div>
+          <ul class="l">
+            <li><b>Lysozyme</b> (tears, saliva, egg white, phagocytes) hydrolyses the <em>β1→4 NAM–NAG</em> bond → lysis. First-line innate defence.</li>
+            <li><b>Penicillins &amp; cephalosporins</b> inhibit transpeptidase (PBP) → wall cannot cross-link. Selective toxicity rests on the fact that <em>the host has no peptidoglycan</em>.</li>
+            <li><b>Gram-positive:</b> thick peptidoglycan + <b>teichoic acid</b> (glycerol/ribitol phosphate — adhesion, antigenicity).</li>
+            <li><b>Gram-negative:</b> thin peptidoglycan + outer membrane bearing <b>lipopolysaccharide (LPS)</b>: O-antigen + core + <b>lipid A = the endotoxin</b> — the trigger of coliform mastitis, endotoxic shock and DIC (ties directly into Unit 3 "oxidative stress &amp; shock").</li>
+            <li><b>Capsular polysaccharides</b> resist phagocytosis and are the basis of serotyping and of many vaccines.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 1 · Carbohydrates</span><span class="m">LINKAGE DECIDES DIGESTIBILITY</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 3 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 1</span>
+      <h2>Biochemistry of Lipids &amp; Prostaglandins</h2>
+      <span class="sub">Simple · compound · derived · lipoproteins · fat indices · eicosanoids</span>
+    </div>
+    <span class="pg">SHEET 3 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2 c">
+      <h3><span class="n">11</span> Bloor's classification — the skeleton of every lipid answer</h3>
+      <svg viewBox="0 0 700 96" role="img" aria-label="Bloor classification of lipids into simple, compound and derived">
+        <rect x="270" y="2" width="160" height="17" rx="3" fill="var(--coral-w)" stroke="var(--coral)" stroke-width="1"/>
+        <text x="350" y="14" text-anchor="middle" font-family="Inter" font-size="9.5" font-weight="700" fill="var(--coral)">LIPIDS (Bloor)</text>
+        <path d="M350,19 L350,26 M120,26 L580,26 M120,26 L120,33 M350,26 L350,33 M580,26 L580,33" fill="none" stroke="#8a9aab" stroke-width="1"/>
+        <rect x="10" y="33" width="220" height="60" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="18" y="45" font-family="Inter" font-size="8.6" font-weight="700" fill="var(--ink)">SIMPLE — ester of FA + alcohol</text>
+        <text x="18" y="56" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Fats &amp; oils = triacylglycerol</text>
+        <text x="18" y="65" font-family="Inter" font-size="7.8" fill="var(--ink-2)">  (FA + glycerol) — fat is solid,</text>
+        <text x="18" y="74" font-family="Inter" font-size="7.8" fill="var(--ink-2)">  oil liquid at room temp</text>
+        <text x="18" y="86" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Waxes = FA + long-chain alcohol</text>
+        <rect x="240" y="33" width="220" height="60" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="248" y="45" font-family="Inter" font-size="8.6" font-weight="700" fill="var(--ink)">COMPOUND — + extra group</text>
+        <text x="248" y="56" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Phospholipids (glycero- / sphingo-)</text>
+        <text x="248" y="65" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Glycolipids (cerebroside, ganglioside)</text>
+        <text x="248" y="74" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Lipoproteins (CM, VLDL, LDL, HDL)</text>
+        <text x="248" y="86" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Sulpholipids, amino-lipids</text>
+        <rect x="470" y="33" width="220" height="60" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="478" y="45" font-family="Inter" font-size="8.6" font-weight="700" fill="var(--ink)">DERIVED — hydrolysis products</text>
+        <text x="478" y="56" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Fatty acids, glycerol, mono/di-AG</text>
+        <text x="478" y="65" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Steroids &amp; sterols (cholesterol)</text>
+        <text x="478" y="74" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Ketone bodies, fat-soluble vit ADEK</text>
+        <text x="478" y="86" font-family="Inter" font-size="7.8" fill="var(--ink-2)">• Eicosanoids, terpenes, carotenoids</text>
+      </svg>
+      <p class="l"><b>Common properties:</b> insoluble in water, soluble in organic solvents (ether, chloroform, benzene); <b>amphipathic</b> if a polar head exists; highest calorific value <em>9.3 kcal/g</em> (vs 4.1 for carbohydrate/protein); non-polar so stored anhydrous — the most economical fuel store. <b>Functions:</b> concentrated energy, structural (membranes, myelin), thermal insulation &amp; padding, carrier of vitamins ADEK, precursor of steroid hormones &amp; eicosanoids, source of essential fatty acids, surfactant, milk-fat and egg-yolk quality.</p>
+    </div>
+
+    <div class="mod">
+      <h3><span class="n">12</span> Fatty acids &amp; essential fatty acids</h3>
+      <ul class="l">
+        <li><b>Saturated:</b> butyric C4 (rumen VFA, milk fat), palmitic C16, stearic C18. <b>Unsaturated:</b> oleic 18:1 ω9, <b>linoleic 18:2 ω6</b>, <b>α-linolenic 18:3 ω3</b>, arachidonic 20:4 ω6, EPA 20:5, DHA 22:6.</li>
+        <li><b>Essential fatty acids = linoleic + α-linolenic</b> — mammals lack Δ12 and Δ15 desaturase so cannot insert double bonds beyond C-9. <b>Arachidonic acid is semi-essential</b> (made from linoleic).</li>
+        <li><b>EFA deficiency:</b> scaly dermatitis, dull dry coat, poor wound healing, impaired reproduction, fatty liver, ↑ transepidermal water loss.</li>
+        <li><b>Cat exception:</b> the cat has negligible Δ6-desaturase → <b>arachidonic acid is dietary-essential for cats</b>, which is why cats are obligate carnivores nutritionally.</li>
+        <li><b>Natural cis</b> configuration bends the chain (↑fluidity, ↓melting point); industrial <b>trans</b> behaves like saturated.</li>
+      </ul>
+      <div class="trap"><b>Trap:</b> "ω" numbering counts from the <em>methyl</em> end, "Δ" from the <em>carboxyl</em> end. Arachidonic acid = 20:4 Δ5,8,11,14 = ω6.</div>
+    </div>
+
+    <div class="mod a">
+      <h3><span class="n">13</span> Fat indices — pure objective marks</h3>
+      <table>
+        <tr><th>Index</th><th>Measures</th><th>Value / use</th></tr>
+        <tr><td class="k">Saponification no.</td><td>mg KOH to saponify 1 g fat</td><td><b>Inversely ∝ chain length.</b> Butter 210–230 (short chains), groundnut oil ≈190</td></tr>
+        <tr><td class="k">Iodine no.</td><td>g I₂ absorbed per 100 g fat</td><td><b>Degree of unsaturation.</b> Coconut ≈8, butter 26–38, linseed 175–200</td></tr>
+        <tr><td class="k">Acid no.</td><td>mg KOH to neutralise free FA in 1 g</td><td><b>Index of hydrolytic rancidity</b> — the practical you perform</td></tr>
+        <tr><td class="k">Reichert–Meissl no.</td><td>Volatile, <em>water-soluble</em> FA (butyric)</td><td>Butter 24–34; vanaspati &lt;1 → <b>test of ghee adulteration</b></td></tr>
+        <tr><td class="k">Polenske no.</td><td>Volatile, <em>water-insoluble</em> FA</td><td>High in coconut oil — detects coconut-oil adulteration</td></tr>
+        <tr><td class="k">Acetyl no.</td><td>Free −OH groups</td><td>High in castor oil (ricinoleic acid)</td></tr>
+      </table>
+      <div class="mnem"><u>Rancidity.</u> <b>Hydrolytic</b> = lipase/moisture → free FA, ↑acid number. <b>Oxidative</b> = O₂ attacks double bonds → peroxides, aldehydes; worst in ω-3-rich fish oil. Prevented by <b>vitamin E, BHT/BHA</b>. <em>Feed link:</em> rancid fish-oil diet + vitamin E deficiency → <b>yellow fat disease (steatitis / pansteatitis)</b> in cats and mink.</div>
+    </div>
+
+    <div class="mod p">
+      <h3><span class="n">14</span> Compound lipids — the ones examiners name</h3>
+      <table>
+        <tr><th>Lipid</th><th>Identity &amp; role</th></tr>
+        <tr><td class="k">Lecithin (PC)</td><td>Choline; most abundant phospholipid; <b>emulsifier</b>; dipalmitoyl-lecithin = <b>lung surfactant</b>; egg yolk</td></tr>
+        <tr><td class="k">Cephalin (PE)</td><td>Ethanolamine; brain; role in <b>blood coagulation</b> (thromboplastin)</td></tr>
+        <tr><td class="k">Phosphatidyl-<br>serine</td><td>Inner leaflet; externalised in <b>apoptosis</b>; procoagulant surface</td></tr>
+        <tr><td class="k">Phosphatidyl-<br>inositol</td><td><b>PIP₂ → IP₃ + DAG</b>: the Ca²⁺ second-messenger system; GPI membrane anchors</td></tr>
+        <tr><td class="k">Cardiolipin</td><td>Diphosphatidylglycerol — <b>found only in the inner mitochondrial membrane</b>; antigenic (VDRL antigen)</td></tr>
+        <tr><td class="k">Plasmalogens</td><td>Ether linkage at C-1; abundant in <b>heart &amp; muscle</b>, myelin</td></tr>
+        <tr><td class="k">Sphingomyelin</td><td><b>Only phospholipid with sphingosine, not glycerol</b>; myelin sheath; Niemann–Pick disease</td></tr>
+        <tr><td class="k">Cerebrosides</td><td>Ceramide + <b>one</b> sugar (galactose); white matter; Gaucher/Krabbe</td></tr>
+        <tr><td class="k">Gangliosides</td><td>Ceramide + oligosaccharide + <b>sialic acid</b>; GM1 is the <b>cholera-toxin receptor</b>; Tay–Sachs</td></tr>
+        <tr><td class="k">Cholesterol</td><td>27-C, <b>cyclopentanoperhydrophenanthrene</b> ring, exclusively animal; precursor of <b>bile acids, vitamin D₃, all steroid hormones</b>; membrane fluidity buffer</td></tr>
+      </table>
+    </div>
+
+    <div class="mod s">
+      <h3><span class="n">15</span> Lipoproteins — density rises as fat falls</h3>
+      <svg viewBox="0 0 340 74" role="img" aria-label="Lipoprotein classes ordered by size and density">
+        <line x1="14" y1="60" x2="326" y2="60" stroke="var(--rule)" stroke-width="1"/>
+        <text x="14" y="71" font-family="Inter" font-size="7.4" fill="var(--faint)">largest · least dense · most TG</text>
+        <text x="326" y="71" text-anchor="end" font-family="Inter" font-size="7.4" fill="var(--faint)">smallest · densest · most protein</text>
+        <circle cx="46" cy="34" r="22" fill="var(--amber-w)" stroke="var(--amber)" stroke-width="1.2"/>
+        <text x="46" y="36" text-anchor="middle" font-family="Inter" font-size="7.6" font-weight="700" fill="var(--amber)">CM</text>
+        <circle cx="128" cy="36" r="17" fill="var(--coral-w)" stroke="var(--coral)" stroke-width="1.2"/>
+        <text x="128" y="38" text-anchor="middle" font-family="Inter" font-size="7.4" font-weight="700" fill="var(--coral)">VLDL</text>
+        <circle cx="205" cy="39" r="12.5" fill="var(--purple-w)" stroke="var(--purple)" stroke-width="1.2"/>
+        <text x="205" y="41.5" text-anchor="middle" font-family="Inter" font-size="7" font-weight="700" fill="var(--purple)">LDL</text>
+        <circle cx="272" cy="42" r="8.5" fill="var(--sage-w)" stroke="var(--sage)" stroke-width="1.2"/>
+        <text x="272" y="44.5" text-anchor="middle" font-family="Inter" font-size="6.4" font-weight="700" fill="var(--sage)">HDL</text>
+        <text x="46" y="12" text-anchor="middle" font-family="JetBrains Mono" font-size="6.6" fill="var(--muted)">apo B-48</text>
+        <text x="128" y="12" text-anchor="middle" font-family="JetBrains Mono" font-size="6.6" fill="var(--muted)">apo B-100</text>
+        <text x="205" y="17" text-anchor="middle" font-family="JetBrains Mono" font-size="6.6" fill="var(--muted)">apo B-100</text>
+        <text x="272" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="6.6" fill="var(--muted)">apo A-I</text>
+      </svg>
+      <table>
+        <tr><th>Class</th><th>Carries</th><th>From → to</th></tr>
+        <tr><td class="k">Chylomicron</td><td><b>Exogenous TG</b> (dietary)</td><td>Intestine → tissues; lymph/lacteals</td></tr>
+        <tr><td class="k">VLDL</td><td><b>Endogenous TG</b></td><td>Liver → tissues; failure to export → <b>fatty liver</b></td></tr>
+        <tr><td class="k">LDL</td><td>Cholesterol ("bad")</td><td>→ peripheral tissue, receptor-mediated endocytosis</td></tr>
+        <tr><td class="k">HDL</td><td>Cholesterol ("good")</td><td><b>Reverse cholesterol transport</b>, tissue → liver; activates LCAT</td></tr>
+      </table>
+      <ul class="l">
+        <li><b>Lipoprotein lipase</b> on capillary endothelium hydrolyses TG in CM/VLDL; activated by <b>apo C-II</b>, released into blood by <b>heparin</b> ("clearing factor lipase") — the reason post-prandial plasma is lipaemic/milky.</li>
+        <li><b>Species point:</b> dog, cat and most farm species are <b>"HDL animals"</b> (HDL predominant) → spontaneous atherosclerosis is rare; hypercholesterolaemia in dogs points to <b>hypothyroidism, diabetes, nephrotic syndrome, cholestasis or hyperadrenocorticism</b>.</li>
+      </ul>
+    </div>
+
+    <div class="mod span2 c">
+      <h3><span class="n">16</span> Prostaglandins &amp; the eicosanoid tree</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Eicosanoids</b> = 20-carbon (<i>eicosa</i>) derivatives of <b>arachidonic acid</b>, released from membrane phospholipid by <b>phospholipase A₂</b>. They are <em>local hormones (autacoids)</em> — made on demand, act on the cell of origin or its neighbour, and are destroyed within seconds; they are <b>not stored</b>. Basic skeleton = prostanoic acid (cyclopentane ring + two side chains).</p>
+          <div class="flow">
+            <span class="s">Membrane phospholipid</span><span class="ar">→</span><span class="cond">phospholipase A₂ ⟂ corticosteroids</span><span class="ar">→</span><span class="s">Arachidonic acid</span>
+          </div>
+          <div class="flow" style="margin-top:2px">
+            <span class="ar">├</span><span class="cond">cyclo-oxygenase ⟂ NSAIDs / aspirin</span><span class="ar">→</span><span class="s">PGG₂ → PGH₂</span><span class="ar">→</span><span class="s">PGD/E/F, PGI₂, TXA₂</span>
+          </div>
+          <div class="flow" style="margin-top:2px">
+            <span class="ar">└</span><span class="cond">lipoxygenase</span><span class="ar">→</span><span class="s">HPETE</span><span class="ar">→</span><span class="s">Leukotrienes (LTB₄, LTC₄/D₄/E₄ = SRS-A)</span>
+          </div>
+          <ul class="l">
+            <li><b>Nomenclature:</b> PG + letter (A–I, by ring substituent) + <em>subscript number = number of double bonds in the side chains</em>. Series 1 from dihomo-γ-linolenic, <b>series 2 from arachidonic (the important ones)</b>, series 3 from EPA — which is why fish-oil ω-3 gives <em>less inflammatory</em> eicosanoids.</li>
+            <li><b>Aspirin</b> irreversibly acetylates COX (platelets cannot resynthesise it → long antiplatelet effect); other <b>NSAIDs are reversible</b>; <b>corticosteroids block phospholipase A₂</b> and therefore switch off <em>both</em> arms — the reason steroids are broader anti-inflammatories than NSAIDs.</li>
+          </ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <table>
+            <tr><th>Eicosanoid</th><th>Chief source</th><th>Principal action</th></tr>
+            <tr><td class="k">PGF<sub>2α</sub></td><td>Uterine endometrium</td><td><b>Luteolysis</b> + myometrial contraction — the basis of <b>oestrus synchronisation, induction of parturition, treatment of pyometra &amp; retained placenta</b> (dinoprost, cloprostenol)</td></tr>
+            <tr><td class="k">PGE₂</td><td>Most tissues</td><td>Vasodilation, <b>fever &amp; pain sensitisation</b>, gastric mucus/bicarbonate <b>cytoprotection</b>, bronchodilation, cervical relaxation</td></tr>
+            <tr><td class="k">PGI₂ (prostacyclin)</td><td>Vascular endothelium</td><td>Vasodilation, <b>inhibits platelet aggregation</b></td></tr>
+            <tr><td class="k">TXA₂</td><td>Platelets</td><td>Vasoconstriction, <b>promotes platelet aggregation</b> — exact opposite of PGI₂</td></tr>
+            <tr><td class="k">LTB₄</td><td>Leucocytes</td><td>Chemotaxis of neutrophils</td></tr>
+            <tr><td class="k">LTC₄/D₄/E₄</td><td>Mast cells</td><td><b>SRS-A</b>: bronchoconstriction, ↑vascular permeability — anaphylaxis, equine asthma</td></tr>
+          </table>
+          <div class="hook"><b>The PGI₂ ↔ TXA₂ balance</b> (endothelium vs platelet) governing haemostasis, and <b>PGF<sub>2α</sub> luteolysis</b>, are the two prostaglandin facts most likely to be asked in both objective and long-answer form.</div>
+          <div class="trap"><b>Trap:</b> NSAID toxicity in dogs (gastric ulceration, renal papillary necrosis) is not a side reaction — it is the <em>predictable loss of PGE₂ cytoprotection and PGI₂-dependent renal perfusion</em>.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 1 · Lipids</span><span class="m">PLA₂ → COX / LOX → LOCAL HORMONES</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 4 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 1</span>
+      <h2>Proteins &amp; Amino Acids</h2>
+      <span class="sub">Classification · four levels of structure · properties · colour reactions</span>
+    </div>
+    <span class="pg">SHEET 4 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod">
+      <h3><span class="n">17</span> Classification of proteins</h3>
+      <table>
+        <tr><th>Group</th><th>Members &amp; identifiers</th></tr>
+        <tr><td class="k">SIMPLE<br>(yield only AA)</td><td><b>Albumin</b> — water soluble, coagulable, full-saturation (NH₄)₂SO₄; serum albumin, ovalbumin, lactalbumin.<br><b>Globulin</b> — insoluble in water, soluble in dilute salt, half-saturation salting-out; immunoglobulins.<br><b>Glutelin</b> (glutenin), <b>Prolamin</b> (zein of maize, gliadin — deficient in lysine &amp; tryptophan).<br><b>Histone</b> — basic, arginine/lysine rich, bound to DNA. <b>Protamine</b> — most basic, in fish sperm.<br><b>Albuminoid / scleroprotein</b> — <em>most insoluble</em>: collagen, elastin, keratin.</td></tr>
+        <tr><td class="k">CONJUGATED<br>(+ prosthetic group)</td><td><b>Nucleoprotein</b> (nucleic acid) · <b>Glycoprotein / mucoprotein</b> (CHO — mucin, hormones) · <b>Phosphoprotein</b> (<b>casein</b>, ovovitellin) · <b>Chromoprotein</b> (haem — Hb, myoglobin, cytochromes, catalase) · <b>Lipoprotein</b> · <b>Metalloprotein</b> (ceruloplasmin–Cu, ferritin–Fe, carbonic anhydrase–Zn) · <b>Flavoprotein</b> (FAD).</td></tr>
+        <tr><td class="k">DERIVED</td><td><b>Primary</b> (bonds intact): proteans, metaproteins, coagulated proteins.<br><b>Secondary</b> (progressive hydrolysis): <span class="m">protein → proteose → peptone → polypeptide → peptide → amino acid</span>.</td></tr>
+      </table>
+      <div class="mnem"><u>Functional list for a 10-mark "biological significance" answer:</u> structural (collagen, keratin) · catalytic (enzymes) · transport (Hb, albumin, transferrin, ceruloplasmin) · hormonal (insulin, GH) · defence (immunoglobulins, complement) · clotting (fibrinogen) · contractile (actin, myosin) · <b>colloid osmotic pressure (albumin ≈ 80 %)</b> · buffering · storage (casein, ferritin, ovalbumin) · genetic (histones) · nutrition (10 essential AA) · receptors &amp; signalling.</div>
+    </div>
+
+    <div class="mod p">
+      <h3><span class="n">18</span> Four levels of structure</h3>
+      <div class="dl">
+        <dt>Primary</dt><dd>Linear amino-acid sequence + disulphide positions. Bond: <b>peptide (covalent)</b>. Determines all higher orders. First sequenced protein = <b>insulin (Sanger)</b>. A single substitution can be lethal (Hb-S).</dd>
+        <dt>Secondary</dt><dd>Local regular folding held by <b>hydrogen bonds</b> between backbone C=O and N–H. <b>α-helix</b>: right-handed, <em>3.6 residues per turn, pitch 5.4 Å</em>, H-bond n→n+4; broken by proline ("helix breaker") &amp; charged clusters. <b>β-pleated sheet</b>: parallel/antiparallel, H-bonds between strands (silk fibroin, keratin). <b>Collagen triple helix</b>: left-handed strands wound right, repeating <b>Gly–X–Y</b> (X often proline, Y hydroxyproline); glycine at every third residue is obligatory.</dd>
+        <dt>Tertiary</dt><dd>Overall 3-D shape of one chain; stabilised chiefly by <b>hydrophobic interactions</b>, plus ionic/salt bridges, H-bonds, van der Waals and <b>disulphide bonds</b> (the only covalent one). Creates the active site / binding cleft. Example: myoglobin.</dd>
+        <dt>Quaternary</dt><dd>Association of ≥2 subunits by non-covalent forces. <b>Haemoglobin α₂β₂</b>, LDH, aldolase, immunoglobulins. Basis of <b>co-operativity and allosteric regulation</b> (sigmoid O₂ curve of Hb vs hyperbolic curve of myoglobin).</dd>
+      </div>
+      <div class="hook"><b>Vitamin C link:</b> ascorbate is the cofactor for <b>prolyl and lysyl hydroxylase</b>. No vitamin C → no hydroxyproline → collagen triple helix cannot cross-link → <b>scurvy</b> (guinea pig, primates, fish — species that lack L-gulonolactone oxidase). Poor wound healing + capillary fragility.</div>
+    </div>
+
+    <div class="mod s">
+      <h3><span class="n">19</span> Properties of proteins</h3>
+      <ul class="l">
+        <li><b>Amphoteric &amp; isoelectric point (pI):</b> net charge zero at pI → minimum solubility, maximum precipitation, no movement in an electric field. <b>Casein pI = 4.6</b> — the reason milk curdles when it sours or when acid/rennet is added, and the basis of paneer/dahi. Serum albumin pI ≈ 4.9.</li>
+        <li><b>Electrophoresis:</b> at pH 8.6 all plasma proteins are anionic and separate as <em>albumin → α₁ → α₂ → β → γ</em>. This is the direct link to <b>dysproteinaemias</b> in Unit 3.</li>
+        <li><b>Denaturation:</b> heat, extremes of pH, urea, guanidine, heavy metals, organic solvents, UV, vigorous shaking. <b>Secondary, tertiary and quaternary structure are destroyed; the peptide bonds of the primary structure remain intact.</b> Result: loss of biological activity, ↓solubility, ↑viscosity, ↑digestibility, exposure of −SH groups. Usually irreversible (boiled egg) but sometimes reversible (ribonuclease).</li>
+        <li><b>Precipitation:</b> by heavy-metal ions (Hg²⁺, Pb²⁺ — protein/egg white is a first-aid antidote), by alkaloidal reagents (tungstic, trichloroacetic, picric, sulphosalicylic acid — used for deproteinising blood before glucose estimation), by organic solvents, and by <b>salting out</b> — globulin at half saturation and albumin at full saturation with ammonium sulphate.</li>
+        <li><b>Colloidal nature:</b> large size, Tyndall effect, non-dialysable, exert osmotic (oncotic) pressure ≈ 25 mmHg.</li>
+      </ul>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">20</span> Amino acids — structure &amp; classification</h3>
+      <p class="l">General formula: a carbon bearing −NH₂, −COOH, −H and a distinguishing <b>R group</b>. All 20 protein amino acids are <b>α-amino acids of the L-configuration</b>; <b>glycine alone is optically inactive</b> (R = H, no chiral carbon).</p>
+      <table>
+        <tr><th>Basis</th><th>Groups</th></tr>
+        <tr><td class="k">Side chain</td><td>Aliphatic (Gly, Ala, Val, Leu, Ile) · Hydroxyl (Ser, Thr, Tyr) · Sulphur (Cys, Met) · <b>Aromatic (Phe, Tyr, Trp — absorb at 280 nm; basis of protein estimation)</b> · Acidic (Asp, Glu) + amides (Asn, Gln) · <b>Basic (Lys, Arg, His)</b> · Imino (Pro — actually an imino acid, gives <em>yellow</em> with ninhydrin)</td></tr>
+        <tr><td class="k">Polarity</td><td>Non-polar/hydrophobic (buried in core) vs polar uncharged vs charged</td></tr>
+        <tr><td class="k">Nutrition</td><td><b>Essential (10)</b> · Semi-essential: <b>arginine &amp; histidine</b> (needed in growth) · Non-essential</td></tr>
+        <tr><td class="k">Metabolic fate</td><td><b>Purely ketogenic: Leucine &amp; Lysine only.</b> Both keto- &amp; glucogenic: Phe, Tyr, Trp, Ile, Thr. All the rest glucogenic.</td></tr>
+      </table>
+      <div class="mnem"><u>Essential amino acids — PVT TIM HALL:</u> <b>P</b>henylalanine, <b>V</b>aline, <b>T</b>hreonine, <b>T</b>ryptophan, <b>I</b>soleucine, <b>M</b>ethionine, <b>H</b>istidine, <b>A</b>rginine, <b>L</b>eucine, <b>L</b>ysine.<br><u>Ketogenic — "Leu &amp; Lys are Kings":</u> only these two.</div>
+      <div class="hook"><b>Species &amp; feed hooks:</b> <b>lysine</b> is first-limiting in cereal-based pig diets; <b>methionine</b> first-limiting in poultry; <b>tryptophan</b> deficient in maize (pellagra, since Trp → niacin). <b>Glycine/serine is essential for poultry</b> (uric acid synthesis). <b>Taurine is essential for the cat</b> — deficiency causes <em>dilated cardiomyopathy and feline central retinal degeneration</em>; <b>arginine deficiency in the cat causes hyperammonaemia within hours</b>. Rumen microbes synthesise all EAA, so quality of dietary protein matters far less in adult ruminants (but <b>bypass/rumen-protected methionine &amp; lysine</b> raise milk protein).</div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">21</span> Physical &amp; chemical properties of amino acids · the peptide bond</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Amphoteric nature &amp; zwitterion.</b> In solution an amino acid exists as a dipolar ion with −NH₃⁺ and −COO⁻. It therefore acts as an acid <em>and</em> a base, and is a good buffer. Hence high melting points, water solubility, and large dipole moments — they behave like salts, not organic solids.</p>
+          <div class="flow" style="font-size:8px">
+            <span class="s">Low pH<br>−NH₃⁺ / −COOH<br>cation → cathode</span><span class="ar">→</span><span class="s"><b>pI</b><br>zwitterion<br>no migration</span><span class="ar">→</span><span class="s">High pH<br>−NH₂ / −COO⁻<br>anion → anode</span>
+          </div>
+          <p class="l"><b>Isoelectric pH:</b> for a neutral amino acid <span class="m">pI = (pK₁ + pK₂)/2</span>; for acidic and basic amino acids, average the two pK values that flank the zwitterion. Solubility and buffering are <em>minimum</em> at pI.</p>
+          <p class="l"><b>Optical activity.</b> The α-carbon is asymmetric (except glycine) → D and L forms, dextro (+) or laevo (−) rotation. <b>Proteins contain only L-amino acids</b>; D-forms occur in bacterial cell walls (D-alanine, D-glutamate) and some antibiotics — which is why they resist host proteases.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Peptide bond formation.</b> The −COOH of one amino acid condenses with the −NH₂ of the next with loss of water, giving a <b>substituted amide (−CO−NH−)</b> link. Chains are written N-terminal → C-terminal.</p>
+          <ul class="l">
+            <li>Has <b>partial double-bond character</b> from resonance → the six atoms of the bond are <b>rigid and planar</b>; <em>no free rotation about the C−N bond</em>.</li>
+            <li>Almost always <b>trans</b> (except X–proline); rotation is possible only about the <b>φ (phi) and ψ (psi)</b> bonds of the α-carbon — the basis of the <b>Ramachandran plot</b>.</li>
+            <li>Uncharged but polar; the C=O and N–H are exactly the H-bond donors/acceptors that build the α-helix and β-sheet.</li>
+            <li>Hydrolysed by strong acid/alkali or by proteolytic enzymes; two or more peptide bonds give the <b>biuret reaction</b>.</li>
+          </ul>
+          <div class="trap"><b>Trap:</b> <em>Biuret is negative for free amino acids and for dipeptides</em> — it needs at least two peptide bonds (i.e. a tripeptide onwards). Ninhydrin, in contrast, is positive for free α-amino acids.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <table>
+            <tr><th>Reaction</th><th>Detects</th><th>Colour</th></tr>
+            <tr><td class="k">Ninhydrin</td><td>Free α-amino acids</td><td><b>Blue-violet</b> (Ruhemann's purple); <em>proline → yellow</em></td></tr>
+            <tr><td class="k">Biuret</td><td>≥2 peptide bonds</td><td>Violet / pink</td></tr>
+            <tr><td class="k">Millon's</td><td><b>Tyrosine</b> (phenol)</td><td>Brick red</td></tr>
+            <tr><td class="k">Xanthoproteic</td><td>Aromatic ring</td><td>Yellow → orange with alkali</td></tr>
+            <tr><td class="k">Hopkins–Cole</td><td><b>Tryptophan</b> (indole)</td><td>Violet ring</td></tr>
+            <tr><td class="k">Sakaguchi</td><td><b>Arginine</b> (guanidino)</td><td>Red</td></tr>
+            <tr><td class="k">Lead acetate</td><td><b>Cysteine</b> (−SH)</td><td>Black PbS</td></tr>
+            <tr><td class="k">Sanger's (FDNB)</td><td>N-terminal AA</td><td>Yellow DNP-AA</td></tr>
+            <tr><td class="k">Edman (PITC)</td><td>N-terminal, sequential</td><td>PTH-amino acid</td></tr>
+          </table>
+          <div class="hook"><b>Sørensen's formol titration</b> (your practical): formaldehyde blocks the −NH₂ group, removing its basic character, so the −COOH can be titrated against standard NaOH with phenolphthalein — this is how amino acids are <em>estimated</em>, and it is a favourite "principle" question.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 1 · Proteins &amp; Amino Acids</span><span class="m">SEQUENCE → FOLD → FUNCTION</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 5 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 1</span>
+      <h2>Nucleic Acids · Final Recall Bank</h2>
+      <span class="sub">Purines &amp; pyrimidines · nucleotides · DNA · RNA · 60 one-liners</span>
+    </div>
+    <span class="pg">SHEET 5 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod p">
+      <h3><span class="n">22</span> Bases → nucleoside → nucleotide</h3>
+      <svg viewBox="0 0 340 60" role="img" aria-label="Assembly of a nucleotide from base, sugar and phosphate">
+        <rect x="4" y="16" width="72" height="26" rx="3" fill="var(--purple-w)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="40" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="var(--purple)">BASE</text>
+        <text x="40" y="37" text-anchor="middle" font-family="Inter" font-size="6.8" fill="var(--ink-2)">purine / pyrimidine</text>
+        <text x="88" y="31" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--faint)">+</text>
+        <rect x="100" y="16" width="72" height="26" rx="3" fill="var(--teal-w)" stroke="var(--teal)" stroke-width="1"/>
+        <text x="136" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="var(--teal)">PENTOSE</text>
+        <text x="136" y="37" text-anchor="middle" font-family="Inter" font-size="6.8" fill="var(--ink-2)">ribose / deoxyribose</text>
+        <text x="182" y="31" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--faint)">=</text>
+        <rect x="192" y="16" width="66" height="26" rx="3" fill="var(--surface)" stroke="var(--rule)" stroke-width="1"/>
+        <text x="225" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="var(--ink)">NUCLEOSIDE</text>
+        <text x="225" y="37" text-anchor="middle" font-family="Inter" font-size="6.6" fill="var(--ink-2)">N-glycosidic bond</text>
+        <text x="266" y="31" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--faint)">+P</text>
+        <rect x="278" y="16" width="58" height="26" rx="3" fill="var(--blue-w)" stroke="var(--blue)" stroke-width="1"/>
+        <text x="307" y="28" text-anchor="middle" font-family="Inter" font-size="8" font-weight="700" fill="var(--blue)">NUCLEOTIDE</text>
+        <text x="307" y="37" text-anchor="middle" font-family="Inter" font-size="6.6" fill="var(--ink-2)">ester at 5′-OH</text>
+        <text x="4" y="55" font-family="Inter" font-size="6.8" fill="var(--faint)">N-9 of purine or N-1 of pyrimidine joins C-1′ of the sugar · β-configuration</text>
+      </svg>
+      <div class="dl">
+        <dt>Purines</dt><dd>Fused 6+5 ring. <b>Adenine, Guanine</b>; also hypoxanthine, xanthine, <b>uric acid</b> (end product in birds &amp; reptiles = uricotelic; in Dalmatian dogs), and methylxanthines <b>caffeine &amp; theobromine</b> — theobromine of chocolate is the classic <em>canine toxicosis</em>.</dd>
+        <dt>Pyrimidines</dt><dd>Single 6-ring. <b>Cytosine (both), Thymine (DNA only), Uracil (RNA only)</b>; orotic acid is the pathway intermediate. Mnemonic: <b>CUT the PY</b> — Cytosine, Uracil, Thymine are PYrimidines.</dd>
+        <dt>Naming</dt><dd>Adenine→adenosine→AMP/ADP/ATP; Guanine→guanosine→GMP; Cytosine→cytidine; Uracil→uridine; Thymine→thymidine. Add "deoxy" for the DNA series.</dd>
+      </div>
+      <div class="hook"><b>Biological significance of nucleotides (a guaranteed short note):</b> ① <b>energy currency</b> — ATP, GTP, and the high-energy phosphoanhydride bond; ② <b>second messengers</b> — cAMP, cGMP; ③ <b>coenzymes</b> — NAD⁺, NADP⁺, FAD, CoA, all built on an <em>adenine nucleotide</em>; ④ <b>activated carriers</b> — UDP-glucose (glycogen), CDP-choline (phospholipid), <b>SAM</b> (methyl), PAPS (sulphate, for GAGs &amp; detoxification); ⑤ <b>monomers</b> of DNA &amp; RNA; ⑥ allosteric regulators (ATP/AMP ratio); ⑦ drug targets — allopurinol, 5-fluorouracil, azathioprine.</div>
+    </div>
+
+    <div class="mod">
+      <h3><span class="n">23</span> DNA — Watson &amp; Crick, 1953</h3>
+      <ul class="l">
+        <li><b>Two antiparallel polynucleotide chains</b> (one 5′→3′, the other 3′→5′) wound into a <b>right-handed double helix</b>; sugar-phosphate backbone outside joined by <b>3′,5′-phosphodiester bonds</b>, bases stacked inside.</li>
+        <li><b>Complementary base pairing:</b> <b>A = T (2 hydrogen bonds)</b>, <b>G ≡ C (3 hydrogen bonds)</b> — always a purine with a pyrimidine, keeping the diameter constant.</li>
+        <li><b>Chargaff's rules:</b> A = T, G = C, therefore purines = pyrimidines; the (A+T)/(G+C) ratio is species-specific.</li>
+        <li>Major and minor grooves — the binding sites of regulatory proteins and many drugs.</li>
+      </ul>
+      <div class="vals">
+        <div class="val"><span class="v">2 nm</span><span class="c">diameter (20 Å)</span></div>
+        <div class="val"><span class="v">10</span><span class="c">bp per turn</span></div>
+        <div class="val"><span class="v">3.4 nm</span><span class="c">pitch per turn</span></div>
+        <div class="val"><span class="v">0.34 nm</span><span class="c">rise per bp</span></div>
+      </div>
+      <ul class="l">
+        <li><b>Forms:</b> <b>B-DNA</b> = physiological, right-handed; A-DNA = dehydrated, right-handed; <b>Z-DNA = left-handed</b>, zig-zag, alternating purine-pyrimidine (GC repeats).</li>
+        <li><b>Denaturation / melting:</b> heat or alkali separates the strands. <b>T<sub>m</sub> rises with G+C content</b> (3 H-bonds). Strand separation exposes the bases → <b>hyperchromic effect: absorbance at 260 nm increases</b>. Slow cooling → renaturation/annealing (the principle of hybridisation and PCR).</li>
+        <li><b>Packaging:</b> DNA + <b>histones (H2A, H2B, H3, H4 octamer)</b> wrapped by ~146 bp = <b>nucleosome</b>, sealed by <b>H1</b> → solenoid → chromatin → chromosome. Supercoiling is managed by <b>topoisomerases/gyrase</b> (target of fluoroquinolones in bacteria).</li>
+        <li><b>Functions:</b> repository of genetic information, replication (semi-conservative), transcription, mutation &amp; variation, molecular diagnosis (PCR), parentage &amp; breed identification.</li>
+      </ul>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">24</span> RNA — a typical ribonucleic acid</h3>
+      <p class="l">Single-stranded, <b>ribose</b> sugar, <b>uracil in place of thymine</b>, alkali-labile (2′-OH), can fold on itself into local double-helical hairpins.</p>
+      <table>
+        <tr><th>Type</th><th>%</th><th>Structure &amp; role</th></tr>
+        <tr><td class="k">mRNA</td><td>2–5</td><td>Most heterogeneous, shortest-lived. Eukaryotic mRNA is capped with <b>7-methylguanosine at 5′</b> and carries a <b>3′ poly-A tail</b>; carries <b>codons</b> — the working copy of the gene</td></tr>
+        <tr><td class="k">tRNA</td><td>≈15</td><td><b>Smallest RNA</b>; <b>clover-leaf</b> secondary / inverted-L tertiary shape; has an <b>anticodon arm</b> and a <b>3′-CCA end that accepts the amino acid</b>; rich in unusual bases (pseudouridine, dihydrouridine, inosine). Adaptor molecule</td></tr>
+        <tr><td class="k">rRNA</td><td><b>≈80</b></td><td><b>Most abundant</b>; with proteins forms the ribosome — <b>prokaryote 70S (50S + 30S), eukaryote 80S (60S + 40S)</b>; the peptidyl transferase is a <em>ribozyme</em>. Target of aminoglycosides &amp; macrolides</td></tr>
+        <tr><td class="k">Others</td><td>—</td><td>snRNA (splicing), miRNA/siRNA (gene silencing), hnRNA (mRNA precursor)</td></tr>
+      </table>
+      <div class="trap"><b>Trap that costs marks:</b> "smallest" = <b>tRNA</b>; "most abundant" = <b>rRNA</b>; "most variable / shortest half-life" = <b>mRNA</b>. Examiners rotate these three every year.</div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">25</span> Final recall bank — read these last, straight before the paper</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div class="qa">
+          <div><span>Fluid mosaic model proposed by</span><span>Singer &amp; Nicolson, 1972</span></div>
+          <div><span>Membrane with highest lipid / lowest protein</span><span>Myelin</span></div>
+          <div><span>Membrane with highest protein</span><span>Inner mitochondrial membrane</span></div>
+          <div><span>Enzyme moving lipid inward / outward</span><span>Flippase / floppase</span></div>
+          <div><span>Only insulin-dependent glucose transporter</span><span>GLUT-4</span></div>
+          <div><span>Glucose sensor of β-cell &amp; liver</span><span>GLUT-2 (high K<sub>m</sub>)</span></div>
+          <div><span>Inhibitor of Na⁺/K⁺-ATPase</span><span>Ouabain / digitalis</span></div>
+          <div><span>Na⁺-glucose symporter inhibitor</span><span>Phlorizin</span></div>
+          <div><span>Donnan equation</span><span>[Na]<sub>i</sub>[Cl]<sub>i</sub> = [Na]<sub>o</sub>[Cl]<sub>o</sub></span></div>
+          <div><span>Buffer works best at</span><span>pH = pK<sub>a</sub> (± 1)</span></div>
+          <div><span>pK<sub>a</sub> of bicarbonate system</span><span>6.1</span></div>
+          <div><span>HCO₃⁻ : H₂CO₃ ratio in blood</span><span>20 : 1</span></div>
+          <div><span>Chief intracellular buffer</span><span>Protein (imidazole) &amp; phosphate</span></div>
+          <div><span>Chief buffer inside the RBC</span><span>Haemoglobin</span></div>
+          <div><span>Epimers of glucose at C-4 / C-2</span><span>Galactose / mannose</span></div>
+          <div><span>Specific rotation of D-glucose</span><span>+52.7°</span></div>
+          <div><span>Sweetest sugar</span><span>Fructose</span></div>
+          <div><span>Energy source of spermatozoa</span><span>Fructose</span></div>
+          <div><span>Non-reducing disaccharides</span><span>Sucrose, trehalose</span></div>
+          <div><span>Milk sugar &amp; its linkage</span><span>Lactose, Gal β1→4 Glc</span></div>
+          <div><span>Glycogen branch frequency</span><span>Every 8–12 residues (α1→6)</span></div>
+          <div><span>Polysaccharide used to measure GFR</span><span>Inulin</span></div>
+          <div><span>Only non-sulphated GAG</span><span>Hyaluronic acid</span></div>
+          <div><span>Most acidic GAG / anticoagulant</span><span>Heparin</span></div>
+          <div><span>"Spreading factor" enzyme</span><span>Hyaluronidase</span></div>
+          <div><span>Bacterial wall polymer &amp; its sugars</span><span>Peptidoglycan — NAG + NAM</span></div>
+          <div><span>Enzyme in tears that lyses bacteria</span><span>Lysozyme (β1→4 NAM–NAG)</span></div>
+          <div><span>Endotoxin of Gram-negative wall</span><span>Lipid A of LPS</span></div>
+        </div>
+        <div class="qa">
+          <div><span>Energy value of fat</span><span>9.3 kcal/g</span></div>
+          <div><span>Essential fatty acids</span><span>Linoleic &amp; α-linolenic</span></div>
+          <div><span>EFA additionally essential for the cat</span><span>Arachidonic acid</span></div>
+          <div><span>Index of unsaturation</span><span>Iodine number</span></div>
+          <div><span>Index of rancidity</span><span>Acid number</span></div>
+          <div><span>Test for ghee adulteration</span><span>Reichert–Meissl number</span></div>
+          <div><span>Saponification number is ∝</span><span>1 / fatty-acid chain length</span></div>
+          <div><span>Phospholipid of lung surfactant</span><span>Dipalmitoyl lecithin</span></div>
+          <div><span>Phospholipid only in inner mito membrane</span><span>Cardiolipin</span></div>
+          <div><span>Only phospholipid without glycerol</span><span>Sphingomyelin</span></div>
+          <div><span>Largest, least dense lipoprotein</span><span>Chylomicron</span></div>
+          <div><span>Reverse cholesterol transport</span><span>HDL (apo A-I, LCAT)</span></div>
+          <div><span>Activator of lipoprotein lipase</span><span>Apo C-II (released by heparin)</span></div>
+          <div><span>Ring system of cholesterol</span><span>Cyclopentanoperhydrophenanthrene</span></div>
+          <div><span>Precursor of all eicosanoids</span><span>Arachidonic acid (20 C)</span></div>
+          <div><span>Enzyme blocked by corticosteroids</span><span>Phospholipase A₂</span></div>
+          <div><span>Enzyme blocked by aspirin/NSAIDs</span><span>Cyclo-oxygenase</span></div>
+          <div><span>Prostaglandin causing luteolysis</span><span>PGF<sub>2α</sub></span></div>
+          <div><span>Platelet aggregator vs inhibitor</span><span>TXA₂ vs PGI₂</span></div>
+          <div><span>Most basic protein</span><span>Protamine</span></div>
+          <div><span>Phosphoprotein of milk &amp; its pI</span><span>Casein, pI 4.6</span></div>
+          <div><span>Residues per turn of α-helix</span><span>3.6 (pitch 5.4 Å)</span></div>
+          <div><span>Repeating unit of collagen</span><span>Gly–X–Y (Y = hydroxyproline)</span></div>
+          <div><span>Bond retained after denaturation</span><span>Peptide bond (primary structure)</span></div>
+          <div><span>Only optically inactive amino acid</span><span>Glycine</span></div>
+          <div><span>Purely ketogenic amino acids</span><span>Leucine &amp; lysine</span></div>
+          <div><span>Amino acids absorbing at 280 nm</span><span>Phe, Tyr, Trp</span></div>
+          <div><span>Ninhydrin colour with proline</span><span>Yellow (others blue-violet)</span></div>
+          <div><span>Method for estimating amino acids</span><span>Sørensen's formol titration</span></div>
+          <div><span>Hydrogen bonds in A=T / G≡C</span><span>2 / 3</span></div>
+          <div><span>Base pairs per turn &amp; pitch of B-DNA</span><span>10 bp, 3.4 nm</span></div>
+          <div><span>Left-handed DNA</span><span>Z-DNA</span></div>
+          <div><span>Increase in A₂₆₀ on melting</span><span>Hyperchromic effect</span></div>
+          <div><span>Smallest / most abundant RNA</span><span>tRNA / rRNA</span></div>
+          <div><span>Amino-acid attachment site on tRNA</span><span>3′-CCA end</span></div>
+        </div>
+      </div>
+      <div class="mnem" style="margin-top:2px"><u>Thirty-second closing sweep:</u> <b>1972 Singer–Nicolson</b> · <b>3 Na out : 2 K in</b> · <b>[Na][Cl] products equal</b> · <b>pH = pK<sub>a</sub> + log salt/acid, ratio 20:1</b> · <b>α = digestible, β = microbial</b> · <b>branch every 8–12 in glycogen</b> · <b>hyaluronic acid alone unsulphated</b> · <b>iodine = unsaturation, acid = rancidity, RM = ghee</b> · <b>PLA₂ → COX → PGF<sub>2α</sub> lyses the CL</b> · <b>3.6 residues per helical turn</b> · <b>PVT TIM HALL</b> · <b>Leu &amp; Lys are the only ketogenic pair</b> · <b>A=T two bonds, G≡C three</b> · <b>10 bp, 3.4 nm, right-handed B-DNA</b>.</div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 1 · Nucleic Acids &amp; Recall</span><span class="m">END OF UNIT 1 — 5 SHEETS</span></div>
+</section>
+
+</div>

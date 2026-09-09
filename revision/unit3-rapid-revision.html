@@ -1,0 +1,687 @@
+<title>Unit 3 Sixty-Minute Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --ink:#0e1c29; --ink-2:#33465a; --muted:#63758a; --faint:#8a9aab;
+  --ground:#eef3f8; --surface:#ffffff; --surface-2:#f6f9fc;
+  --rule:rgba(21,101,192,.18); --rule-soft:rgba(21,101,192,.10);
+  --blue:#1565c0; --teal:#00897b; --purple:#6a48b5; --amber:#b25e00;
+  --coral:#d84315; --sage:#2e7d32;
+  --blue-w:rgba(21,101,192,.07); --teal-w:rgba(0,137,123,.07);
+  --purple-w:rgba(106,72,181,.07); --amber-w:rgba(178,94,0,.08);
+  --coral-w:rgba(216,67,21,.07); --sage-w:rgba(46,125,50,.07);
+  --shadow:0 1px 2px rgba(14,28,41,.05), 0 10px 30px rgba(14,28,41,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+    --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+    --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+    --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+    --coral:#f5825c; --sage:#68c46d;
+    --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+    --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+    --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e6edf5; --ink-2:#c3d0dd; --muted:#93a4b6; --faint:#75879a;
+  --ground:#0b1420; --surface:#111e2c; --surface-2:#16253a;
+  --rule:rgba(120,170,225,.24); --rule-soft:rgba(120,170,225,.13);
+  --blue:#6aa9f0; --teal:#3fc0b0; --purple:#a98ae8; --amber:#e0a34a;
+  --coral:#f5825c; --sage:#68c46d;
+  --blue-w:rgba(106,169,240,.10); --teal-w:rgba(63,192,176,.10);
+  --purple-w:rgba(169,138,232,.10); --amber-w:rgba(224,163,74,.11);
+  --coral-w:rgba(245,130,92,.10); --sage-w:rgba(104,196,109,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Inter",system-ui,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; padding:22px 14px 60px;
+}
+.wrap{max-width:210mm;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* ---------- top bar (screen only) ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;
+  padding:12px 16px;border:1px solid var(--rule);border-radius:10px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.bar h1{margin:0;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.bar p{margin:0;font-size:11.5px;color:var(--muted);flex:1 1 240px;line-height:1.45}
+.bar .go{
+  font:600 11px/1 "Inter",sans-serif;letter-spacing:.04em;
+  border:1px solid var(--blue);color:var(--blue);background:transparent;
+  padding:7px 12px;border-radius:6px;cursor:pointer;
+}
+.bar .go:hover{background:var(--blue-w)}
+.bar .go:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* ---------- sheet ---------- */
+.sheet{
+  width:210mm;min-height:297mm;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);
+  padding:11mm 10mm 8mm;position:relative;
+  display:flex;flex-direction:column;gap:3.6mm;
+}
+.head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+  border-bottom:2px solid var(--blue);padding-bottom:4px;
+}
+.head .l{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.head .unit{
+  font:800 9px/1 "Inter",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;background:var(--blue);padding:4px 7px;border-radius:3px;
+}
+.head h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.015em}
+.head .sub{font-size:9.5px;color:var(--muted);font-weight:500}
+.head .pg{font:700 9px/1 "JetBrains Mono",monospace;color:var(--faint);letter-spacing:.06em;white-space:nowrap}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:3.2mm;align-content:start}
+.grid.thirds{grid-template-columns:1fr 1fr 1fr}
+.span2{grid-column:1/-1}
+
+/* ---------- module ---------- */
+.mod{
+  border:1px solid var(--rule-soft);border-left:2.5px solid var(--blue);
+  border-radius:3px;background:var(--surface-2);padding:5px 7px 6px;
+  display:flex;flex-direction:column;gap:3.5px;break-inside:avoid;
+}
+.mod>h3{
+  margin:0;font:800 8.6px/1.2 "Inter",sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--blue);display:flex;gap:6px;align-items:center;
+}
+.mod>h3 .n{
+  font:700 7.6px/1 "JetBrains Mono",monospace;color:var(--surface);
+  background:var(--blue);border-radius:2px;padding:2.5px 3.5px;letter-spacing:0;
+}
+.mod.t{border-left-color:var(--teal);background:var(--teal-w)}
+.mod.t>h3{color:var(--teal)} .mod.t>h3 .n{background:var(--teal)}
+.mod.p{border-left-color:var(--purple);background:var(--purple-w)}
+.mod.p>h3{color:var(--purple)} .mod.p>h3 .n{background:var(--purple)}
+.mod.a{border-left-color:var(--amber);background:var(--amber-w)}
+.mod.a>h3{color:var(--amber)} .mod.a>h3 .n{background:var(--amber)}
+.mod.c{border-left-color:var(--coral);background:var(--coral-w)}
+.mod.c>h3{color:var(--coral)} .mod.c>h3 .n{background:var(--coral)}
+.mod.s{border-left-color:var(--sage);background:var(--sage-w)}
+.mod.s>h3{color:var(--sage)} .mod.s>h3 .n{background:var(--sage)}
+.mod.b{background:var(--blue-w)}
+
+/* ---------- text primitives ---------- */
+p.l{margin:0;font-size:8.7px;line-height:1.42;color:var(--ink-2)}
+ul.l{margin:0;padding-left:11px;display:flex;flex-direction:column;gap:1.8px}
+ul.l li{font-size:8.7px;line-height:1.38;color:var(--ink-2)}
+ul.l li::marker{color:var(--faint)}
+b,strong{color:var(--ink);font-weight:700}
+em{font-style:normal;color:var(--coral);font-weight:700}
+code,.m{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:8.1px;font-weight:600;color:var(--ink)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:1.8px 7px;font-size:8.7px;line-height:1.35}
+.dl dt{font-weight:700;color:var(--ink);white-space:nowrap}
+.dl dd{margin:0;color:var(--ink-2)}
+
+/* ---------- table ---------- */
+table{border-collapse:collapse;width:100%;font-size:8.3px;line-height:1.3}
+th,td{border:1px solid var(--rule-soft);padding:2.6px 4px;text-align:left;vertical-align:top;color:var(--ink-2)}
+th{background:var(--blue-w);color:var(--ink);font-weight:700;font-size:7.9px;letter-spacing:.03em;text-transform:uppercase}
+td.k{font-weight:700;color:var(--ink);white-space:nowrap}
+td .m{font-size:7.9px}
+.scroll{overflow-x:auto}
+
+/* ---------- chips / callouts ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{
+  font:600 7.9px/1.25 "Inter",sans-serif;border:1px solid var(--rule);
+  background:var(--surface);border-radius:9px;padding:2.4px 6px;color:var(--ink-2);
+}
+.chip b{color:var(--ink)}
+.mnem{
+  border:1px dashed var(--amber);background:var(--amber-w);border-radius:3px;
+  padding:4px 6px;font-size:8.5px;line-height:1.35;color:var(--ink-2);
+}
+.mnem u{text-decoration:none;color:var(--amber);font-weight:800}
+.hook{
+  border-left:2.5px solid var(--coral);background:var(--coral-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.hook b{color:var(--coral)}
+.trap{
+  border-left:2.5px solid var(--purple);background:var(--purple-w);
+  padding:3.5px 6px;font-size:8.4px;line-height:1.38;color:var(--ink-2);border-radius:0 3px 3px 0;
+}
+.trap b{color:var(--purple)}
+
+/* value strip */
+.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(58px,1fr));gap:3px}
+.val{border:1px solid var(--rule-soft);background:var(--surface);border-radius:3px;padding:3px 4px;text-align:center}
+.val .v{font:700 10px/1.1 "JetBrains Mono",monospace;color:var(--blue);font-variant-numeric:tabular-nums}
+.val .c{font-size:7.4px;color:var(--muted);line-height:1.25;margin-top:1.5px;display:block}
+
+/* flow arrows */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:3px;font-size:8.3px;color:var(--ink-2)}
+.flow .s{border:1px solid var(--rule);background:var(--surface);border-radius:3px;padding:2.4px 5px;font-weight:600;color:var(--ink)}
+.flow .ar{color:var(--faint);font-weight:700}
+.flow .cond{font:600 7.4px/1 "Inter",sans-serif;color:var(--teal)}
+
+svg{display:block;width:100%;height:auto}
+.cap{font-size:7.4px;color:var(--faint);line-height:1.3}
+
+/* recall grid p5 */
+.qa{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden}
+.qa div{display:grid;grid-template-columns:1.15fr 1fr;font-size:8.3px;line-height:1.32}
+.qa div:nth-child(odd){background:var(--surface)}
+.qa div>span{padding:2.4px 5px;border-bottom:1px solid var(--rule-soft)}
+.qa div>span:first-child{color:var(--ink-2);border-right:1px solid var(--rule-soft)}
+.qa div>span:last-child{font-weight:700;color:var(--ink)}
+.qa div:last-child>span{border-bottom:0}
+
+.foot{
+  margin-top:auto;border-top:1px solid var(--rule-soft);padding-top:3.5px;
+  display:flex;justify-content:space-between;gap:10px;
+  font-size:7.4px;color:var(--faint);letter-spacing:.02em;
+}
+.foot .m{font-size:7.4px;color:var(--faint);font-weight:600}
+
+@media print{
+  body{background:#fff;padding:0}
+  .bar{display:none}
+  .wrap{max-width:none;gap:0}
+  .sheet{box-shadow:none;border:0;border-radius:0;break-after:page;page-break-after:always;min-height:297mm}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
+}
+@page{size:A4;margin:0}
+@media (max-width:230mm){
+  .wrap,.sheet{width:100%;min-width:0}
+  .sheet{padding:14px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<div class="bar">
+  <h1>Unit&nbsp;3 · Sixty-Minute Sheet</h1>
+  <p>Veterinary Analytical Biochemistry, VCI 2+1 syllabus, compressed to 5 printable A4 sides. This is the unit that pays twice — it is examined here and again in Clinical Practices. Coral = examiner's favourite. Purple = the trap that costs marks.</p>
+  <button class="go" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<!-- ═══════════════════════ SHEET 1 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 3</span>
+      <h2>Blood Sugar Regulation · Diabetes · Tests for Carbohydrate Disturbance</h2>
+      <span class="sub">Syllabus lines 1–2</span>
+    </div>
+    <span class="pg">SHEET 1 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod span2 b">
+      <h3><span class="n">01</span> Hormonal control of carbohydrate metabolism &amp; regulation of blood sugar</h3>
+      <p class="l">Blood glucose is held within narrow limits by <b>one hypoglycaemic hormone opposed by five hyperglycaemic ones</b>. Sources of blood glucose: intestinal absorption, hepatic glycogenolysis, gluconeogenesis. Losses: tissue uptake and oxidation, glycogenesis, lipogenesis, and — above the renal threshold — urinary loss.</p>
+      <div class="scroll">
+      <table>
+        <tr><th>Hormone</th><th>Source</th><th>Chief actions on carbohydrate</th><th>Net effect</th></tr>
+        <tr><td class="k">Insulin</td><td>β-cells, islets of Langerhans</td><td>Recruits <b>GLUT-4</b> in muscle and fat; ↑ glucokinase, glycogen synthase, PFK-1, PDH, acetyl-CoA carboxylase; ↓ glycogen phosphorylase, gluconeogenic enzymes, hormone-sensitive lipase</td><td><b>The only hypoglycaemic hormone</b>; anabolic; also drives K⁺ into cells</td></tr>
+        <tr><td class="k">Glucagon</td><td>α-cells</td><td>cAMP → PKA → <b>hepatic glycogenolysis, gluconeogenesis, ketogenesis</b>; no action on muscle</td><td>Hyperglycaemic; the fasting hormone</td></tr>
+        <tr><td class="k">Adrenaline</td><td>Adrenal medulla</td><td>Glycogenolysis in <b>liver and muscle</b>, lipolysis, ↓insulin release (α₂)</td><td>Hyperglycaemic; "stress hyperglycaemia" — <b>marked in the cat</b></td></tr>
+        <tr><td class="k">Glucocorticoids</td><td>Adrenal cortex</td><td>↑ gluconeogenesis and protein catabolism; peripheral <b>insulin resistance</b></td><td>Hyperglycaemic; hyperadrenocorticism</td></tr>
+        <tr><td class="k">Growth hormone</td><td>Anterior pituitary</td><td>Anti-insulin, ↑lipolysis</td><td>Hyperglycaemic; acromegaly, and the <b>progesterone-driven GH of the dioestrous bitch</b></td></tr>
+        <tr><td class="k">Thyroxine</td><td>Thyroid</td><td>↑ intestinal absorption and glycogenolysis</td><td>Hyperglycaemic</td></tr>
+      </table>
+      </div>
+      <div class="vals">
+        <div class="val"><span class="v">70–110</span><span class="c">dog/cat, mg/dL</span></div>
+        <div class="val"><span class="v">45–60</span><span class="c">cattle &amp; sheep</span></div>
+        <div class="val"><span class="v">75–115</span><span class="c">horse</span></div>
+        <div class="val"><span class="v">85–150</span><span class="c">poultry</span></div>
+        <div class="val"><span class="v">180</span><span class="c">renal threshold, dog</span></div>
+        <div class="val"><span class="v">280–300</span><span class="c">renal threshold, cat</span></div>
+      </div>
+      <div class="hook"><b>Why ruminant values are low and why it matters:</b> the ruminant absorbs almost no glucose from the gut and depends wholly on gluconeogenesis from <b>propionate</b>. Its "normal" 45–60 mg/dL is therefore <em>not</em> hypoglycaemia, and its margin for extra demand is thin — which is precisely why <b>ketosis and pregnancy toxaemia are ruminant diseases and diabetes mellitus is rare in cattle</b>.</div>
+    </div>
+
+    <div class="mod c">
+      <h3><span class="n">02</span> Diabetes mellitus &amp; hyperinsulinism</h3>
+      <p class="l"><b>Diabetes mellitus</b> — chronic hyperglycaemia from absolute or relative insulin deficiency. <b>Type 1 (IDDM)</b>: β-cell destruction, absolute deficiency, ketosis-prone — the usual canine form. <b>Type 2 (NIDDM)</b>: insulin resistance with islet amyloid deposition — the usual feline form, linked to obesity and inactivity. <b>Secondary/type 3</b>: dioestrus and progesterone/GH in the bitch, hyperadrenocorticism, glucocorticoid or megestrol therapy, pancreatitis, acromegaly in the cat.</p>
+      <div class="flow" style="font-size:8px">
+        <span class="s">↓Insulin</span><span class="ar">→</span><span class="s">↓glucose uptake<br>+ ↑gluconeogenesis</span><span class="ar">→</span><span class="s"><b>Hyperglycaemia</b></span><span class="ar">→</span><span class="s">exceeds renal threshold</span><span class="ar">→</span><span class="s"><b>Glycosuria</b></span><span class="ar">→</span><span class="s">osmotic diuresis</span><span class="ar">→</span><span class="s"><b>PU / PD</b>, dehydration</span>
+      </div>
+      <div class="flow" style="margin-top:2px;font-size:8px">
+        <span class="s">↓Insulin</span><span class="ar">→</span><span class="s">unrestrained lipolysis</span><span class="ar">→</span><span class="s">↑FFA to liver, OAA drained</span><span class="ar">→</span><span class="s"><b>Ketogenesis</b></span><span class="ar">→</span><span class="s">ketonaemia, ketonuria</span><span class="ar">→</span><span class="s"><b>Metabolic acidosis (↑anion gap)</b></span>
+      </div>
+      <ul class="l">
+        <li><b>Cardinal signs — the "3 P's plus":</b> polyuria, polydipsia, polyphagia with <em>weight loss</em>; later anorexia, vomiting, dehydration, acetone breath, <b>Kussmaul respiration</b>, cataract (dog — sorbitol/polyol pathway), plantigrade stance (cat — diabetic neuropathy), poor wound healing and recurrent infection, <b>hepatic lipidosis</b>.</li>
+        <li><b>Biochemical picture:</b> persistent fasting hyperglycaemia, glycosuria, ketonaemia/ketonuria, <b>metabolic acidosis with increased anion gap</b>, hypercholesterolaemia and lipaemia, ↑ALP and ALT, dehydration with initial hyperkalaemia but <em>total-body potassium depletion</em>, and hyponatraemia (pseudo, from osmotic dilution).</li>
+      </ul>
+      <div class="trap"><b>Trap — the cat.</b> Restraint alone can push a cat's glucose over 300 mg/dL by adrenaline release. <b>Stress hyperglycaemia is transient and does <em>not</em> cause a raised fructosamine</b>, so fructosamine (or glycated haemoglobin) is used to prove that hyperglycaemia has been present for weeks.</div>
+      <p class="l"><b>Hyperinsulinism (insulinoma)</b> — a functional β-cell tumour, chiefly of the <b>middle-aged to older dog (ferrets also)</b>. Autonomous insulin secretion causes <b>fasting hypoglycaemia</b> with weakness, ataxia, muscle tremor, collapse and seizures, classically <b>relieved by feeding</b>. <b>Whipple's triad</b>: neurological signs + documented hypoglycaemia + relief on giving glucose. Diagnosis rests on <b>an inappropriately normal or high serum insulin measured on the same sample as a low glucose</b> (raised insulin : glucose ratio). Compare with the other causes of hypoglycaemia: hepatic failure and portosystemic shunt, hypoadrenocorticism, sepsis, neonatal and toy-breed hypoglycaemia, hunting-dog hypoglycaemia, xylitol ingestion, glycogen storage disease, and delay in separating serum (glycolysis in vitro).</p>
+    </div>
+
+    <div class="mod a">
+      <h3><span class="n">03</span> Biochemical tests for disturbance of carbohydrate metabolism</h3>
+      <table>
+        <tr><th>Test</th><th>Principle</th><th>Interpretation</th></tr>
+        <tr><td class="k">Fasting blood glucose</td><td>GOD-POD (glucose oxidase–peroxidase) enzymatic method; or o-toluidine, Folin–Wu, Nelson–Somogyi (older)</td><td>The primary screen. Collect in <b>NaF-oxalate (grey top)</b> or separate serum within 30 min</td></tr>
+        <tr><td class="k">Urine sugar</td><td><b>Benedict's</b> (reducing sugars, non-specific) vs <b>glucose-oxidase strip</b> (specific for glucose)</td><td>Glycosuria = blood glucose above the renal threshold, <em>or</em> a proximal tubular defect</td></tr>
+        <tr><td class="k">Ketone bodies</td><td><b>Rothera's nitroprusside test</b> / dipstick — detects <b>acetoacetate and acetone but NOT β-hydroxybutyrate</b></td><td>Ketonuria/ketonaemia. In serious ketosis most of the ketone is BHB, so the test <em>underestimates</em> severity</td></tr>
+        <tr><td class="k">Serum / milk BHB</td><td>BHB dehydrogenase, hand-held meter; milk BHB test strips cow-side</td><td><b>The reference analyte for bovine ketosis</b>: &lt;1.0 normal, 1.2–1.4 subclinical, &gt;2.6–3.0 clinical</td></tr>
+        <tr><td class="k">Glucose tolerance test (GTT)</td><td>Oral or intravenous glucose load, then serial sampling</td><td>Diabetic curve: high fasting value, exaggerated peak, <b>delayed return to baseline</b>. Rarely needed and unreliable in the cat</td></tr>
+        <tr><td class="k">Insulin tolerance /<br>insulin : glucose ratio</td><td>Response to exogenous insulin; paired insulin and glucose</td><td>Insulin resistance; confirmation of <b>insulinoma</b></td></tr>
+        <tr><td class="k">Fructosamine</td><td>Glycated serum proteins — reflects <b>the previous 1–3 weeks</b></td><td>Separates true diabetes from <b>stress hyperglycaemia</b>; monitors control</td></tr>
+        <tr><td class="k">Glycated Hb (HbA1c)</td><td>Glycation of haemoglobin — reflects 2–3 months</td><td>Long-term glycaemic control</td></tr>
+        <tr><td class="k">Ancillary</td><td>Urine specific gravity, serum electrolytes, blood gas &amp; anion gap, serum lipids, ALT/ALP, urine culture</td><td>Assess ketoacidosis, dehydration and complications</td></tr>
+      </table>
+      <div class="hook"><b>Guaranteed short note:</b> "<em>Benedict's test</em>" — alkaline cupric citrate is reduced by a free carbonyl group; the sequence of colours <b>blue → green → yellow → orange → brick-red</b> grades roughly 0.5 %, 1 %, 1.5 % and 2 % of reducing sugar. It is positive for <em>any</em> reducing sugar (lactose in the lactating animal, fructose, galactose, and reducing drug metabolites), which is exactly why a <b>glucose-oxidase strip</b> is needed to prove that the sugar is glucose.</div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 3 · Carbohydrate Disorders</span><span class="m">ONE HYPOGLYCAEMIC HORMONE, FIVE AGAINST IT</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 2 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 3</span>
+      <h2>Ruminant &amp; Neonatal Energy Disorders · Plasma Proteins</h2>
+      <span class="sub">Bovine ketosis · pregnancy toxaemia · baby-pig hypoglycaemia · dysproteinaemias · acute-phase proteins</span>
+    </div>
+    <span class="pg">SHEET 2 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod c span2">
+      <h3><span class="n">04</span> The three classical production-animal energy disorders — one mechanism, three settings</h3>
+      <div class="flow">
+        <span class="s">Glucose demand exceeds gluconeogenic supply</span><span class="ar">→</span><span class="s"><b>Hypoglycaemia</b></span><span class="ar">→</span><span class="s">↑glucagon, ↓insulin → lipolysis</span><span class="ar">→</span><span class="s">NEFA flood the liver</span><span class="ar">→</span><span class="s">OAA diverted to gluconeogenesis</span><span class="ar">→</span><span class="s"><b>Acetyl-CoA → ketone bodies</b></span><span class="ar">→</span><span class="s"><b>Ketonaemia · ketonuria · fatty liver</b></span>
+      </div>
+      <div class="scroll">
+      <table>
+        <tr><th>Feature</th><th>Bovine ketosis (acetonaemia)</th><th>Pregnancy toxaemia</th><th>Baby-pig hypoglycaemia</th></tr>
+        <tr><td class="k">Species &amp; timing</td><td><b>High-yielding dairy cow, first 2–6 weeks of lactation</b></td><td><b>Ewe or doe in the last 3–4 weeks of gestation, carrying twins or triplets</b>; also seen in beef cows and queens</td><td><b>Piglet in the first 24–72 hours of life</b>; also weak neonatal lambs, kids, kittens</td></tr>
+        <tr><td class="k">Precipitating cause</td><td>Negative energy balance at peak yield; over-fat at calving; sudden ration change; displaced abomasum</td><td>Uterine glucose drain by multiple foetuses + reduced rumen capacity + any stress or transport</td><td><b>Negligible glycogen store, almost no body fat, immature gluconeogenesis</b>, plus chilling, agalactia of the sow, large litter, splay leg</td></tr>
+        <tr><td class="k">Biochemistry</td><td>↓glucose (&lt;40 mg/dL) · <b>↑↑BHB &gt;2.6–3.0 mmol/L</b> · ketonuria · ↑NEFA · low hepatic glycogen · fatty liver</td><td>Same, but <b>more severe and often irreversible</b>: profound hypoglycaemia, massive ketonaemia, <b>fatty liver, azotaemia, hypocalcaemia</b>, terminal acidosis</td><td><b>Blood glucose &lt;40 mg/dL, may fall below 20</b>; <em>ketosis is minimal</em> because the piglet has too little fat to mobilise</td></tr>
+        <tr><td class="k">Clinical signs</td><td>Drop in milk, selective inappetence (refuses concentrate), weight loss, firm dry dung, <b>acetone smell in breath and milk</b>; <em>nervous form</em> — licking, circling, bellowing, hyperaesthesia</td><td>Separation from flock, blindness, star-gazing, teeth grinding, incoordination, recumbency, coma; death in 2–7 days if untreated</td><td>Shivering, weakness, wobbling, <b>hypothermia</b>, high-pitched squealing, paddling convulsions, coma</td></tr>
+        <tr><td class="k">Field tests</td><td><b>Rothera's test</b> on urine/milk; cow-side <b>milk or blood BHB strips</b>; Ross test</td><td>Urine ketones, blood glucose &amp; BHB, ketones in aqueous humour post-mortem</td><td>Blood glucose; rule out hypothermia, starvation, septicaemia and iron-deficiency anaemia</td></tr>
+        <tr><td class="k">Rational treatment</td><td><b>IV 40–50 % dextrose</b> + <b>propylene glycol / glycerol orally</b> (gluconeogenic precursors) + <b>glucocorticoids</b> + B₁₂/cobalt; propionate salts; correct the ration</td><td>Same, plus <b>induction of parturition or caesarean — removing the foetal glucose drain is the only definitive cure</b>; calcium borogluconate</td><td><b>Warmth first</b>, then intraperitoneal or oral glucose every few hours; ensure colostrum intake and treat the sow's agalactia</td></tr>
+      </table>
+      </div>
+      <div class="hook"><b>The examiner's favourite comparison:</b> <em>ketosis is a disease of the lactating cow with an <b>outflow</b> of glucose into milk; pregnancy toxaemia is a disease of the pregnant ewe with an <b>outflow</b> into foetuses; baby-pig hypoglycaemia is a disease of <b>absent reserve and absent intake</b>.</em> The first two are ketotic, the third is not — because ketosis requires fat to burn, and the newborn piglet has almost none (≈1–2 % body fat and no brown adipose tissue).</div>
+      <div class="trap"><b>Trap:</b> ketosis has a <b>primary</b> form (pure negative energy balance) and a far commoner <b>secondary</b> form driven by another disease that stops the cow eating — <em>displaced abomasum, traumatic reticuloperitonitis, metritis, mastitis, lameness</em>. Never treat the ketones without hunting for the primary lesion.</div>
+    </div>
+
+    <div class="mod t">
+      <h3><span class="n">05</span> Plasma proteins &amp; dysproteinaemias</h3>
+      <p class="l"><b>All plasma proteins except the immunoglobulins are made in the liver.</b> On <b>cellulose-acetate electrophoresis at pH 8.6</b> they separate — fastest to slowest — as <b>albumin → α₁ → α₂ → β → γ</b>.</p>
+      <table>
+        <tr><th>Fraction</th><th>Chief members</th><th>Function &amp; diagnostic meaning</th></tr>
+        <tr><td class="k">Albumin</td><td>Albumin (the single largest fraction)</td><td><b>≈75–80 % of colloid osmotic pressure</b>; transports bilirubin, free fatty acids, calcium, hormones and drugs; a <b>negative acute-phase protein</b>; the body's protein reserve</td></tr>
+        <tr><td class="k">α₁</td><td>α₁-antitrypsin, α₁-acid glycoprotein, HDL</td><td>Antiprotease, acute-phase</td></tr>
+        <tr><td class="k">α₂</td><td><b>Haptoglobin</b>, ceruloplasmin, α₂-macroglobulin</td><td>Haptoglobin binds free haemoglobin — <b>falls in intravascular haemolysis</b>; ceruloplasmin carries copper</td></tr>
+        <tr><td class="k">β</td><td><b>Transferrin</b>, complement C3, fibrinogen, β-lipoprotein, <b>IgM</b></td><td>Iron transport, complement</td></tr>
+        <tr><td class="k">γ</td><td><b>Immunoglobulins IgG, IgA, IgM, IgE</b></td><td>Humoral immunity; made by plasma cells, <em>not</em> by the liver</td></tr>
+      </table>
+      <div class="vals">
+        <div class="val"><span class="v">6–8</span><span class="c">total protein, g/dL</span></div>
+        <div class="val"><span class="v">2.5–4.5</span><span class="c">albumin, g/dL</span></div>
+        <div class="val"><span class="v">0.6–1.2</span><span class="c">A : G ratio, cattle</span></div>
+        <div class="val"><span class="v">0.7–1.1</span><span class="c">A : G ratio, dog</span></div>
+      </div>
+      <ul class="l">
+        <li><b>Hypoalbuminaemia</b> — reduced synthesis (chronic liver disease, malnutrition, chronic inflammation), increased loss (<b>protein-losing nephropathy — glomerulonephritis, amyloidosis; protein-losing enteropathy; burns; severe haemorrhage</b>), or sequestration. Consequences: <b>oedema, ascites and effusions</b> once albumin falls below ≈1.5 g/dL — the direct application of oncotic pressure and the Donnan effect from Unit 1.</li>
+        <li><b>Hyperglobulinaemia</b> — <b>polyclonal</b> (a broad-based γ peak: chronic infection, ehrlichiosis, FIP, trypanosomiasis, dirofilariasis, chronic dermatitis, liver disease) or <b>monoclonal</b> (a tall narrow spike: <b>multiple myeloma, plasmacytoma, lymphoma, monoclonal gammopathy</b>).</li>
+        <li><b>A : G ratio</b> falls in almost every chronic disease — either because albumin falls, globulin rises, or both. A total protein that looks normal can hide a severe dysproteinaemia, which is why <b>the ratio, not the total, is the diagnostic figure</b>.</li>
+        <li><b>Failure of passive transfer</b> in the calf, foal, lamb and kid — inadequate colostral IgG gives a low total protein and low γ fraction in the first days of life; screened by <b>total protein by refractometer, zinc sulphate turbidity, glutaraldehyde coagulation or GGT</b>.</li>
+      </ul>
+    </div>
+
+    <div class="mod s">
+      <h3><span class="n">06</span> Acute-phase proteins (APPs)</h3>
+      <p class="l"><b>Definition:</b> plasma proteins whose concentration changes by at least 25 % within 24–48 hours of tissue injury, infection, inflammation, surgery or neoplasia, driven by <b>IL-1, IL-6 and TNF-α</b> acting on the hepatocyte. They are <b>non-specific but exquisitely sensitive early markers</b>, and they rise long before leucocyte changes appear.</p>
+      <table>
+        <tr><th>Direction</th><th>Protein</th><th>Species where it is the major APP</th></tr>
+        <tr><td class="k" rowspan="4">Positive<br>(rise)</td><td><b>Haptoglobin</b></td><td><b>Cattle, sheep, goat</b> — the classic bovine marker (mastitis, metritis, pneumonia, traumatic reticulitis)</td></tr>
+        <tr><td><b>Serum amyloid A (SAA)</b></td><td><b>Horse and cat</b>; fastest responder of all — rises within 6–8 h</td></tr>
+        <tr><td><b>C-reactive protein (CRP)</b></td><td><b>Dog and pig</b></td></tr>
+        <tr><td>α₁-acid glycoprotein, fibrinogen, ceruloplasmin, complement, α₁-antitrypsin</td><td><b>Fibrinogen</b> is the practical, cheap ruminant and equine inflammation marker</td></tr>
+        <tr><td class="k">Negative<br>(fall)</td><td><b>Albumin</b>, transferrin, transthyretin</td><td>All species — synthesis is switched away from albumin toward APPs</td></tr>
+      </table>
+      <div class="mnem"><u>Species shortcut — commit this to memory:</u> <b>Cattle → Haptoglobin · Horse &amp; Cat → SAA · Dog &amp; Pig → CRP</b>. Fibrinogen and the plasma-fibrinogen : total-protein ratio remain the cheapest field test in large animals.</div>
+      <div class="hook"><b>Uses:</b> early detection of subclinical disease in herds (transition-cow monitoring, pig-herd health), differentiating inflammatory from non-inflammatory disease, monitoring response to therapy, prognosis in surgery and colic, and <b>meat-inspection screening</b>. Chronic persistent elevation of SAA underlies <b>reactive (AA) amyloidosis</b>.</div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 3 · Energy Disorders &amp; Proteins</span><span class="m">GLUCOSE OUT → FAT MOBILISED → KETONES UP</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 3 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 3</span>
+      <h2>Lipid Profile · Clinical Enzymology · Liver Function Tests</h2>
+      <span class="sub">Syllabus lines 5–7</span>
+    </div>
+    <span class="pg">SHEET 3 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod">
+      <h3><span class="n">07</span> Lipid profile in disease diagnosis</h3>
+      <p class="l">The panel: <b>total cholesterol, triacylglycerol, HDL-cholesterol, LDL-cholesterol</b> (Friedewald estimate), phospholipids and NEFA. A fasting sample of 12 h is essential — post-prandial chylomicrons make the serum <b>lipaemic (milky)</b> and interfere with almost every other assay.</p>
+      <table>
+        <tr><th>Change</th><th>Interpret as</th></tr>
+        <tr><td class="k">Hyper-<br>cholesterolaemia</td><td><b>Hypothyroidism (the classic canine cause)</b>, diabetes mellitus, hyperadrenocorticism, <b>nephrotic syndrome</b>, cholestasis/post-hepatic obstruction, pancreatitis, high-fat diet, idiopathic hyperlipidaemia of the <b>Miniature Schnauzer and Shetland Sheepdog</b></td></tr>
+        <tr><td class="k">Hypo-<br>cholesterolaemia</td><td><b>Hepatic insufficiency and portosystemic shunt</b>, protein-losing enteropathy, maldigestion/malabsorption, starvation, hypoadrenocorticism</td></tr>
+        <tr><td class="k">Hyper-<br>triglyceridaemia</td><td>Post-prandial, diabetes mellitus, pancreatitis, hypothyroidism, hyperadrenocorticism, cholestasis, <b>equine hyperlipaemia</b></td></tr>
+        <tr><td class="k">↑ NEFA</td><td><b>Negative energy balance</b> — the transition dairy cow; predicts ketosis and fatty liver</td></tr>
+      </table>
+      <div class="hook"><b>Two species syndromes to name:</b> ① <b>Equine hyperlipaemia</b> — obese <b>ponies, miniature horses and donkeys</b>, especially pregnant or lactating mares under stress or anorexia; massive VLDL/TG rise, opaque plasma, fatty infiltration of liver and kidney, high mortality. ② <b>Feline hepatic lipidosis</b> — the anorectic obese cat mobilises fat faster than its liver can export VLDL. Both illustrate the same principle: <b>fat mobilisation outruns hepatic export capacity</b>.</div>
+      <div class="trap"><b>Trap:</b> dogs and cats are "<b>HDL animals</b>" — HDL, not LDL, is the predominant lipoprotein — so <b>spontaneous atherosclerosis is rare</b>. A hypercholesterolaemic dog is telling you about its thyroid, adrenal, kidney or pancreas, not about its coronary arteries.</div>
+    </div>
+
+    <div class="mod c">
+      <h3><span class="n">08</span> Clinical enzymology</h3>
+      <p class="l"><b>Functional plasma enzymes</b> are secreted into plasma to act there and rise in liver disease (coagulation factors, lipoprotein lipase, ceruloplasmin, pseudocholinesterase — these <em>fall</em> in hepatic failure). <b>Non-functional plasma enzymes</b> have no role in plasma; they leak from damaged cells and their <b>rise indicates cell injury or induced synthesis</b> — these are the diagnostic enzymes.</p>
+      <div class="scroll">
+      <table>
+        <tr><th>Enzyme</th><th>Chief tissue</th><th>Rises in</th><th>Species note</th></tr>
+        <tr><td class="k">ALT (SGPT)</td><td>Hepatocyte cytosol</td><td><b>Hepatocellular damage</b> — the liver-specific leakage enzyme</td><td><b>Useful only in dog, cat and primate</b>; of no value in cattle, sheep, horse</td></tr>
+        <tr><td class="k">AST (SGOT)</td><td>Liver + <b>muscle</b> + RBC</td><td>Hepatocellular and <b>muscle</b> damage; haemolysis</td><td><b>The liver enzyme of large animals</b>, always paired with CK to decide liver vs muscle</td></tr>
+        <tr><td class="k">SDH / GLDH</td><td>Hepatocyte</td><td>Acute hepatocellular necrosis</td><td><b>Liver-specific in horses and ruminants</b>; SDH is very labile</td></tr>
+        <tr><td class="k">ALP</td><td>Biliary epithelium, bone, intestine</td><td><b>Cholestasis</b>; bone growth; drugs</td><td><b>Steroid-induced isoenzyme is unique to the dog</b>; short half-life in the cat makes any rise significant</td></tr>
+        <tr><td class="k">GGT</td><td>Biliary epithelium; colostrum</td><td><b>Cholestasis</b>, especially in horse, ruminant and cat</td><td>Very high in <b>colostrum</b> — used to confirm passive transfer in calves and foals</td></tr>
+        <tr><td class="k">CK (CPK)</td><td>Skeletal &amp; cardiac muscle, brain</td><td><b>Acute muscle damage</b> — the most specific and earliest muscle marker; short half-life</td><td><b>Equine exertional rhabdomyolysis, white muscle disease (Se/vit E), downer cow, IM injections</b></td></tr>
+        <tr><td class="k">LDH</td><td>Ubiquitous</td><td>Any tissue damage; <b>haemolysis</b></td><td>Sensitive but non-specific; isoenzymes localise it</td></tr>
+        <tr><td class="k">Amylase &amp; lipase</td><td>Pancreas (also salivary, gastric)</td><td><b>Acute pancreatitis</b> in the dog</td><td>Also rise in renal failure (reduced clearance); <b>DGGR-lipase / cPLI</b> are more specific</td></tr>
+        <tr><td class="k">Cholinesterase</td><td>Plasma &amp; RBC</td><td><b>Falls</b> — never rises</td><td><b>&lt;25 % of normal confirms organophosphate/carbamate poisoning</b>; also falls in hepatic failure</td></tr>
+      </table>
+      </div>
+      <div class="mnem"><u>Read the pattern, not the enzyme:</u> <b>ALT/AST/SDH ↑ = hepatocellular (leakage)</b> · <b>ALP/GGT ↑ = cholestatic (induction)</b> · <b>CK + AST ↑ but ALT normal = muscle</b> · <b>albumin ↓, urea ↓, glucose ↓, cholesterol ↓, bilirubin ↑ = loss of hepatic <em>function</em></b>. Damage and function are two different questions.</div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">09</span> Liver function tests — classification &amp; differential diagnosis of jaundice</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Classification of LFTs</b> — the framework the examiner wants before any detail:</p>
+          <div class="dl">
+            <dt>① Excretory</dt><dd><b>Bilirubin</b> (total, direct/conjugated, indirect), urine bilirubin and urobilinogen, <b>BSP (bromosulphthalein) and ICG clearance</b>, serum <b>bile acids</b> (pre- and 2 h post-prandial — the single most sensitive functional test, and the test of choice for a <b>portosystemic shunt</b>).</dd>
+            <dt>② Enzymes of<br>damage</dt><dd><b>ALT, AST, SDH, GLDH</b> (hepatocellular) and <b>ALP, GGT</b> (cholestatic).</dd>
+            <dt>③ Synthetic<br>function</dt><dd><b>Albumin, total protein, A : G ratio, cholesterol, blood urea, glucose, coagulation factors (PT, APTT)</b> — all <em>fall</em> in hepatic failure.</dd>
+            <dt>④ Detoxifying<br>function</dt><dd><b>Blood ammonia</b>, ammonia tolerance test, hippuric acid test.</dd>
+            <dt>⑤ Protein-<br>flocculation</dt><dd>Older but still asked: <b>thymol turbidity, zinc sulphate turbidity, cephalin-cholesterol flocculation</b>, Takata-Ara.</dd>
+          </div>
+          <div class="trap"><b>Trap:</b> the liver has an enormous reserve — <b>more than 70–80 % must be lost before the functional tests become abnormal</b>. Enzymes tell you about damage <em>early</em>; albumin, urea and bilirubin tell you about failure <em>late</em>.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Bilirubin metabolism in one line:</b></p>
+          <div class="flow" style="font-size:7.8px">
+            <span class="s">Senescent RBC → haem</span><span class="ar">→</span><span class="s">biliverdin</span><span class="ar">→</span><span class="s"><b>Unconjugated bilirubin</b><br>albumin-bound, water-<em>insoluble</em></span><span class="ar">→</span><span class="s">Liver: UDP-glucuronyl transferase</span><span class="ar">→</span><span class="s"><b>Conjugated</b><br>water-soluble</span><span class="ar">→</span><span class="s">Bile → gut → urobilinogen → stercobilin</span>
+          </div>
+          <div class="scroll">
+          <table>
+            <tr><th>Test</th><th>Pre-hepatic<br>(haemolytic)</th><th>Hepatic</th><th>Post-hepatic<br>(obstructive)</th></tr>
+            <tr><td class="k">Total bilirubin</td><td>↑</td><td>↑</td><td>↑↑↑</td></tr>
+            <tr><td class="k">Predominant form</td><td><b>Unconjugated (indirect)</b></td><td>Both</td><td><b>Conjugated (direct)</b></td></tr>
+            <tr><td class="k">van den Bergh</td><td><b>Indirect positive</b></td><td>Biphasic</td><td><b>Direct, prompt</b></td></tr>
+            <tr><td class="k">Urine bilirubin</td><td><b>Absent</b></td><td>Present</td><td><b>Present ++</b></td></tr>
+            <tr><td class="k">Urine urobilinogen</td><td><b>↑↑</b></td><td>Variable</td><td><b>Absent</b></td></tr>
+            <tr><td class="k">Faeces</td><td>Dark</td><td>Normal/pale</td><td><b>Clay-coloured, pale</b></td></tr>
+            <tr><td class="k">ALT / AST</td><td>Normal or mild ↑</td><td><b>↑↑↑</b></td><td>Mild ↑</td></tr>
+            <tr><td class="k">ALP / GGT</td><td>Normal</td><td>Mild ↑</td><td><b>↑↑↑</b></td></tr>
+            <tr><td class="k">PCV</td><td><b>↓ anaemia</b></td><td>Normal</td><td>Normal</td></tr>
+          </table>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="hook"><b>This differential table is the single most repeated long-answer question in Unit 3.</b> Reproduce it as a table, then add one line of species context: <b>the horse develops fasting (anorexia) hyperbilirubinaemia</b> that is unconjugated and physiological; <b>cattle rarely become icteric</b> except in haemolytic disease (babesiosis, anaplasmosis, leptospirosis, copper toxicity, <em>Brassica</em>); <b>any icterus in a cat demands exclusion of hepatic lipidosis, cholangiohepatitis, FIP and haemoplasmosis</b>.</div>
+          <p class="l"><b>Common causes to quote:</b> <em>pre-hepatic</em> — babesiosis, theileriosis, anaplasmosis, trypanosomiasis, leptospirosis, immune-mediated haemolytic anaemia, onion/copper/paracetamol toxicity, incompatible transfusion. <em>Hepatic</em> — infectious canine hepatitis, leptospirosis, aflatoxicosis and other mycotoxins, <b>lantana and <em>Crotalaria</em>/pyrrolizidine alkaloid poisoning</b>, copper toxicity in sheep, chronic fibrosis, neoplasia, drugs. <em>Post-hepatic</em> — cholelithiasis, <b>Fasciola in ruminants</b>, ascariasis in the pig, pancreatitis, neoplasia of the duct or pancreas.</p>
+          <p class="l"><b>Ammonia and encephalopathy:</b> a failing or bypassed liver cannot run the urea cycle, so <b>blood ammonia rises while BUN falls</b>. Together with <b>ammonium biurate crystals</b> in the urine and abnormal <b>bile acids</b>, this is the diagnostic triad of a <b>portosystemic shunt</b> in a young dog.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 3 · Lipids, Enzymes, Liver</span><span class="m">LEAKAGE vs INDUCTION vs FUNCTION</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 4 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 3</span>
+      <h2>Renal Function Tests · Urine Analysis · Acid–Base Disorders</h2>
+      <span class="sub">Syllabus lines 8–9</span>
+    </div>
+    <span class="pg">SHEET 4 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod t">
+      <h3><span class="n">10</span> Biochemical tests of renal function</h3>
+      <table>
+        <tr><th>Analyte</th><th>Origin &amp; behaviour</th><th>Interpretation</th></tr>
+        <tr><td class="k">BUN /<br>blood urea</td><td>End product of the <b>hepatic urea cycle</b>; freely filtered but <b>partly reabsorbed</b>, and reabsorption rises when flow is slow</td><td><b>↑</b> pre-renal (dehydration, shock, cardiac failure, high-protein diet, GI haemorrhage, catabolism), renal (≥75 % nephron loss) or post-renal (obstruction, ruptured bladder). <b>↓</b> in hepatic failure, portosystemic shunt, low-protein diet, over-hydration, and in <b>ruminants, in whom urea is recycled to the rumen</b></td></tr>
+        <tr><td class="k">Creatinine</td><td>From <b>muscle creatine phosphate at a constant daily rate</b>; freely filtered and <b>not reabsorbed</b></td><td><b>The better index of GFR.</b> Independent of diet and protein catabolism, but influenced by muscle mass — low in cachectic and very young animals. Rises only after <b>≈75 % of nephrons are lost</b></td></tr>
+        <tr><td class="k">Uric acid</td><td>End product of purine catabolism</td><td>Chief nitrogenous end product in <b>birds and reptiles</b> — raised in <b>avian gout</b> and renal disease; in the dog it matters mainly in the <b>Dalmatian</b> (urate uroliths) and in portosystemic shunt</td></tr>
+        <tr><td class="k">Clearance tests</td><td><b>Inulin clearance = gold standard for GFR</b>; endogenous or exogenous creatinine clearance is the practical version; PAH clearance measures renal plasma flow &amp; tubular secretion</td><td>Detect renal disease <b>before</b> azotaemia appears; <span class="m">C = (U × V)/P</span></td></tr>
+        <tr><td class="k">SDMA</td><td>Symmetric dimethylarginine, freely excreted</td><td>Rises with only ~25–40 % loss of GFR — the modern early marker</td></tr>
+        <tr><td class="k">Others</td><td>Serum phosphorus &amp; calcium, potassium, sodium, bicarbonate, <b>urine protein : creatinine ratio</b>, water deprivation &amp; concentration test, fractional electrolyte excretion, GGT : creatinine ratio in urine (tubular damage)</td><td>Stage the disease and separate glomerular from tubular injury</td></tr>
+      </table>
+      <div class="mnem"><u>Azotaemia vs uraemia:</u> <b>azotaemia</b> is a <em>laboratory</em> finding — raised blood urea and creatinine. <b>Uraemia</b> is the <em>clinical syndrome</em> — azotaemia plus vomiting, ulcerative stomatitis, uraemic breath, anaemia, acidosis. The <b>BUN : creatinine ratio</b> and the <b>urine specific gravity taken <em>before</em> fluid therapy</b> are what separate pre-renal from renal azotaemia: a dehydrated animal with pre-renal azotaemia still concentrates its urine (USG &gt;1.030 dog, &gt;1.035 cat), a renal-failure patient cannot (isosthenuria 1.008–1.012).</div>
+    </div>
+
+    <div class="mod p">
+      <h3><span class="n">11</span> Urine analysis — detection of pathological constituents</h3>
+      <div class="scroll">
+      <table>
+        <tr><th>Finding</th><th>Test</th><th>Means</th></tr>
+        <tr><td class="k">Glucose</td><td>Benedict's; glucose-oxidase strip</td><td>Diabetes mellitus; also proximal tubular (Fanconi) defect, stress in the cat</td></tr>
+        <tr><td class="k">Ketones</td><td><b>Rothera's nitroprusside</b>; strip</td><td>Ketosis, pregnancy toxaemia, diabetic ketoacidosis, starvation. <em>Does not detect BHB</em></td></tr>
+        <tr><td class="k">Protein</td><td>Heat &amp; acetic acid, sulphosalicylic acid, dipstick; <b>UPC ratio</b> to quantify</td><td>Glomerulonephritis, amyloidosis, pyelonephritis, cystitis, haemorrhage; must be read with the USG and sediment</td></tr>
+        <tr><td class="k">Bilirubin</td><td><b>Fouchet's</b>, Gmelin's, strip</td><td>Hepatic and post-hepatic jaundice. <b>Trace bilirubinuria is normal in the dog</b> (low renal threshold) but <b>never normal in the cat</b></td></tr>
+        <tr><td class="k">Urobilinogen</td><td>Ehrlich's aldehyde</td><td>Increased in haemolysis; <b>absent in complete biliary obstruction</b></td></tr>
+        <tr><td class="k">Blood / Hb / Mb</td><td>Benzidine or o-toluidine; sediment</td><td>Intact RBC = haematuria; free Hb = haemoglobinuria (babesiosis, leptospirosis, <b>post-parturient haemoglobinuria</b>); myoglobin = <b>rhabdomyolysis, azoturia, white muscle disease</b></td></tr>
+        <tr><td class="k">Casts &amp; cells</td><td>Sediment microscopy</td><td>Casts are moulded in the tubule and <b>prove renal, not lower-tract, origin</b>: hyaline, granular, cellular, waxy</td></tr>
+        <tr><td class="k">Crystals</td><td>Sediment</td><td>Struvite, calcium oxalate, <b>ammonium biurate (portosystemic shunt / Dalmatian)</b>, cystine, urate; <b>calcium oxalate monohydrate in ethylene-glycol poisoning</b></td></tr>
+        <tr><td class="k">Physical</td><td>Volume, colour, transparency, odour, <b>specific gravity by refractometer</b>, pH</td><td><b>Isosthenuria 1.008–1.012 = the kidney has lost concentrating ability.</b> Herbivore urine is normally alkaline, carnivore acidic</td></tr>
+      </table>
+      </div>
+      <div class="hook"><b>Guaranteed practical question:</b> the sequence of a complete urinalysis — <b>physical → chemical → microscopic</b> — and why the sample must be fresh (within 30 min or refrigerated): standing urine loses ketones and bilirubin, grows bacteria, turns alkaline as urea is split to ammonia, and dissolves or precipitates crystals and casts.</div>
+    </div>
+
+    <div class="mod c span2">
+      <h3><span class="n">12</span> Disturbances of acid–base balance and their diagnosis</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l">Everything follows from <b>Henderson–Hasselbalch</b>: <span class="m">pH = 6.1 + log (HCO₃⁻ / 0.03 × pCO₂)</span>, normally <span class="m">6.1 + log 20 = 7.4</span>. <b>HCO₃⁻ is the metabolic (renal) component; pCO₂ is the respiratory (pulmonary) component.</b> Name the primary disorder by asking which one moved in the same direction as the pH change.</p>
+          <div class="scroll">
+          <table>
+            <tr><th>Disorder</th><th>pH</th><th>Primary change</th><th>Compensation</th><th>Veterinary causes</th></tr>
+            <tr><td class="k">Metabolic acidosis</td><td>↓</td><td><b>HCO₃⁻ ↓</b></td><td><b>Hyperventilation</b> → pCO₂ ↓ (fast, hours)</td><td><b>Diabetic ketoacidosis, ruminal lactic acidosis (grain overload), diarrhoea in calves (HCO₃⁻ loss), renal failure, shock &amp; lactic acidosis, ethylene glycol, urinary obstruction</b></td></tr>
+            <tr><td class="k">Metabolic alkalosis</td><td>↑</td><td><b>HCO₃⁻ ↑</b></td><td>Hypoventilation → pCO₂ ↑ (limited by hypoxia)</td><td><b>Abomasal displacement/torsion and vomiting (loss of HCl), high-dose loop diuretics, hypokalaemia, excess bicarbonate therapy</b></td></tr>
+            <tr><td class="k">Respiratory acidosis</td><td>↓</td><td><b>pCO₂ ↑</b></td><td>Renal H⁺ excretion &amp; HCO₃⁻ retention (slow, 2–5 days)</td><td>Airway obstruction, pneumonia, pulmonary oedema, anaesthetic depression, upper-airway paralysis, pleural effusion</td></tr>
+            <tr><td class="k">Respiratory alkalosis</td><td>↑</td><td><b>pCO₂ ↓</b></td><td>Renal HCO₃⁻ excretion</td><td><b>Heat stress and panting in poultry and cattle</b> — the classic cause of <b>thin-shelled eggs</b>; pain, fever, hyperventilation, early sepsis</td></tr>
+          </table>
+          </div>
+          <div class="mnem"><u>Anion gap</u> <span class="m">= (Na⁺ + K⁺) − (Cl⁻ + HCO₃⁻)</span>, normally ≈ 12–25 mEq/L. A <b>high anion gap</b> means unmeasured acid has been added — <b>ketoacids, lactate, uraemic acids, ethylene-glycol metabolites</b>. A <b>normal (hyperchloraemic) anion gap</b> means bicarbonate has simply been lost — <b>diarrhoea, renal tubular acidosis</b>. This one calculation separates the two families of metabolic acidosis.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>How to read a blood-gas report in four steps:</b> ① look at <b>pH</b> — acidaemia or alkalaemia; ② look at <b>HCO₃⁻ and pCO₂</b> and see which one explains the pH — that is the primary disorder; ③ check whether the other has moved in the <em>same direction</em> — that is compensation (compensation never overshoots to normal); ④ if both move in opposite directions, or the compensation is inappropriate, call it a <b>mixed disorder</b>.</p>
+          <div class="vals">
+            <div class="val"><span class="v">7.35–7.45</span><span class="c">arterial pH</span></div>
+            <div class="val"><span class="v">35–45</span><span class="c">pCO₂, mmHg</span></div>
+            <div class="val"><span class="v">22–26</span><span class="c">HCO₃⁻, mmol/L</span></div>
+            <div class="val"><span class="v">±2</span><span class="c">base excess</span></div>
+            <div class="val"><span class="v">12–25</span><span class="c">anion gap, mEq/L</span></div>
+          </div>
+          <div class="hook"><b>Two field syndromes to be able to write out in full:</b> ① <b>Ruminal lactic acidosis (grain overload)</b> — sudden carbohydrate load → <em>Streptococcus bovis</em> and lactobacilli produce <b>D- and L-lactate</b> → <b>rumen pH falls below 5</b> → chemical rumenitis, osmotic pull of water into the rumen, dehydration, <b>systemic metabolic acidosis</b>, laminitis and hepatic abscessation. Treat with oral alkalinisers (magnesium hydroxide), rumenotomy or transfaunation, and <b>IV sodium bicarbonate with fluids</b>. ② <b>Calf diarrhoea</b> — loss of bicarbonate and sodium in faeces plus D-lactate absorption → <b>metabolic acidosis with dehydration and paradoxical hyperkalaemia</b>; the whole rationale of oral rehydration salts containing bicarbonate/citrate precursors.</div>
+          <div class="trap"><b>Trap:</b> acidosis drives <b>K⁺ out of cells</b> (in exchange for H⁺) so serum potassium looks <em>high</em> even though total body potassium is depleted; correcting the acidosis with bicarbonate and insulin then drives K⁺ back in and can precipitate fatal <b>hypokalaemia</b>. Always supplement potassium once the animal is urinating.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 3 · Renal &amp; Acid–Base</span><span class="m">HCO₃⁻ = METABOLIC · pCO₂ = RESPIRATORY</span></div>
+</section>
+
+<!-- ═══════════════════════ SHEET 5 ═══════════════════════ -->
+<section class="sheet">
+  <div class="head">
+    <div class="l">
+      <span class="unit">Unit 3</span>
+      <h2>Digestive Disorders · Oxidative Stress &amp; Shock · Fluid Therapy · Detoxification</h2>
+      <span class="sub">Syllabus lines 10–12, plus the final recall bank</span>
+    </div>
+    <span class="pg">SHEET 5 / 5</span>
+  </div>
+
+  <div class="grid">
+
+    <div class="mod s">
+      <h3><span class="n">13</span> Biochemistry of digestive disorders</h3>
+      <ul class="l">
+        <li><b>Maldigestion vs malabsorption.</b> <em>Maldigestion</em> = failure to break food down — chiefly <b>exocrine pancreatic insufficiency (EPI)</b>, common in the <b>German Shepherd</b>: steatorrhoea, voluminous pale faeces, ravenous appetite with weight loss; confirmed by a <b>low serum TLI (trypsin-like immunoreactivity)</b>, with low cobalamin and high folate. <em>Malabsorption</em> = failure of the mucosa to take up the products — infiltrative bowel disease, villous atrophy, parasitism, lymphangiectasia; assessed by <b>D-xylose absorption, faecal fat, cobalamin and folate</b>.</li>
+        <li><b>Protein-losing enteropathy</b> — loss of albumin <em>and</em> globulin into the gut (lymphangiectasia, chronic enteropathy, parasitism, Johne's disease) → <b>panhypoproteinaemia, oedema, ascites</b>. Contrast with protein-losing <em>nephropathy</em>, which loses albumin selectively.</li>
+        <li><b>Ruminal disorders — the biochemical trio:</b> <b>simple indigestion</b> (rumen pH 6–7, poor motility); <b>ruminal lactic acidosis</b> (pH &lt;5, ↑D- and L-lactate, systemic acidosis); <b>ruminal alkalosis</b> from urea overfeeding or putrefaction (<b>pH &gt;7.5–8, high ammonia</b>). Rumen fluid examination — colour, odour, consistency, <b>pH, methylene-blue reduction time, protozoal motility, sedimentation-flotation, chloride (&gt;30 mEq/L suggests abomasal reflux)</b> — is a favourite practical question.</li>
+        <li><b>Abomasal displacement and vomiting</b> sequester HCl → <b>hypochloraemic, hypokalaemic metabolic alkalosis with paradoxical aciduria</b>.</li>
+        <li><b>Diarrhoea</b> — secretory (enterotoxigenic <em>E. coli</em>, cholera-like, mediated by cAMP), osmotic (lactose intolerance, overfeeding), inflammatory/exudative, and dysmotility. All lose <b>water, sodium, potassium and bicarbonate</b> → dehydration + metabolic acidosis.</li>
+      </ul>
+    </div>
+
+    <div class="mod c">
+      <h3><span class="n">14</span> Oxidative stress &amp; shock</h3>
+      <p class="l"><b>Oxidative stress</b> = an imbalance between the production of <b>reactive oxygen species (ROS)</b> and the antioxidant defence, in favour of the ROS, causing damage to lipid, protein and DNA.</p>
+      <div class="flow" style="font-size:8px">
+        <span class="s">O₂</span><span class="ar">→</span><span class="s"><b>Superoxide O₂•⁻</b></span><span class="cond">SOD (Cu, Zn, Mn)</span><span class="ar">→</span><span class="s">H₂O₂</span><span class="cond">catalase (Fe) · glutathione peroxidase (<b>Se</b>)</span><span class="ar">→</span><span class="s">H₂O</span>
+      </div>
+      <ul class="l">
+        <li><b>Sources of ROS:</b> leakage from the electron transport chain, the <b>respiratory burst</b> of neutrophils (NADPH oxidase, myeloperoxidase), xanthine oxidase during <b>ischaemia–reperfusion</b>, cytochrome P450, transition metals via the <b>Fenton and Haber–Weiss reactions</b>, radiation, mycotoxins and xenobiotics.</li>
+        <li><b>Antioxidant defence — enzymatic:</b> <b>superoxide dismutase (Cu-Zn cytosolic, Mn mitochondrial), catalase, glutathione peroxidase (selenium)</b>, glutathione reductase (needs <b>NADPH from the HMP shunt</b>), thioredoxin. <b>Non-enzymatic:</b> <b>vitamin E (α-tocopherol — the chain-breaking membrane antioxidant), vitamin C, β-carotene, glutathione, uric acid, taurine, ceruloplasmin, transferrin, albumin, zinc</b>.</li>
+        <li><b>Consequences:</b> <b>lipid peroxidation</b> (measured as <b>MDA / TBARS</b>), membrane and enzyme damage, DNA strand breaks, and activation of NF-κB with cytokine release.</li>
+        <li><b>Veterinary conditions in which oxidative stress is central:</b> <b>white muscle disease and mulberry heart disease (Se/vitamin E deficiency)</b>, <b>yellow fat disease</b> in cats, transition-cow disease and retained placenta, mastitis and metritis, ischaemia–reperfusion after gastric dilatation-volvulus and colic, <b>onion, copper, paracetamol, nitrate and mycotoxin poisonings</b>, heat stress in poultry, and ageing.</li>
+      </ul>
+      <p class="l"><b>Shock</b> — acute generalised failure of tissue perfusion. Whatever the type (hypovolaemic, distributive/septic, cardiogenic, obstructive), the biochemistry converges: <b>inadequate O₂ delivery → anaerobic glycolysis → lactic acid accumulation → metabolic acidosis with a high anion gap</b>; the Na⁺/K⁺-ATPase fails for want of ATP so <b>cells swell and K⁺ leaks out</b>; lysosomal enzymes are released; <b>endotoxin (lipid A)</b> in septic shock triggers TNF-α, IL-1 and nitric oxide, causing vasodilation, capillary leak and <b>DIC</b>. Monitoring: <b>blood lactate (the best prognostic indicator), base deficit, PCV/TP, glucose, electrolytes, creatinine, coagulation profile</b>.</p>
+    </div>
+
+    <div class="mod t span2">
+      <h3><span class="n">15</span> Biochemical basis of fluid therapy · Detoxification and xenobiotic metabolism</h3>
+      <div class="grid thirds" style="gap:2.6mm">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Fluid compartments.</b> Total body water ≈ <b>60 % of body weight</b>, split as <b>ICF ≈ 40 %</b> and <b>ECF ≈ 20 %</b> (interstitial 15 %, plasma 5 %). <b>Na⁺ is the principal ECF cation and the determinant of ECF volume; K⁺ is the principal ICF cation.</b> Water moves by osmosis; protein holds it in the vessel by oncotic pressure (Starling forces + the Donnan effect).</p>
+          <table>
+            <tr><th>Fluid</th><th>Type</th><th>Use</th></tr>
+            <tr><td class="k">Normal saline 0.9 %</td><td>Isotonic crystalloid, replacement</td><td><b>Hypochloraemic alkalosis, hyperkalaemia, hypercalcaemia</b>; contains no buffer</td></tr>
+            <tr><td class="k">Ringer's lactate /<br>acetate</td><td>Balanced isotonic crystalloid</td><td><b>The default replacement fluid</b>; lactate is metabolised in the liver to bicarbonate — so use <b>acetate</b> when the liver is failing</td></tr>
+            <tr><td class="k">5 % dextrose</td><td>Free water once metabolised</td><td>Pure water deficits, <b>hypoglycaemia, ketosis (40–50 % IV)</b>; never for volume replacement</td></tr>
+            <tr><td class="k">Sodium bicarbonate</td><td>Alkalinising</td><td><b>Severe metabolic acidosis</b> — grain overload, calf diarrhoea, ketoacidosis. Deficit ≈ <span class="m">BW(kg) × 0.3 × base deficit</span></td></tr>
+            <tr><td class="k">Hypertonic saline 7.2 %</td><td>Small-volume resuscitation</td><td>Shock, GDV; must be followed by isotonic fluid</td></tr>
+            <tr><td class="k">Colloids &amp; plasma</td><td>Oncotic support</td><td>Hypoalbuminaemia, severe hypoproteinaemia</td></tr>
+          </table>
+          <div class="mnem"><u>Prescribing in three parts:</u> <b>① correct the existing deficit</b> = BW(kg) × % dehydration × 10 = mL · <b>② replace ongoing losses</b> (vomiting, diarrhoea, polyuria) · <b>③ supply maintenance</b> ≈ 50–60 mL/kg/day. Then decide the <em>route</em>, the <em>rate</em>, and the <em>potassium</em> — never exceed 0.5 mEq K⁺/kg/hour.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <p class="l"><b>Detoxification (biotransformation)</b> converts lipid-soluble xenobiotics — drugs, plant toxins, pesticides, mycotoxins, food additives, industrial chemicals — into <b>more water-soluble, less toxic, more readily excretable</b> compounds. The <b>liver</b> is the chief site (smooth ER); also kidney, lung, intestinal mucosa and skin.</p>
+          <div class="dl">
+            <dt>Phase I —<br>functionalisation</dt><dd><b>Oxidation, reduction, hydrolysis</b>, hydration and dehalogenation. Introduces or unmasks a polar group (−OH, −NH₂, −SH, −COOH). Dominated by the <b>cytochrome P450 mixed-function oxidase system</b>. Products may be <em>more</em> toxic than the parent — <b>bioactivation</b>.</dd>
+            <dt>Phase II —<br>conjugation</dt><dd>Attachment of a bulky polar endogenous molecule, always making the product <b>less toxic and readily excreted</b>: <b>glucuronidation (UDP-glucuronyl transferase — the commonest), sulphation (PAPS), glutathione conjugation, acetylation, methylation (SAM), glycine conjugation (hippuric acid), and mercapturic-acid formation</b>.</dd>
+          </div>
+          <p class="l"><b>Cytochrome P450</b> — a superfamily of <b>haem-thiolate monooxygenases</b> named for the 450 nm absorbance of their CO complex. Reaction: <span class="m">RH + O₂ + NADPH + H⁺ → ROH + H₂O + NADP⁺</span> — <b>one atom of oxygen enters the substrate, the other becomes water</b>; the partner enzyme is <b>NADPH–cytochrome P450 reductase</b>. Besides xenobiotics, P450s make <b>steroid hormones, bile acids, vitamin D and eicosanoids</b>. They are strongly <b>inducible</b> (phenobarbitone, rifampicin, PCBs, some pesticides) and <b>inhibitable</b> (chloramphenicol, cimetidine, ketoconazole) — the mechanism of countless drug interactions and of altered withdrawal periods in food animals.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div class="hook"><b>Species deficiencies — the most rewarding facts in this section:</b> ① <b>The cat has a deficient glucuronyl transferase</b>, so it cannot glucuronidate efficiently — hence its notorious sensitivity to <b>paracetamol (methaemoglobinaemia, Heinz bodies, facial oedema), aspirin, phenols and benzoic acid</b>. ② <b>The dog is a poor acetylator</b> (deficient N-acetyltransferase) — sulphonamide handling differs. ③ <b>The pig sulphates poorly.</b> ④ Neonates of all species have immature phase-II systems. Antidote logic follows directly: <b>N-acetylcysteine replenishes glutathione</b> in paracetamol poisoning.</div>
+          <div class="trap"><b>Trap — bioactivation.</b> "Detoxification" does not always detoxify. Phase I can create a more dangerous metabolite: <b>paracetamol → NAPQI</b> (hepatotoxic and, in cats, met-Hb forming), <b>parathion → paraoxon</b> (a far stronger cholinesterase inhibitor), <b>aflatoxin B₁ → its 8,9-epoxide</b> (binds DNA, hepatocarcinogenic), <b>ethylene glycol → glycolic and oxalic acid</b> (metabolic acidosis and calcium-oxalate nephrosis, treated by blocking alcohol dehydrogenase with fomepizole or ethanol). Always name one such example when asked about biotransformation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod a span2">
+      <h3><span class="n">16</span> Final recall bank — read these last, straight before the paper</h3>
+      <div class="grid" style="gap:2.6mm">
+        <div class="qa">
+          <div><span>Only hypoglycaemic hormone</span><span>Insulin</span></div>
+          <div><span>Insulin-dependent glucose transporter</span><span>GLUT-4</span></div>
+          <div><span>Normal blood glucose, cattle</span><span>45–60 mg/dL</span></div>
+          <div><span>Renal threshold for glucose, dog / cat</span><span>≈180 / ≈280 mg/dL</span></div>
+          <div><span>Anticoagulant for a glucose sample</span><span>Sodium fluoride–oxalate</span></div>
+          <div><span>Test that distinguishes stress from true diabetes</span><span>Fructosamine</span></div>
+          <div><span>Ketone body <em>not</em> detected by Rothera's</span><span>β-hydroxybutyrate</span></div>
+          <div><span>Diagnostic analyte for bovine ketosis</span><span>Blood or milk BHB</span></div>
+          <div><span>Clinical BHB cut-off</span><span>&gt;2.6–3.0 mmol/L</span></div>
+          <div><span>Ketosis occurs in which stage of lactation</span><span>First 2–6 weeks (peak yield)</span></div>
+          <div><span>Pregnancy toxaemia occurs when</span><span>Last 3–4 weeks, twins/triplets</span></div>
+          <div><span>Definitive cure of pregnancy toxaemia</span><span>Remove the foetuses</span></div>
+          <div><span>Why baby pigs are not ketotic</span><span>Almost no body fat to mobilise</span></div>
+          <div><span>Oral gluconeogenic precursor for ketosis</span><span>Propylene glycol / glycerol</span></div>
+          <div><span>Functional β-cell tumour</span><span>Insulinoma — Whipple's triad</span></div>
+          <div><span>Electrophoretic order of plasma proteins</span><span>Albumin, α₁, α₂, β, γ</span></div>
+          <div><span>Protein contributing most oncotic pressure</span><span>Albumin (75–80 %)</span></div>
+          <div><span>Only plasma proteins not made in liver</span><span>Immunoglobulins</span></div>
+          <div><span>Protein binding free haemoglobin</span><span>Haptoglobin</span></div>
+          <div><span>Tall narrow γ spike means</span><span>Monoclonal gammopathy / myeloma</span></div>
+          <div><span>Major acute-phase protein in cattle</span><span>Haptoglobin</span></div>
+          <div><span>Major APP in horse and cat</span><span>Serum amyloid A</span></div>
+          <div><span>Major APP in dog and pig</span><span>C-reactive protein</span></div>
+          <div><span>The negative acute-phase protein</span><span>Albumin</span></div>
+          <div><span>Cytokines driving the APP response</span><span>IL-1, IL-6, TNF-α</span></div>
+          <div><span>Classic cause of canine hypercholesterolaemia</span><span>Hypothyroidism</span></div>
+          <div><span>Hyperlipaemia of ponies and donkeys</span><span>Equine hyperlipaemia</span></div>
+          <div><span>Dogs and cats are which lipoprotein animals</span><span>HDL animals</span></div>
+        </div>
+        <div class="qa">
+          <div><span>Liver leakage enzyme in dog and cat</span><span>ALT</span></div>
+          <div><span>Liver enzyme of large animals</span><span>AST (with SDH / GLDH)</span></div>
+          <div><span>Enzymes of cholestasis</span><span>ALP and GGT</span></div>
+          <div><span>Best marker of acute muscle damage</span><span>Creatine kinase</span></div>
+          <div><span>Enzyme used to confirm passive transfer</span><span>GGT (high in colostrum)</span></div>
+          <div><span>Enzyme that falls in OP poisoning</span><span>Cholinesterase (&lt;25 %)</span></div>
+          <div><span>Most sensitive functional liver test</span><span>Serum bile acids</span></div>
+          <div><span>Urine bilirubin in haemolytic jaundice</span><span>Absent</span></div>
+          <div><span>Urine urobilinogen in obstruction</span><span>Absent</span></div>
+          <div><span>Direct van den Bergh means</span><span>Conjugated / obstructive</span></div>
+          <div><span>Portosystemic shunt triad</span><span>↑ammonia, ↓BUN, biurate crystals</span></div>
+          <div><span>% liver that must be lost before failure</span><span>&gt;70–80 %</span></div>
+          <div><span>Better index of GFR than urea</span><span>Creatinine</span></div>
+          <div><span>Gold-standard GFR marker</span><span>Inulin clearance</span></div>
+          <div><span>% nephron loss before azotaemia</span><span>≈75 %</span></div>
+          <div><span>Urea is low in</span><span>Liver failure &amp; portosystemic shunt</span></div>
+          <div><span>Nitrogenous end product of birds</span><span>Uric acid (uricotelic)</span></div>
+          <div><span>Isosthenuria range</span><span>1.008–1.012</span></div>
+          <div><span>Casts in urine prove</span><span>Renal (tubular) origin</span></div>
+          <div><span>Crystals in ethylene-glycol poisoning</span><span>Calcium oxalate monohydrate</span></div>
+          <div><span>Henderson–Hasselbalch ratio in blood</span><span>HCO₃⁻ : H₂CO₃ = 20 : 1</span></div>
+          <div><span>Metabolic component / respiratory component</span><span>HCO₃⁻ / pCO₂</span></div>
+          <div><span>Anion gap formula</span><span>(Na+K) − (Cl+HCO₃)</span></div>
+          <div><span>Acid–base state in grain overload</span><span>Metabolic acidosis (rumen pH &lt;5)</span></div>
+          <div><span>Acid–base state in displaced abomasum</span><span>Hypochloraemic metabolic alkalosis</span></div>
+          <div><span>Acid–base state in panting poultry</span><span>Respiratory alkalosis</span></div>
+          <div><span>Test for exocrine pancreatic insufficiency</span><span>Serum TLI</span></div>
+          <div><span>Selenium-dependent antioxidant enzyme</span><span>Glutathione peroxidase</span></div>
+          <div><span>Marker of lipid peroxidation</span><span>MDA / TBARS</span></div>
+          <div><span>Best prognostic indicator in shock</span><span>Blood lactate</span></div>
+          <div><span>Default balanced replacement fluid</span><span>Ringer's lactate</span></div>
+          <div><span>Commonest phase-II conjugation</span><span>Glucuronidation</span></div>
+          <div><span>Conjugation reaction deficient in the cat</span><span>Glucuronidation</span></div>
+          <div><span>Toxic metabolite of paracetamol</span><span>NAPQI (antidote N-acetylcysteine)</span></div>
+          <div><span>Enzyme system of phase-I oxidation</span><span>Cytochrome P450 (mixed-function oxidase)</span></div>
+        </div>
+      </div>
+      <div class="mnem" style="margin-top:2px"><u>Thirty-second closing sweep:</u> <b>insulin alone lowers glucose; five hormones raise it</b> · <b>fructosamine beats stress hyperglycaemia</b> · <b>Rothera's misses BHB</b> · <b>ketosis = lactation, toxaemia = twins, baby pig = no reserve</b> · <b>haptoglobin cattle, SAA horse/cat, CRP dog/pig, albumin negative</b> · <b>ALT/AST leak, ALP/GGT cholestasis, CK muscle, bile acids function</b> · <b>haemolytic = indirect + no urine bilirubin; obstructive = direct + no urobilinogen</b> · <b>creatinine beats urea; inulin is the gold standard; 75 % nephrons before azotaemia</b> · <b>HCO₃⁻ metabolic, pCO₂ respiratory, anion gap splits the acidoses</b> · <b>SOD → catalase/GSH-Px(Se) → water</b> · <b>phase I P450 can bioactivate; phase II always detoxifies; the cat cannot glucuronidate</b>.</div>
+    </div>
+
+  </div>
+  <div class="foot"><span>Veterinary Biochemistry · Unit 3 · Digestive, Shock, Fluids, Detoxification</span><span class="m">END OF UNIT 3 — 5 SHEETS</span></div>
+</section>
+
+</div>
