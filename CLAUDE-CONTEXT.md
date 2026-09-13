@@ -34,7 +34,7 @@ This project follows the exact proven architecture and shared IVRI Academic ligh
 4. **Question & Answer** — Written-exam practice: short notes, long answers, differentiate-between tables, definitions, practical spotting.
 5. **Quiz** — MCQ / True-False / Fill-blank, with unit-wise, annual exam mode, grand test, practical, Exam Mode (timed) and Smart Review (spaced repetition).
 6. **Dashboard** — Coverage by unit, accuracy, streak, 12-week heatmap, Leitner boxes, 0–1000 XP Biochemistry Mastery Index.
-7. **Library** — Bookmarks · Notes · Highlights · 199+ Term Veterinary Biochemistry Glossary with speech audio.
+7. **Library** — Bookmarks · Notes · Highlights · 500 Term Veterinary Biochemistry Glossary with speech audio.
 8. **Settings** — Theme, backup/restore, about.
 
 ### Exam Structure (VCI Annual Examination)
@@ -108,7 +108,7 @@ D:\VET BIOCHEMISTRY\
 │   ├── app.js                 Router + shell + section renderers + highlighter + audio
 │   ├── quiz.js                Quiz engine (window.quizApp)
 │   ├── dashboard.js           Analytics (window.dashboardApp)
-│   ├── glossary.js            199+ term UG dictionary + tooltip decorator + SpeechSynthesis
+│   ├── glossary.js            500 term UG dictionary + tooltip decorator + SpeechSynthesis
 │   ├── search.js              Global search engine (Ctrl+K)
 │   ├── deep-guide.js          Contextual deep guide overlay controller
 │   └── events.js              Department announcements renderer

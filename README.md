@@ -58,7 +58,7 @@ D:\VET BIOCHEMISTRY\
 │   ├── app.js                 Router, page renderers, highlighter, and audio reader
 │   ├── quiz.js                Quiz engine with Annual Examination, Grand Test, & SRS
 │   ├── dashboard.js           Biochemistry mastery analytics & 12-week heatmap
-│   ├── glossary.js            199+ term UG biochemistry dictionary with audio & tooltips
+│   ├── glossary.js            500 term UG biochemistry dictionary with audio & tooltips
 │   ├── search.js              Global Ctrl+K search palette
 │   ├── deep-guide.js          Contextual deep guide overlay controller
 │   └── events.js              Announcements banner and card renderer

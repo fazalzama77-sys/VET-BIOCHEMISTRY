@@ -41,7 +41,7 @@ repo/ (or VET BIOCHEMISTRY/)
 │   ├── store.js                ← LocalStorage persistence layer (vbioc- prefix)
 │   ├── quiz.js                 ← Quiz engine with Annual Exam mode, timer & SRS logic
 │   ├── dashboard.js            ← Progress analytics, streak calculator & 12-week heatmap
-│   ├── glossary.js             ← 199+ term Veterinary Biochemistry dictionary & speech engine
+│   ├── glossary.js             ← 500 term Veterinary Biochemistry dictionary & speech engine
 │   ├── search.js               ← Full-text deep search across theory, practical, quiz & glossary
 │   ├── deep-guide.js           ← Interactive study guide reader
 │   └── events.js               ← Academic calendar & events viewer
