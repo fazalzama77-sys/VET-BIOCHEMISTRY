@@ -1085,10 +1085,106 @@ const glossary = {
                 const def = this._lookup[match.toLowerCase()];
                 if (!def) return match;
                 const safeDef = def.replace(/"/g, '&quot;');
-                return `<abbr class="glossary-term" data-term="${match.toLowerCase()}" data-def="${safeDef}" tabindex="0" role="button" aria-label="${match}: ${safeDef}">${match}</abbr>`;
+                return `<abbr class="gloss-term glossary-term" data-term="${match.toLowerCase()}" data-def="${safeDef}" tabindex="0" role="button" aria-label="${match}: ${safeDef}">${match}</abbr>`;
             });
             textNode.parentNode.replaceChild(span, textNode);
         }
+
+        this._hookTooltip();
+    },
+
+    // One popup for the whole page, attached to <body> and placed beside the word
+    // that was hovered, focused or tapped (so it never jumps to the top of the page).
+    _hookTooltip() {
+        if (this._tooltipHooked) return;
+        this._tooltipHooked = true;
+
+        const tip = document.createElement('div');
+        tip.className = 'gloss-tooltip';
+        tip.setAttribute('role', 'tooltip');
+        tip.innerHTML =
+            '<div class="gloss-tooltip__head">' +
+                '<span class="gloss-tooltip__term"></span>' +
+                '<button type="button" class="gloss-tooltip__speak" title="Pronounce term" aria-label="Pronounce term">' +
+                    '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path d="M15 9.5a3.5 3.5 0 0 1 0 5"/><path d="M17.5 7a7 7 0 0 1 0 10"/></svg>' +
+                '</button>' +
+            '</div>' +
+            '<div class="gloss-tooltip__def"></div>';
+        document.body.appendChild(tip);
+
+        let active = null;   // word the popup belongs to
+        let pinned = false;  // opened by tap/click: stays until tapping elsewhere
+
+        const place = () => {
+            if (!active || !active.isConnected) return hide();
+            const r = active.getBoundingClientRect();
+            const w = tip.offsetWidth;
+            const h = tip.offsetHeight;
+            const left = Math.max(12, Math.min(r.left + r.width / 2 - w / 2, window.innerWidth - w - 12));
+            let top = r.bottom + 8;
+            if (top + h > window.innerHeight - 12 && r.top - h - 8 > 12) top = r.top - h - 8;
+            tip.style.left = left + 'px';
+            tip.style.top = top + 'px';
+        };
+
+        const show = (term, pin) => {
+            active = term;
+            pinned = pin;
+            tip.querySelector('.gloss-tooltip__term').textContent = term.textContent;
+            tip.querySelector('.gloss-tooltip__def').textContent = term.dataset.def || '';
+            tip.classList.add('is-visible');
+            place();
+        };
+
+        const hide = () => {
+            active = null;
+            pinned = false;
+            tip.classList.remove('is-visible');
+        };
+
+        document.addEventListener('click', (e) => {
+            if (tip.contains(e.target)) return;
+            const term = e.target.closest && e.target.closest('.gloss-term');
+            if (!term) return hide();
+            if (active === term && pinned) return hide();
+            show(term, true);
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            const term = e.target.closest && e.target.closest('.gloss-term');
+            if (term && !pinned && term !== active) show(term, false);
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (!active || pinned) return;
+            const to = e.relatedTarget;
+            if (to && (active.contains(to) || tip.contains(to))) return;
+            if (e.target.closest && (e.target.closest('.gloss-term') || tip.contains(e.target))) hide();
+        });
+
+        document.addEventListener('focusin', (e) => {
+            const term = e.target.closest && e.target.closest('.gloss-term');
+            if (term && term !== active) show(term, false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && active) hide();
+            const term = e.target.closest && e.target.closest('.gloss-term');
+            if (term && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                show(term, true);
+            }
+        });
+
+        tip.querySelector('.gloss-tooltip__speak').addEventListener('click', () => {
+            if (active && window.app && typeof window.app.speak === 'function') {
+                window.app.speak(active.textContent);
+            }
+        });
+
+        window.addEventListener('scroll', () => { if (active) place(); }, { passive: true, capture: true });
+        window.addEventListener('resize', () => { if (active) place(); }, { passive: true });
+        window.addEventListener('hashchange', hide);
     },
 
     define(term) {

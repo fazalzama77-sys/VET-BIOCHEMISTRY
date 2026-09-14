@@ -617,13 +617,13 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-base); }
   outline: none;
 }
 
-.gloss-term::after {
-  content: attr(data-def);
+/* One shared popup, placed next to the tapped/hovered word by glossary.js */
+.gloss-tooltip {
   position: fixed;
-  left: var(--tt-left, 50%);
-  top: var(--tt-top, 100%);
-  width: var(--tt-width, 290px);
-  max-width: 330px;
+  left: 0;
+  top: 0;
+  width: 320px;
+  max-width: calc(100vw - 24px);
   padding: 10px 14px;
   background: var(--surface);
   color: var(--text);
@@ -635,18 +635,44 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-base); }
   line-height: 1.45;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transform: translateY(4px);
   transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
 }
 
-.gloss-term:hover::after, .gloss-term:focus::after {
+.gloss-tooltip.is-visible {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
+
+.gloss-tooltip__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.gloss-tooltip__term {
+  font-weight: 700;
+  color: var(--accent, #1565c0);
+  text-transform: capitalize;
+}
+
+.gloss-tooltip__speak {
+  margin-left: auto;
+  display: inline-flex;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent, #1565c0);
+  cursor: pointer;
+}
+
+.gloss-tooltip__speak:hover { background-color: rgba(21, 101, 192, 0.08); }
+.gloss-tooltip__speak .ico { width: 16px; height: 16px; }
 
 /* Glossary Browser in Library */
 .glossary-card {
