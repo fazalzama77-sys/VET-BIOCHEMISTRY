@@ -494,6 +494,22 @@ a.card:hover, .card--link:hover {
 }
 .callout__title { font-weight: 640; margin-bottom: var(--s1); }
 
+/* ---------- Math & Chemical Equations ---------- */
+.equation-block {
+  margin: var(--s3) 0 var(--s4);
+  padding: var(--s3) var(--s4);
+  background: var(--surface-2, rgba(255, 255, 255, 0.05));
+  border-left: 3px solid var(--accent, #3b82f6);
+  border-radius: var(--r-sm, 6px);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.95em;
+  line-height: 1.6;
+  overflow-x: auto;
+  text-align: center;
+  color: var(--text, inherit);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
 /* ---------- Tabs ---------- */
 .tabs { display: flex; gap: var(--s1); border-bottom: 1px solid var(--border); margin-bottom: var(--s6); overflow-x: auto; }
 .tab {
