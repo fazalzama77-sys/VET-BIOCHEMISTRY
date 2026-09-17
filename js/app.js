@@ -1356,12 +1356,36 @@ var app = (function () {
       '</a>';
     }).join("");
 
+    /* ---- math / symbol sanitizer helper ---- */
+    function sanitizeMathSymbols(html) {
+      if (!html || typeof html !== "string") return html;
+      return html
+        .replace(/\\+rightarrow|\\+longrightarrow/g, "→")
+        .replace(/\\+leftarrow|\\+longleftarrow/g, "←")
+        .replace(/\\+rightleftharpoons/g, "⇌")
+        .replace(/\\+alpha/g, "α")
+        .replace(/\\+beta/g, "β")
+        .replace(/\\+gamma/g, "γ")
+        .replace(/\\+Delta/g, "Δ")
+        .replace(/\\+delta/g, "δ")
+        .replace(/\\+lambda/g, "λ")
+        .replace(/\\+mu/g, "μ")
+        .replace(/\\+pi/g, "π")
+        .replace(/\\+times/g, "×")
+        .replace(/\\+pm/g, "±")
+        .replace(/\\+approx/g, "≈")
+        .replace(/\\+circ/g, "°")
+        .replace(/\\+ge\b|\\+geq\b/g, "≥")
+        .replace(/\\+le\b|\\+leq\b/g, "≤")
+        .replace(/(?<!\$)\$(?!\$)(.*?)(?<!\$)\$(?!\$)/g, "$1");
+    }
+
     /* ---- content blocks ---- */
     function block(label, html, mod, ic) {
       var iconHtml = ic ? icon(ic) : "";
       return '<section class="block' + (mod ? " block--" + mod : "") + '">' +
         '<span class="block__label">' + iconHtml + ' ' + label + '</span>' +
-        '<div class="block__body">' + html + '</div></section>';
+        '<div class="block__body">' + sanitizeMathSymbols(html) + '</div></section>';
     }
 
     var body;
@@ -1425,7 +1449,7 @@ var app = (function () {
               '<h1 class="lesson__title">' + esc(t.title) +
                 '<button class="speakbtn speak-btn" id="speakbtn" aria-label="Read aloud" title="Read this topic aloud">' +
                 icon("speaker") + '</button></h1>' +
-              (c.summary ? '<p class="lesson__summary">' + c.summary + '</p>' : '') +
+              (c.summary ? '<p class="lesson__summary">' + sanitizeMathSymbols(c.summary) + '</p>' : '') +
             '</header>' +
 
             '<div class="toolbar">' +
