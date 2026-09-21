@@ -20,8 +20,9 @@ var store = (function () {
     notes:      PREFIX + "notes",       // { topicId: "note text" }
     highlights: PREFIX + "highlights",  // { topicId: [ {text, color}, ... ] }
     hlColor:    PREFIX + "hl-color",    // "yellow" | "green" | "blue" | "pink" | "orange" | "purple"
-    quiz:       PREFIX + "quiz",        // { attempts: [], byUnit: {}, byFormat: {}, byTopic: {} }
+    quiz:       PREFIX + "quiz",        // { attempts: [], byUnit: {}, byFormat: {}, byTopic: {}, bySub: {} }
     quizRun:    PREFIX + "quiz-run",    // an unfinished test, so it survives a refresh
+    quizReports: PREFIX + "quiz-reports", // full answer sheets of the last 20 finished tests
     srs:        PREFIX + "srs",         // { questionKey: {box, due, wrong} }
     activity:   PREFIX + "activity",    // { "YYYY-MM-DD": actionCount }
     visits:     PREFIX + "visits",      // number
@@ -159,7 +160,9 @@ var store = (function () {
       attempts: q.attempts || [],
       byUnit: q.byUnit || {},
       byFormat: q.byFormat || {},
-      byTopic: q.byTopic || {}
+      byTopic: q.byTopic || {},
+      bySub: q.bySub || {},
+      byDiff: q.byDiff || {}
     };
   }
 
@@ -212,8 +215,62 @@ var store = (function () {
       q.byTopic[t] = r;
     });
 
+    // Per sub-section (the thematic modules inside a unit), so the Dashboard
+    // can say "revise Ketogenesis", not just "revise Unit 2".
+    var subs = attempt.subs || {};
+    Object.keys(subs).forEach(function (s) {
+      if (!subs[s] || !subs[s].total) return;
+      var r = q.bySub[s] || { total: 0, right: 0 };
+      r.total += subs[s].total;
+      r.right += subs[s].right;
+      r.lastAt = attempt.at;
+      q.bySub[s] = r;
+    });
+
+    // Per difficulty tier (1 Foundational, 2 Core UG, 3 Rank-1 Classic)
+    var diffs = attempt.diffs || {};
+    Object.keys(diffs).forEach(function (d) {
+      if (!diffs[d] || !diffs[d].total) return;
+      var r = q.byDiff[d] || { total: 0, right: 0 };
+      r.total += diffs[d].total;
+      r.right += diffs[d].right;
+      q.byDiff[d] = r;
+    });
+
     write(KEYS.quiz, q);
     logActivity();
+  }
+
+  /* ---------- full answer sheets (so a past test can be reopened) ----------
+     Only the last 20 are kept; each one holds the question keys, what was
+     answered, how long each question took and which ones were flagged.
+     Everything else about a result can be recomputed from the question bank. */
+  var MAX_REPORTS = 20;
+
+  function getReports() {
+    var a = read(KEYS.quizReports, []);
+    return Array.isArray(a) ? a : [];
+  }
+
+  function saveReport(report) {
+    var list = getReports();
+    list.push(report);
+    if (list.length > MAX_REPORTS) list = list.slice(-MAX_REPORTS);
+    if (!write(KEYS.quizReports, list)) {
+      // Storage is full — keep only the newest few rather than losing them all.
+      write(KEYS.quizReports, list.slice(-5));
+    }
+    return report.id;
+  }
+
+  function getReport(id) {
+    var list = getReports();
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+
+  function deleteReport(id) {
+    write(KEYS.quizReports, getReports().filter(function (r) { return r.id !== id; }));
   }
 
   /* ---------- an unfinished quiz run ---------- */
@@ -405,6 +462,7 @@ var store = (function () {
     getHighlights: getHighlights, addHighlight: addHighlight, removeHighlight: removeHighlight,
     getHighlightColor: getHighlightColor, setHighlightColor: setHighlightColor, VALID_HL_COLORS: VALID_HL_COLORS,
     getQuiz: getQuiz, saveAttempt: saveAttempt,
+    getReports: getReports, saveReport: saveReport, getReport: getReport, deleteReport: deleteReport,
     getQuizRun: getQuizRun, saveQuizRun: saveQuizRun, clearQuizRun: clearQuizRun,
     getSrs: getSrs, gradeSrs: gradeSrs, dueSrs: dueSrs,
     getActivity: getActivity, logActivity: logActivity, computeStreak: computeStreak,

@@ -740,3 +740,66 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-base); }
   width: 16px;
   height: 16px;
 }
+
+/* ============================================================
+   UTILITY CLASSES
+   ------------------------------------------------------------
+   The Dashboard and Quiz markup relies on these small helpers.
+   They were being used before they existed, which is why some
+   headings did not push their action button to the right and
+   some cards had no padding. Keep this list in sync with the
+   class names used in js/dashboard.js and js/quiz.js.
+   ============================================================ */
+.row--between { justify-content: space-between; }
+.row--end     { justify-content: flex-end; }
+.flex         { display: flex; }
+.inline-flex  { display: inline-flex; }
+.block        { display: block; }
+.items-center { align-items: center; }
+.items-start  { align-items: flex-start; }
+.wrap         { flex-wrap: wrap; }
+
+.gap-1{gap:var(--s1)}.gap-2{gap:var(--s2)}.gap-3{gap:var(--s3)}
+.gap-4{gap:var(--s4)}.gap-5{gap:var(--s5)}.gap-6{gap:var(--s6)}
+
+.mt-1{margin-top:var(--s1)}.mt-3{margin-top:var(--s3)}.mt-5{margin-top:var(--s5)}
+.mt-10{margin-top:var(--s10)}
+.mb-1{margin-bottom:var(--s1)}.mb-2{margin-bottom:var(--s2)}.mb-3{margin-bottom:var(--s3)}
+.mb-5{margin-bottom:var(--s5)}.mb-12{margin-bottom:var(--s12)}
+.ml-1{margin-left:var(--s1)}.ml-2{margin-left:var(--s2)}.ml-auto{margin-left:auto}
+.mr-2{margin-right:var(--s2)}.mr-3{margin-right:var(--s3)}
+
+.p-3{padding:var(--s3)}.p-4{padding:var(--s4)}.p-5{padding:var(--s5)}
+
+.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}
+.text-muted{color:var(--text-muted)}.text-faint{color:var(--text-faint)}
+.font-mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.font-medium{font-weight:560}.font-bold{font-weight:700}
+.nowrap{white-space:nowrap}
+
+.grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+@media (max-width: 1080px) { .grid--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 620px)  { .grid--5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Chip variants used by the quiz difficulty badges */
+.chip--subtle { background: var(--surface-2); border-color: var(--border); color: var(--text-muted); }
+.chip--sm     { height: 19px; padding: 0 7px; font-size: 11px; }
+.chip.faint   { color: var(--text-faint); }
+
+/* Outline button used across the Dashboard prescriptions */
+.btn--outline {
+  background: transparent;
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+.btn--outline:hover { background: var(--accent-soft); }
+.btn.disabled, .btn[disabled] { opacity: .5; pointer-events: none; }
+
+/* Entry animations referenced by the quiz and result screens */
+@keyframes u-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes u-scale-up { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+.animate-fade-in  { animation: u-fade-in 240ms var(--ease) both; }
+.animate-scale-up { animation: u-scale-up 260ms var(--ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in, .animate-scale-up { animation: none; }
+}
