@@ -152,43 +152,79 @@ var quizApp = (function () {
 
   /* Sequence mode used to take the first N questions of the pool, so a 20-question
      Grand Test was 20 Unit-1 multiple choice questions and never touched the other
-     units or formats. This spreads the N across every unit and format in the pool,
-     proportionally, while keeping each group in curriculum order. */
+     units or formats — and a 10-question Unit test was 10 questions from that
+     unit's first sub-section. This spreads the N across every unit, sub-section
+     and format in the pool, proportionally, while keeping each group in
+     curriculum order. */
   function pickSpread(pool, count) {
     if (count >= pool.length) return pool.slice(0);
 
     var order = {};                       // key -> original position, so the final
     pool.forEach(function (q, i) { order[q.key] = i; });   // sort stays O(n log n)
 
+    // The allocation happens in two passes. Doing it in one pass over
+    // unit|sub-section|format buckets looked tidier, but every bucket then had
+    // the same fractional remainder, the tie-break always fell to whichever
+    // format was listed first, and a 10-question test came out as 5 MCQ + 5 T/F
+    // with no fill-in-the-blanks at all. Splitting by format first guarantees
+    // the 2 : 1 : 1 ratio survives; the second pass spreads each format's share
+    // across the units and sub-sections it covers.
+    var out = [];
+    var byFormat = bucket(pool, function (q) { return q.format; });
+    var formatShares = allocate(byFormat, count);
+
+    formatShares.forEach(function (fs) {
+      if (!fs.take) return;
+      var byModule = bucket(fs.items, function (q) { return q.unitId + "|" + (q.subSection || "-"); });
+      allocate(byModule, fs.take).forEach(function (ms) {
+        out = out.concat(ms.items.slice(0, ms.take));
+      });
+    });
+
+    // Keep the original curriculum order of the pool
+    return out.sort(function (a, b) { return order[a.key] - order[b.key]; });
+  }
+
+  /* Split a list into insertion-ordered buckets. */
+  function bucket(items, keyFn) {
     var groups = [], index = {};
-    pool.forEach(function (q) {
-      var k = q.unitId + "|" + q.format;
+    items.forEach(function (q) {
+      var k = keyFn(q);
       if (index[k] === undefined) { index[k] = groups.length; groups.push({ key: k, items: [] }); }
       groups[index[k]].items.push(q);
     });
+    return groups;
+  }
 
-    // Largest-remainder allocation so the totals always add up to count
+  /* Largest-remainder allocation: hand out `count` places across the groups in
+     proportion to their size, so the takes always add up to exactly `count`. */
+  function allocate(groups, count) {
+    var pool = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
+    if (!pool) return groups.map(function (g) { return { key: g.key, items: g.items, take: 0 }; });
+
     var shares = groups.map(function (g) {
-      var exact = count * g.items.length / pool.length;
-      return { g: g, take: Math.floor(exact), rem: exact - Math.floor(exact) };
+      var exact = count * g.items.length / pool;
+      return { key: g.key, items: g.items, take: Math.min(g.items.length, Math.floor(exact)), rem: exact - Math.floor(exact) };
     });
     var used = shares.reduce(function (n, s) { return n + s.take; }, 0);
-    shares.slice().sort(function (a, b) { return b.rem - a.rem; }).forEach(function (s) {
-      if (used < count && s.take < s.g.items.length) { s.take++; used++; }
+
+    // Biggest fractional remainder first; ties go to the larger group so the
+    // extra place lands where there is most material to draw from.
+    shares.slice().sort(function (a, b) {
+      return (b.rem - a.rem) || (b.items.length - a.items.length);
+    }).forEach(function (s) {
+      if (used < count && s.take < s.items.length) { s.take++; used++; }
     });
+
     // Any leftover (groups that ran out) goes to whoever still has questions
-    for (var pass = 0; used < count && pass < 40; pass++) {
+    for (var pass = 0; used < count && pass < 60; pass++) {
       var moved = false;
       shares.forEach(function (s) {
-        if (used < count && s.take < s.g.items.length) { s.take++; used++; moved = true; }
+        if (used < count && s.take < s.items.length) { s.take++; used++; moved = true; }
       });
       if (!moved) break;
     }
-
-    var out = [];
-    shares.forEach(function (s) { out = out.concat(s.g.items.slice(0, s.take)); });
-    // Keep the original curriculum order of the pool
-    return out.sort(function (a, b) { return order[a.key] - order[b.key]; });
+    return shares;
   }
 
   function countAvailable(unitIds, subSectionId) {
