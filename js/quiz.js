@@ -50,6 +50,15 @@ var quizApp = (function () {
   }
 
   function resetRun() {
+    stopRun();
+    run = null;
+  }
+
+  /* Called by the router when the student leaves the quiz section, so an exam
+     timer or key listener can never keep running in the background. */
+  function leave() {
+    if (run && run.active) persistRun();
+    stopRun();
     run = null;
   }
 
@@ -104,6 +113,42 @@ var quizApp = (function () {
     return copy;
   }
 
+  /* Sequence mode used to take the first N questions of the pool, so a 20-question
+     Grand Test was 20 Unit-1 multiple choice questions and never touched the other
+     units or formats. This spreads the N across every unit and format in the pool,
+     proportionally, while keeping each group in curriculum order. */
+  function pickSpread(pool, count) {
+    if (count >= pool.length) return pool.slice(0);
+
+    var groups = [], index = {};
+    pool.forEach(function (q) {
+      var k = q.unitId + "|" + q.format;
+      if (index[k] === undefined) { index[k] = groups.length; groups.push({ key: k, items: [] }); }
+      groups[index[k]].items.push(q);
+    });
+
+    // Largest-remainder allocation so the totals always add up to count
+    var shares = groups.map(function (g) {
+      var exact = count * g.items.length / pool.length;
+      return { g: g, take: Math.floor(exact), rem: exact - Math.floor(exact) };
+    });
+    var used = shares.reduce(function (n, s) { return n + s.take; }, 0);
+    shares.slice().sort(function (a, b) { return b.rem - a.rem; }).forEach(function (s) {
+      if (used < count && s.take < s.g.items.length) { s.take++; used++; }
+    });
+    // Any leftover (groups that ran out) goes to whoever still has questions
+    for (var pass = 0; used < count && pass < 4; pass++) {
+      shares.forEach(function (s) {
+        if (used < count && s.take < s.g.items.length) { s.take++; used++; }
+      });
+    }
+
+    var out = [];
+    shares.forEach(function (s) { out = out.concat(s.g.items.slice(0, s.take)); });
+    // Keep the original curriculum order of the pool
+    return out.sort(function (a, b) { return pool.indexOf(a) - pool.indexOf(b); });
+  }
+
   function countAvailable(unitIds, subSectionId) {
     return bankFor(unitIds, ["mcq", "tf", "fib"], subSectionId).length;
   }
@@ -116,6 +161,7 @@ var quizApp = (function () {
     var kind = params.a;
 
     if (run && run.active) { paintRun(); return; }
+    if (kind === "resume") { if (resumeSavedRun()) return; location.hash = "#/quiz"; return; }
 
     if (!kind) { renderHub(); return; }
     if (kind === "unit")      { renderSetup("unit", params.b); return; }
@@ -129,6 +175,25 @@ var quizApp = (function () {
   /* ============================================================
      HUB
      ============================================================ */
+  /* Banner offering to continue a test that was left unfinished
+     (page refreshed, app closed, phone call in the middle of a paper). */
+  function resumeBanner() {
+    var saved = savedRun();
+    if (!saved) return "";
+    return '<a class="card resume-card" href="#/quiz/resume">' +
+        '<div class="row items-center gap-3">' +
+          '<span class="resume-card__icon">&#9654;</span>' +
+          '<span>' +
+            '<b>Continue your unfinished test</b>' +
+            '<span class="small muted block">' + app.esc(saved.label || "Quiz") + ' — question ' +
+              (Math.min(saved.i || 0, saved.keys.length - 1) + 1) + ' of ' + saved.keys.length +
+              (saved.exam ? ' (Exam Mode)' : '') + '</span>' +
+          '</span>' +
+          '<span class="btn btn--primary btn--sm push">Resume</span>' +
+        '</div>' +
+      '</a>';
+  }
+
   function renderHub() {
     resetRun();
 
@@ -176,6 +241,8 @@ var quizApp = (function () {
         '<p class="lede">Test individual sub-sections, full units, paper-wise or grand exams. ' +
         'Choose between <b>Sequence Mode</b> (curriculum order) or <b>Shuffle Mode</b> (randomized), with instant feedback and Spaced Repetition queue.</p>' +
       '</div>' +
+
+      resumeBanner() +
 
       (totalAll === 0
         ? '<div class="empty"><div class="empty__icon">' + app.icon("quiz") + '</div><h3>The question bank is empty</h3>' +
@@ -299,6 +366,8 @@ var quizApp = (function () {
           '<h1>' + app.esc(label) + '</h1>' +
           '<p class="lede">Configure your test parameters below. Pick question count, format filters, and test mode.</p>' +
         '</div>' +
+
+        resumeBanner() +
 
         '<div class="card setup quiz-setup-card">' +
           subSecHtml +
@@ -474,8 +543,8 @@ var quizApp = (function () {
           if (state.orderMode === "shuffle") {
             finalQuestions = shuffle(rawPool).slice(0, state.count);
           } else {
-            // Sequence mode: exact curriculum sequence
-            finalQuestions = rawPool.slice(0, state.count);
+            // Sequence mode: curriculum order, spread across every unit and format
+            finalQuestions = pickSpread(rawPool, state.count);
           }
 
           var runLabel = label;
@@ -530,33 +599,116 @@ var quizApp = (function () {
      RUNNING A QUIZ
      ============================================================ */
   function start(questions, scope, label, exam, minutes, orderMode, subSectionId, unitId) {
+    stopRun();
     run = {
       active: true,
       qs: questions,
       i: 0,
       answers: new Array(questions.length).fill(null),
+      checked: new Array(questions.length).fill(false), // per question, so Previous/Next never wipes it
+      graded: new Array(questions.length).fill(false),  // each question feeds the SRS box only once
       scope: scope,
       label: label,
       orderMode: orderMode || "sequence",
       subSectionId: subSectionId || "all",
       unitId: unitId || (questions[0] ? questions[0].unitId : null),
       exam: !!exam,
+      minutes: exam ? minutes : 0,
       endsAt: exam ? Date.now() + minutes * 60000 : 0,
       startedAt: Date.now(),
-      revealed: false,
       timer: null,
       streak: 0
     };
-
-    if (run.exam) {
-      run.timer = setInterval(function () {
-        if (!run || !run.active) { clearInterval(run && run.timer); return; }
-        if (Date.now() >= run.endsAt) { finish(true); return; }
-        var t = document.getElementById("qtimer");
-        if (t) t.textContent = fmtTime(run.endsAt - Date.now());
-      }, 1000);
-    }
+    startTimer();
+    persistRun();
     paintRun();
+  }
+
+  function startTimer() {
+    if (!run || !run.exam) return;
+    var id = setInterval(function () {
+      if (!run || !run.active || !run.exam) { clearInterval(id); return; }
+      if (Date.now() >= run.endsAt) { clearInterval(id); finish(true); return; }
+      var t = document.getElementById("qtimer");
+      if (t) t.textContent = fmtTime(run.endsAt - Date.now());
+    }, 1000);
+    run.timer = id;
+  }
+
+  /* Stop every timer and key listener this run owns. Called before a new run starts,
+     when the test is quit or finished, and when the student navigates away. */
+  function stopRun() {
+    if (!run) return;
+    if (run.timer) { clearInterval(run.timer); run.timer = null; }
+    if (run._keyHandler) { window.removeEventListener("keydown", run._keyHandler); run._keyHandler = null; }
+  }
+
+  /* ============================================================
+     SAVING AN UNFINISHED RUN (survives a refresh or app restart)
+     ============================================================ */
+  function questionByKey(key) {
+    var parts = String(key).split(":");
+    if (parts.length !== 3) return null;
+    var bank = (window.quizBank || {})[parts[0]];
+    var list = bank && bank[parts[1]];
+    var raw = list && list[parseInt(parts[2], 10)];
+    if (!raw || !raw.q) return null;
+    return bankFor([parts[0]], [parts[1]], null).filter(function (q) { return q.key === key; })[0] || null;
+  }
+
+  function persistRun() {
+    if (!run || !run.active || !store.saveQuizRun) return;
+    store.saveQuizRun({
+      at: Date.now(),
+      keys: run.qs.map(function (q) { return q.key; }),
+      answers: run.answers,
+      checked: run.checked,
+      graded: run.graded,
+      i: run.i,
+      scope: run.scope,
+      label: run.label,
+      orderMode: run.orderMode,
+      subSectionId: run.subSectionId,
+      unitId: run.unitId,
+      exam: run.exam,
+      minutes: run.minutes,
+      endsAt: run.endsAt,
+      startedAt: run.startedAt,
+      streak: run.streak
+    });
+  }
+
+  function savedRun() {
+    if (!store.getQuizRun) return null;
+    var s = store.getQuizRun();
+    if (!s || !s.keys || !s.keys.length) return null;
+    // An exam whose clock ran out while the app was closed cannot be resumed.
+    if (s.exam && s.endsAt && Date.now() >= s.endsAt) { store.clearQuizRun(); return null; }
+    return s;
+  }
+
+  function resumeSavedRun() {
+    var s = savedRun();
+    if (!s) return false;
+    var qs = s.keys.map(questionByKey);
+    if (qs.some(function (q) { return !q; })) {   // the question bank changed under us
+      store.clearQuizRun();
+      app.toast("That saved test no longer matches the question bank");
+      return false;
+    }
+    stopRun();
+    run = {
+      active: true, qs: qs, i: Math.min(s.i || 0, qs.length - 1),
+      answers: s.answers || new Array(qs.length).fill(null),
+      checked: s.checked || new Array(qs.length).fill(false),
+      graded: s.graded || new Array(qs.length).fill(false),
+      scope: s.scope, label: s.label, orderMode: s.orderMode, subSectionId: s.subSectionId,
+      unitId: s.unitId, exam: !!s.exam, minutes: s.minutes || 0, endsAt: s.endsAt || 0,
+      startedAt: s.startedAt || Date.now(), timer: null, streak: s.streak || 0
+    };
+    startTimer();
+    paintRun();
+    return true;
   }
 
   function fmtTime(ms) {
@@ -564,10 +716,23 @@ var quizApp = (function () {
     return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
   }
 
+  function isAnswered(v) {
+    return v !== null && v !== undefined && String(v).trim() !== "";
+  }
+
+  function answeredCount() {
+    return run.answers.filter(isAnswered).length;
+  }
+
+  /* ============================================================
+     PAINTING THE CURRENT QUESTION
+     ============================================================ */
   function paintRun() {
+    if (!run || !run.active) return;
     var q = run.qs[run.i];
     var given = run.answers[run.i];
-    var showFeedback = !run.exam && run.revealed;
+    var locked = !!run.checked[run.i];        // answered and already marked
+    var showFeedback = !run.exam && locked;   // practice mode shows the answer straight away
 
     var body;
     if (q.format === "mcq") {
@@ -581,8 +746,8 @@ var quizApp = (function () {
         return '<button type="button" class="' + cls + '" data-pick="' + i + '"' + (showFeedback ? ' disabled' : '') + '>' +
           '<span class="opt__key">' + "ABCD".charAt(i) + '</span>' +
           '<span class="opt__text">' + app.esc(opt) + '</span>' +
-          (showFeedback && i === q.a ? '<span class="opt__state">✓</span>' : '') +
-          (showFeedback && given === i && i !== q.a ? '<span class="opt__state">✗</span>' : '') +
+          (showFeedback && i === q.a ? '<span class="opt__state">&#10003;</span>' : '') +
+          (showFeedback && given === i && i !== q.a ? '<span class="opt__state">&#10007;</span>' : '') +
         '</button>';
       }).join("") + '</div>';
 
@@ -597,8 +762,8 @@ var quizApp = (function () {
         return '<button type="button" class="' + cls + '" data-pick="' + v + '"' + (showFeedback ? ' disabled' : '') + '>' +
           '<span class="opt__key">' + (v ? "T" : "F") + '</span>' +
           '<span class="opt__text">' + (v ? "True" : "False") + '</span>' +
-          (showFeedback && v === q.a ? '<span class="opt__state">✓</span>' : '') +
-          (showFeedback && given === v && v !== q.a ? '<span class="opt__state">✗</span>' : '') +
+          (showFeedback && v === q.a ? '<span class="opt__state">&#10003;</span>' : '') +
+          (showFeedback && given === v && v !== q.a ? '<span class="opt__state">&#10007;</span>' : '') +
         '</button>';
       }).join("") + '</div>';
 
@@ -607,37 +772,43 @@ var quizApp = (function () {
       body = '<div class="fib-card">' +
         '<div class="fib-input-wrap">' +
           '<input type="text" id="fibinput" class="fib-input" placeholder="Type your answer here..." autocomplete="off" autocorrect="off" spellcheck="false" ' +
-          'value="' + app.esc(given !== null ? String(given) : "") + '"' + (showFeedback ? ' disabled' : '') + '>' +
+          'value="' + app.esc(isAnswered(given) ? String(given) : "") + '"' + (showFeedback ? ' disabled' : '') + '>' +
           (!showFeedback
-            ? '<button type="button" class="btn btn--primary" id="fibsubmit">Submit</button>'
+            ? '<button type="button" class="btn btn--primary" id="fibsubmit">' + (run.exam ? 'Save' : 'Check') + '</button>'
             : '') +
         '</div>' +
         (showFeedback
           ? '<div class="fib-accepted-callout ' + (isCorrect(q, given) ? 'is-ok' : 'is-error') + '">' +
-              '<span class="badge">' + (isCorrect(q, given) ? '✓ Correct' : '✗ Incorrect') + '</span>' +
+              '<span class="badge">' + (isCorrect(q, given) ? '&#10003; Correct' : '&#10007; Incorrect') + '</span>' +
               '<span class="label"><b>Standard Answer:</b> ' + app.esc(q.a_display || (Array.isArray(q.a) ? q.a[0] : q.a)) + '</span>' +
             '</div>'
           : '') +
         '</div>';
     }
 
-    var answered = run.answers.filter(function (a) { return a !== null && a !== ""; }).length;
+    var answered = answeredCount();
 
-    // Sub-section badge metadata
     var subMeta = getSubSectionMeta(q.unitId, q.subSection);
     var subBadge = subMeta
       ? '<span class="chip chip--accent"><span class="qicon">' + subMeta.icon + '</span> ' + app.esc(subMeta.title) + '</span>'
       : '';
 
     var diffBadge = q.diff === 1
-      ? '<span class="chip chip--subtle">⭐ Foundational</span>'
+      ? '<span class="chip chip--subtle">&#11088; Foundational</span>'
       : q.diff === 2
-        ? '<span class="chip chip--subtle">⭐⭐ Core UG</span>'
-        : '<span class="chip chip--warn">⭐⭐⭐ Rank 1 Classic</span>';
+        ? '<span class="chip chip--subtle">&#11088;&#11088; Core UG</span>'
+        : '<span class="chip chip--warn">&#11088;&#11088;&#11088; Rank 1 Classic</span>';
 
     var orderBadge = run.orderMode === "sequence"
       ? '<span class="chip chip--subtle">📋 Sequence Mode</span>'
       : '<span class="chip chip--subtle">🔀 Shuffle Mode</span>';
+
+    var lastOne = run.i === run.qs.length - 1;
+    var primaryBtn = (q.format === "fib" && !locked)
+      ? ''   // the Check / Save button sits next to the input instead
+      : (lastOne
+        ? '<button class="btn btn--primary btn--lg" id="finishbtn">Finish &amp; See Results 🏆</button>'
+        : '<button class="btn btn--primary btn--lg" id="nextbtn">Next Question →</button>');
 
     host.innerHTML =
       '<div class="quizrun animate-fade-in">' +
@@ -653,6 +824,8 @@ var quizApp = (function () {
 
         '<div class="bar bar--lg mt-3"><div class="bar__fill" style="width:' +
           (((run.i + 1) / run.qs.length) * 100) + '%"></div></div>' +
+
+        paletteHtml() +
 
         '<div class="card quizcard mt-5">' +
           '<div class="quizcard__meta">' +
@@ -685,161 +858,186 @@ var quizApp = (function () {
           '<button class="btn" id="prevbtn"' + (run.i === 0 ? ' disabled' : '') + '>← Previous</button>' +
           '<div class="push"></div>' +
           '<span class="small faint mr-3">' + answered + ' of ' + run.qs.length + ' answered</span>' +
-          (!run.exam && !run.revealed
-            ? '<button class="btn btn--primary btn--lg" id="checkbtn">Check Answer (Enter)</button>'
-            : (run.i === run.qs.length - 1
-              ? '<button class="btn btn--primary btn--lg" id="finishbtn">Finish &amp; See Results 🏆</button>'
-              : '<button class="btn btn--primary btn--lg" id="nextbtn">Next Question →</button>')) +
+          primaryBtn +
         '</div>' +
 
-        (run.exam && run.i === run.qs.length - 1
-          ? '<div class="row mt-4"><button class="btn btn--primary btn--block btn--lg" id="submitbtn">Submit Paper Now</button></div>'
+        (run.exam
+          ? '<div class="row mt-4"><button class="btn btn--block" id="submitbtn">Submit Paper Now</button></div>'
           : '') +
       '</div>';
 
     wireRun(q);
   }
 
+  /* Question navigator — tap any number to jump; the colours show what is done. */
+  function paletteHtml() {
+    return '<div class="qpalette" id="qpalette">' + run.qs.map(function (q, i) {
+      var cls = "qpalette__dot";
+      if (i === run.i) cls += " is-current";
+      if (run.checked[i] && !run.exam) cls += isCorrect(q, run.answers[i]) ? " is-right" : " is-wrong";
+      else if (isAnswered(run.answers[i])) cls += " is-answered";
+      return '<button type="button" class="' + cls + '" data-jump="' + i + '" ' +
+        'aria-label="Question ' + (i + 1) + '">' + (i + 1) + '</button>';
+    }).join("") + '</div>';
+  }
+
   function isCorrect(q, given) {
-    if (given === null || given === undefined || given === "") return false;
+    if (!isAnswered(given)) return false;
     if (q.format === "mcq") return given === q.a;
     if (q.format === "tf") return given === q.a;
-    // FIB checking: compare against all acceptable answers
-    var norm = String(given).trim().toLowerCase();
+    // FIB checking: compare against every acceptable answer
+    var norm = String(given).trim().toLowerCase().replace(/\s+/g, " ");
     return (q.a || []).some(function (acc) {
-      return String(acc).trim().toLowerCase() === norm;
+      return String(acc).trim().toLowerCase().replace(/\s+/g, " ") === norm;
     });
   }
 
+  /* Record an answer. In practice mode a single tap also marks it and shows the
+     explanation straight away — there is no separate save step. */
+  function submitAnswer(value) {
+    var q = run.qs[run.i];
+    if (run.checked[run.i] && !run.exam) return;   // already marked; use Previous / Next to move
+    run.answers[run.i] = value;
+
+    if (!run.exam) {
+      run.checked[run.i] = true;
+      var ok = isCorrect(q, value);
+      if (!run.graded[run.i]) {
+        store.gradeSrs(q.key, ok);
+        run.graded[run.i] = true;
+      }
+      if (ok) {
+        run.streak = (run.streak || 0) + 1;
+        if (run.streak === 3 && app.popMilestone) app.popMilestone("🔥 3 in a row!");
+        else if (run.streak === 5 && app.popMilestone) app.popMilestone("🚀 5 streak — unstoppable!");
+        else if (run.streak === 7 && app.popMilestone) app.popMilestone("⚡ 7 straight — pure genius!");
+        else if (run.streak === 10 && app.popMilestone) app.popMilestone("👑 10 streak — Master Biochemist!");
+      } else {
+        run.streak = 0;
+      }
+    }
+    persistRun();
+    paintRun();
+    if (!run.exam && isCorrect(q, value) && app.burstConfetti) {
+      var anchor = document.querySelector(".opt.is-right") || document.querySelector(".quizcard");
+      if (anchor) app.burstConfetti(anchor);
+    }
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= run.qs.length) return;
+    run.i = index;
+    persistRun();
+    paintRun();
+  }
+
   function wireRun(q) {
-    // Option picking for MCQ and TF
+    // A single tap on any option selects it (and marks it, outside exam mode)
     document.querySelectorAll("[data-pick]").forEach(function (b) {
       b.addEventListener("click", function () {
         var raw = b.getAttribute("data-pick");
-        run.answers[run.i] = (q.format === "tf") ? (raw === "true") : parseInt(raw, 10);
-        paintRun();
+        submitAnswer(q.format === "tf" ? (raw === "true") : parseInt(raw, 10));
       });
     });
+
+    // Question navigator
+    document.querySelectorAll("[data-jump]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        goTo(parseInt(b.getAttribute("data-jump"), 10));
+      });
+    });
+
+    function submitFib() {
+      var input = document.getElementById("fibinput");
+      var val = input ? input.value : run.answers[run.i];
+      if (!isAnswered(val)) { app.toast("Please type your answer first"); return; }
+      submitAnswer(val);
+    }
 
     // FIB input
     var fib = document.getElementById("fibinput");
     if (fib) {
-      if (!run.revealed && !run.exam) {
-        setTimeout(function () { fib.focus(); }, 50);
-      }
+      if (!run.checked[run.i]) setTimeout(function () { fib.focus(); }, 50);
       fib.addEventListener("input", function () {
         run.answers[run.i] = fib.value;
       });
       fib.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          run.answers[run.i] = fib.value;
-          var cb = document.getElementById("checkbtn") || document.getElementById("nextbtn") || document.getElementById("finishbtn");
-          if (cb) cb.click();
-        }
+        if (e.key === "Enter") { e.preventDefault(); submitFib(); }
       });
     }
 
     var fibSubmit = document.getElementById("fibsubmit");
-    if (fibSubmit) {
-      fibSubmit.addEventListener("click", function () {
-        var cb = document.getElementById("checkbtn");
-        if (cb) cb.click();
-      });
-    }
+    if (fibSubmit) fibSubmit.addEventListener("click", submitFib);
 
-    // Check answer button
-    var check = document.getElementById("checkbtn");
-    if (check) check.addEventListener("click", function () {
-      if (run.answers[run.i] === null || run.answers[run.i] === "") {
-        app.toast("Please select or type an answer first");
-        return;
-      }
-      run.revealed = true;
-      var ok = isCorrect(q, run.answers[run.i]);
-      store.gradeSrs(q.key, ok);
-
-      if (ok) {
-        run.streak = (run.streak || 0) + 1;
-        if (app.burstConfetti) app.burstConfetti(check);
-        if (run.streak === 3 && app.popMilestone) app.popMilestone("🔥 3 in a row!");
-        else if (run.streak === 5 && app.popMilestone) app.popMilestone("🚀 5 streak — unstoppable!");
-        else if (run.streak === 7 && app.popMilestone) app.popMilestone("⚡ 7 straight — pure genius!");
-        else if (run.streak === 10 && app.popMilestone) app.popMilestone("👑 10 streak — Master Pathologist!");
-      } else {
-        run.streak = 0;
-      }
-      paintRun();
-    });
-
-    // Navigation buttons
     var next = document.getElementById("nextbtn");
-    if (next) next.addEventListener("click", function () {
-      run.i++;
-      run.revealed = false;
-      paintRun();
-    });
+    if (next) next.addEventListener("click", function () { goTo(run.i + 1); });
 
     var prev = document.getElementById("prevbtn");
-    if (prev) prev.addEventListener("click", function () {
-      run.i--;
-      run.revealed = false;
-      paintRun();
-    });
+    if (prev) prev.addEventListener("click", function () { goTo(run.i - 1); });
 
     var fin = document.getElementById("finishbtn");
-    if (fin) fin.addEventListener("click", function () { finish(false); });
+    if (fin) fin.addEventListener("click", function () { confirmFinish(); });
 
     var sub = document.getElementById("submitbtn");
-    if (sub) sub.addEventListener("click", function () {
-      if (confirm("Submit your examination paper now?")) finish(false);
-    });
+    if (sub) sub.addEventListener("click", function () { confirmFinish(); });
 
     var quit = document.getElementById("quitbtn");
     if (quit) quit.addEventListener("click", function () {
-      if (confirm("Quit this quiz? Progress on uncompleted questions will not be saved.")) {
-        if (run && run.timer) clearInterval(run.timer);
+      if (confirm("Quit this test? Your answers so far will not be added to the dashboard.")) {
+        stopRun();
+        if (store.clearQuizRun) store.clearQuizRun();
         resetRun();
         location.hash = "#/quiz";
       }
     });
 
-    // Global keyboard shortcuts (1-4 or A-D for MCQ, T/F for True/False, Enter for Next)
+    // Keyboard: 1-4 / A-D for MCQ, T / F for True-False, arrows to move, Enter for next
     function handleKey(e) {
+      if (!run || !run.active) return;
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      var cur = run.qs[run.i];
+      var locked = run.checked[run.i] && !run.exam;
 
-      if (!run.revealed && !run.exam) {
-        if (q.format === "mcq") {
+      if (!locked) {
+        if (cur.format === "mcq") {
           var map = { "1": 0, "2": 1, "3": 2, "4": 3, "a": 0, "b": 1, "c": 2, "d": 3, "A": 0, "B": 1, "C": 2, "D": 3 };
-          if (map[e.key] !== undefined) {
-            run.answers[run.i] = map[e.key];
-            paintRun();
+          if (map[e.key] !== undefined && map[e.key] < (cur.o || []).length) {
+            e.preventDefault();
+            submitAnswer(map[e.key]);
             return;
           }
-        } else if (q.format === "tf") {
-          if (e.key === "t" || e.key === "T" || e.key === "1") { run.answers[run.i] = true; paintRun(); return; }
-          if (e.key === "f" || e.key === "F" || e.key === "2") { run.answers[run.i] = false; paintRun(); return; }
+        } else if (cur.format === "tf") {
+          if (e.key === "t" || e.key === "T" || e.key === "1") { e.preventDefault(); submitAnswer(true); return; }
+          if (e.key === "f" || e.key === "F" || e.key === "2") { e.preventDefault(); submitAnswer(false); return; }
         }
       }
 
+      if (e.key === "ArrowRight") { e.preventDefault(); goTo(run.i + 1); return; }
+      if (e.key === "ArrowLeft") { e.preventDefault(); goTo(run.i - 1); return; }
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        var cb = document.getElementById("checkbtn") || document.getElementById("nextbtn") || document.getElementById("finishbtn");
-        if (cb) cb.click();
+        var btn = document.getElementById("nextbtn") || document.getElementById("finishbtn");
+        if (btn) btn.click();
       }
     }
 
-    // Attach one-time keydown handler
-    window.removeEventListener("keydown", run._keyHandler);
+    if (run._keyHandler) window.removeEventListener("keydown", run._keyHandler);
     run._keyHandler = handleKey;
     window.addEventListener("keydown", run._keyHandler);
+  }
+
+  function confirmFinish() {
+    var left = run.qs.length - answeredCount();
+    if (left > 0 && !confirm(left + " question" + (left === 1 ? " is" : "s are") + " still unanswered. Finish anyway?")) return;
+    finish(false);
   }
 
   /* ============================================================
      RESULTS & ANALYTICS
      ============================================================ */
   function finish(timedOut) {
-    if (run && run.timer) clearInterval(run.timer);
-    if (run && run._keyHandler) window.removeEventListener("keydown", run._keyHandler);
+    stopRun();
+    if (store.clearQuizRun) store.clearQuizRun();
 
     var correct = 0;
     var wrongList = [];
@@ -863,7 +1061,22 @@ var quizApp = (function () {
 
     var total = run.qs.length;
     var percent = app.pct(correct, total);
-    var mins = Math.round((Date.now() - run.startedAt) / 60000) || 1;
+    var seconds = Math.max(1, Math.round((Date.now() - run.startedAt) / 1000));
+    var mins = Math.max(1, Math.round(seconds / 60));
+
+    // Everything the Dashboard needs to track progress over time
+    var units = {}, topics = {};
+    run.qs.forEach(function (q, i) {
+      var ok = isCorrect(q, run.answers[i]);
+      if (q.unitId) {
+        units[q.unitId] = units[q.unitId] || { total: 0, right: 0 };
+        units[q.unitId].total++; if (ok) units[q.unitId].right++;
+      }
+      if (q.topicId) {
+        topics[q.topicId] = topics[q.topicId] || { total: 0, right: 0 };
+        topics[q.topicId].total++; if (ok) topics[q.topicId].right++;
+      }
+    });
 
     store.saveAttempt({
       at: Date.now(),
@@ -871,8 +1084,16 @@ var quizApp = (function () {
       label: run.label,
       total: total,
       correct: correct,
+      attempted: run.answers.filter(isAnswered).length,
       exam: run.exam,
-      minutes: mins
+      timedOut: !!timedOut,
+      orderMode: run.orderMode,
+      subSectionId: run.subSectionId,
+      minutes: mins,
+      seconds: seconds,
+      formats: formatStats,
+      units: units,
+      topics: topics
     });
 
     var verdict = percent >= 85 ? "Rank 1 Distinction" : percent >= 70 ? "Strong First Class" : percent >= 50 ? "Passing Grade" : "Needs Revision";
@@ -970,5 +1191,5 @@ var quizApp = (function () {
     resetRun();
   }
 
-  return { render: render, reset: resetRun };
+  return { render: render, reset: resetRun, leave: leave, hasSavedRun: function () { return !!savedRun(); } };
 })();

@@ -222,6 +222,10 @@ var app = (function () {
     };
     state.section = map[name] || "home";
 
+    // Leaving the quiz section: stop the exam clock and save the unfinished run
+    // so it can be resumed instead of being silently lost.
+    if (state.section !== "quiz" && window.quizApp && quizApp.leave) quizApp.leave();
+
     // Section accent colour
     var accentFor = {
       theory: "theory", unit: "theory", topic: "theory",

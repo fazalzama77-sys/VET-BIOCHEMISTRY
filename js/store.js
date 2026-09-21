@@ -20,7 +20,8 @@ var store = (function () {
     notes:      PREFIX + "notes",       // { topicId: "note text" }
     highlights: PREFIX + "highlights",  // { topicId: [ {text, color}, ... ] }
     hlColor:    PREFIX + "hl-color",    // "yellow" | "green" | "blue" | "pink" | "orange" | "purple"
-    quiz:       PREFIX + "quiz",        // { attempts: [], byUnit: {} }
+    quiz:       PREFIX + "quiz",        // { attempts: [], byUnit: {}, byFormat: {}, byTopic: {} }
+    quizRun:    PREFIX + "quiz-run",    // an unfinished test, so it survives a refresh
     srs:        PREFIX + "srs",         // { questionKey: {box, due, wrong} }
     activity:   PREFIX + "activity",    // { "YYYY-MM-DD": actionCount }
     visits:     PREFIX + "visits",      // number
@@ -152,24 +153,74 @@ var store = (function () {
   }
 
   /* ---------- quiz results ---------- */
-  function getQuiz() { return read(KEYS.quiz, { attempts: [], byUnit: {} }); }
+  function getQuiz() {
+    var q = read(KEYS.quiz, null) || {};
+    return {
+      attempts: q.attempts || [],
+      byUnit: q.byUnit || {},
+      byFormat: q.byFormat || {},
+      byTopic: q.byTopic || {}
+    };
+  }
+
+  function bumpRecord(map, key, total, correct, at) {
+    var r = map[key] || { runs: 0, best: 0, totalQ: 0, totalCorrect: 0 };
+    r.runs += 1;
+    r.totalQ += total || 0;
+    r.totalCorrect += correct || 0;
+    var pct = total ? Math.round(correct / total * 100) : 0;
+    if (pct > r.best) r.best = pct;
+    r.last = pct;
+    r.lastAt = at;
+    map[key] = r;
+  }
+
   function saveAttempt(attempt) {
     var q = getQuiz();
     q.attempts.push(attempt);
     if (q.attempts.length > 200) q.attempts = q.attempts.slice(-200);
 
-    var u = q.byUnit[attempt.scope] || { runs: 0, best: 0, totalQ: 0, totalCorrect: 0 };
-    u.runs += 1;
-    u.totalQ += attempt.total;
-    u.totalCorrect += attempt.correct;
-    var pct = attempt.total ? Math.round(attempt.correct / attempt.total * 100) : 0;
-    if (pct > u.best) u.best = pct;
-    u.last = pct;
-    u.lastAt = attempt.at;
-    q.byUnit[attempt.scope] = u;
+    // The scope key ("unit:unit-1", "grand", "paper:annual", "review", ...)
+    bumpRecord(q.byUnit, attempt.scope, attempt.total, attempt.correct, attempt.at);
+
+    // Per unit, so a sub-section test or a grand test still counts towards that
+    // unit's mastery on the Dashboard.
+    var units = attempt.units || {};
+    Object.keys(units).forEach(function (unitId) {
+      var key = "unit:" + unitId;
+      if (key === attempt.scope) return;   // already counted above
+      bumpRecord(q.byUnit, key, units[unitId].total, units[unitId].right, attempt.at);
+    });
+
+    // Per question format (MCQ / True-False / Fill in the blanks)
+    var fmts = attempt.formats || {};
+    Object.keys(fmts).forEach(function (f) {
+      if (!fmts[f] || !fmts[f].total) return;
+      var r = q.byFormat[f] || { total: 0, right: 0 };
+      r.total += fmts[f].total;
+      r.right += fmts[f].right;
+      q.byFormat[f] = r;
+    });
+
+    // Per topic, so the Dashboard can point at the weakest chapters
+    var topics = attempt.topics || {};
+    Object.keys(topics).forEach(function (t) {
+      var r = q.byTopic[t] || { total: 0, right: 0 };
+      r.total += topics[t].total;
+      r.right += topics[t].right;
+      r.lastAt = attempt.at;
+      q.byTopic[t] = r;
+    });
 
     write(KEYS.quiz, q);
     logActivity();
+  }
+
+  /* ---------- an unfinished quiz run ---------- */
+  function getQuizRun() { return read(KEYS.quizRun, null); }
+  function saveQuizRun(runState) { write(KEYS.quizRun, runState); }
+  function clearQuizRun() {
+    try { localStorage.removeItem(KEYS.quizRun); } catch (e) {}
   }
 
   /* ---------- spaced repetition (Leitner boxes 1-5) ---------- */
@@ -354,6 +405,7 @@ var store = (function () {
     getHighlights: getHighlights, addHighlight: addHighlight, removeHighlight: removeHighlight,
     getHighlightColor: getHighlightColor, setHighlightColor: setHighlightColor, VALID_HL_COLORS: VALID_HL_COLORS,
     getQuiz: getQuiz, saveAttempt: saveAttempt,
+    getQuizRun: getQuizRun, saveQuizRun: saveQuizRun, clearQuizRun: clearQuizRun,
     getSrs: getSrs, gradeSrs: gradeSrs, dueSrs: dueSrs,
     getActivity: getActivity, logActivity: logActivity, computeStreak: computeStreak,
     bumpVisits: bumpVisits, getVisits: getVisits,

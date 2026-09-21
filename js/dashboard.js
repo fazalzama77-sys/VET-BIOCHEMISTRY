@@ -174,6 +174,9 @@ var dashboardApp = (function () {
         /* 5. 5-Box Leitner Memory Pipeline */
         renderLeitnerPipeline(srs, boxCounts, srsKeys.length, dueCards) +
 
+        /* 5b. Quiz Performance Tracker */
+        renderQuizTracker(quiz, allUnits) +
+
         /* 6. Activity Heatmap & Performance Trends */
         '<div class="grid grid--2">' +
           renderHeatmapCard(activity, streak) +
@@ -561,6 +564,118 @@ var dashboardApp = (function () {
   }
 
   /* ---------- Diagnostic Assessment Ledger ---------- */
+  /* ---------- Quiz Performance Tracker ---------- */
+  function renderQuizTracker(quiz, allUnits) {
+    var attempts = quiz.attempts || [];
+    var byFormat = quiz.byFormat || {};
+    var byTopic = quiz.byTopic || {};
+
+    if (!attempts.length) {
+      return '<section class="mt-8">' +
+        '<h2>Quiz Performance Tracker</h2>' +
+        '<p class="muted small mt-1">Every test you finish is recorded here — accuracy by question type, ' +
+          'your strongest and weakest chapters, and how your scores move over time.</p>' +
+        '<div class="card p-5 text-center mt-4 text-muted">' + app.icon("target") + '<br>' +
+          'No tests finished yet. Your first quiz will fill this in.<br>' +
+          '<a class="btn btn--primary btn--sm mt-3" href="#/quiz">Start a quiz</a>' +
+        '</div></section>';
+    }
+
+    var totalQ = 0, totalCorrect = 0, totalSeconds = 0, examCount = 0;
+    attempts.forEach(function (a) {
+      totalQ += a.total || 0;
+      totalCorrect += a.correct || 0;
+      totalSeconds += a.seconds || ((a.minutes || 0) * 60);
+      if (a.exam) examCount++;
+    });
+    var accuracy = totalQ ? Math.round(totalCorrect / totalQ * 100) : 0;
+    var perQ = totalQ ? Math.round(totalSeconds / totalQ) : 0;
+
+    // Last 10 scores, oldest first, as a simple bar trend
+    var recent = attempts.slice(-10);
+    var trend = recent.map(function (a) {
+      var p = app.pct(a.correct, a.total);
+      var d = new Date(a.at);
+      return '<div class="qtrend__col" title="' + app.esc(a.label || "Quiz") + ' — ' + p + '% on ' +
+          d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) + '">' +
+        '<div class="qtrend__bar ' + (p >= 75 ? 'is-ok' : p >= 50 ? 'is-warn' : 'is-low') + '" style="height:' + Math.max(6, p) + '%"></div>' +
+        '<span class="qtrend__lbl">' + p + '</span>' +
+      '</div>';
+    }).join("");
+
+    var fmtNames = { mcq: "Multiple Choice", tf: "True / False", fib: "Fill in the Blanks" };
+    var fmtIcons = { mcq: "🔘", tf: "⚖️", fib: "✍️" };
+    var fmtRows = ["mcq", "tf", "fib"].map(function (f) {
+      var r = byFormat[f] || { total: 0, right: 0 };
+      var p = r.total ? Math.round(r.right / r.total * 100) : 0;
+      return '<div class="qfmt-row">' +
+        '<span class="qfmt-row__name">' + fmtIcons[f] + ' ' + fmtNames[f] + '</span>' +
+        '<span class="bar"><span class="bar__fill" style="width:' + p + '%"></span></span>' +
+        '<span class="qfmt-row__val">' + (r.total ? p + '% <small>(' + r.right + '/' + r.total + ')</small>' : '<small>not attempted</small>') + '</span>' +
+      '</div>';
+    }).join("");
+
+    // Weakest chapters: at least 2 questions answered, lowest accuracy first
+    var topicRows = Object.keys(byTopic).map(function (id) {
+      var r = byTopic[id];
+      return { id: id, total: r.total, right: r.right, pct: r.total ? Math.round(r.right / r.total * 100) : 0 };
+    }).filter(function (t) { return t.total >= 2 && syllabus.topicById[t.id]; });
+    topicRows.sort(function (a, b) { return a.pct - b.pct || b.total - a.total; });
+    var weak = topicRows.slice(0, 5);
+    var strong = topicRows.slice(-3).reverse().filter(function (t) { return t.pct >= 70; });
+
+    function topicList(list, tone) {
+      return list.map(function (t) {
+        var title = (syllabus.topicById[t.id] || {}).title || t.id;
+        return '<a class="tlist__row" href="#/topic/' + t.id + '">' +
+          '<span class="tlist__body"><span class="tlist__title">' + app.esc(title) + '</span>' +
+          '<span class="tlist__sub">' + t.right + ' of ' + t.total + ' correct</span></span>' +
+          '<span class="tlist__right"><span class="chip ' + tone + '">' + t.pct + '%</span></span>' +
+        '</a>';
+      }).join("");
+    }
+
+    return '<section class="mt-8">' +
+      '<h2>Quiz Performance Tracker</h2>' +
+      '<p class="muted small mt-1">Every finished test is recorded here.</p>' +
+
+      '<div class="grid grid--4 mt-4">' +
+        app.statCard("Questions answered", totalQ, totalCorrect + " correct", "quiz") +
+        app.statCard("Overall accuracy", accuracy + "%", "across every finished test", "target") +
+        app.statCard("Tests finished", attempts.length, examCount + " timed exam" + (examCount === 1 ? "" : "s"), "trophy") +
+        app.statCard("Average pace", perQ ? perQ + "s" : "—", "per question", "clock") +
+      '</div>' +
+
+      '<div class="grid grid--2 mt-5">' +
+        '<div class="card">' +
+          '<h3>Accuracy by question type</h3>' +
+          '<div class="qfmt mt-3">' + fmtRows + '</div>' +
+        '</div>' +
+        '<div class="card">' +
+          '<h3>Score trend (last ' + recent.length + ')</h3>' +
+          '<div class="qtrend mt-3">' + trend + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      (topicRows.length
+        ? '<div class="grid grid--2 mt-5">' +
+            '<div class="card">' +
+              '<h3>Chapters to revise first</h3>' +
+              '<p class="muted small mt-1">Lowest accuracy across every test you have taken.</p>' +
+              '<div class="tlist mt-3" style="border:none">' + topicList(weak, "chip--danger") + '</div>' +
+            '</div>' +
+            (strong.length
+              ? '<div class="card">' +
+                  '<h3>Your strongest chapters</h3>' +
+                  '<p class="muted small mt-1">Keep these warm with Smart Review.</p>' +
+                  '<div class="tlist mt-3" style="border:none">' + topicList(strong, "chip--ok") + '</div>' +
+                '</div>'
+              : '') +
+          '</div>'
+        : '') +
+    '</section>';
+  }
+
   function renderRecentAttemptsCard(quiz) {
     var list = (quiz.attempts || []).slice(-6).reverse();
 
