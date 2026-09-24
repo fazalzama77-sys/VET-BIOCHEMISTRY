@@ -2,8 +2,12 @@
    data-quiz.JS  —  Master Examination Quiz Bank
    Veterinary Biochemistry Studio (B.V.Sc & A.H. Year 2)
    Strictly aligned with VCI MSVE Syllabus (Credit Hours 2+1=3)
-   Units 1 to 3: 180 questions per unit (90 MCQ, 45 TF, 45 FIB)
-   Total Questions: 540 | Ratio 2 : 1 : 1
+   Unit 1: 250 questions (126 MCQ, 62 TF, 62 FIB)
+   Unit 2: 250 questions (126 MCQ, 62 TF, 62 FIB)
+   Unit 3: 180 questions (90 MCQ, 45 TF, 45 FIB)
+   Total Questions: 680 | MCQ : TF : FIB kept close to 2 : 1 : 1
+   NOTE: add new questions at the END of each list. Question keys are
+   unit:format:index, so re-ordering would detach saved Smart Review history.
    ============================================================ */
 
 var quizBank = {
@@ -1268,6 +1272,510 @@ var quizBank = {
         "topicId": "u1-t16",
         "subSection": "u1-s5",
         "diff": 3
+      },
+      {
+        "q": "The term 'biochemistry' was introduced in 1903 by the German chemist:",
+        "o": [
+          "Friedrich Wöhler",
+          "Eduard Buchner",
+          "Carl Neuberg",
+          "Hans Krebs"
+        ],
+        "a": 2,
+        "e": "Carl Neuberg coined the term 'biochemistry' in 1903 and is often called the father of modern biochemistry.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "Friedrich Wöhler's synthesis of urea from ammonium cyanate in 1828 was a landmark in biochemistry because it:",
+        "o": [
+          "Identified urea as the main end product of protein metabolism in mammals",
+          "Showed that an organic compound could be made from inorganic precursors, disproving vitalism",
+          "Established the sequence of reactions of the urea cycle",
+          "Demonstrated the first cell-free enzyme reaction"
+        ],
+        "a": 1,
+        "e": "Before 1828, organic compounds were believed to require a 'vital force' of living organisms. Wöhler's laboratory synthesis of urea disproved this vitalism theory and laid the foundation of organic chemistry and biochemistry.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "The most abundant chemical constituent of a living animal cell by weight is:",
+        "o": [
+          "Water",
+          "Lipid",
+          "Protein",
+          "Nucleic acid"
+        ],
+        "a": 0,
+        "e": "Water makes up roughly 70% of cell weight. It is the solvent for metabolism, the medium of transport and a participant in hydrolytic reactions. Proteins are the most abundant organic constituent.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "The Na+/Ca2+ exchanger of cardiac muscle cells, which uses the sodium gradient to expel calcium, is an example of:",
+        "o": [
+          "Primary active transport",
+          "Secondary active transport (antiport)",
+          "Facilitated diffusion (uniport)",
+          "Receptor-mediated endocytosis"
+        ],
+        "a": 1,
+        "e": "The exchanger uses no ATP directly. It uses the Na+ gradient created by the Na+/K+-ATPase to move Ca2+ out of the cell against its gradient, in the opposite direction to Na+. This is secondary active transport by antiport.",
+        "topicId": "u1-t02",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "Cells take up cholesterol-rich LDL particles from blood by:",
+        "o": [
+          "Simple diffusion across the lipid bilayer",
+          "Pinocytosis without any specific receptor",
+          "Receptor-mediated endocytosis through clathrin-coated pits",
+          "Exocytosis"
+        ],
+        "a": 2,
+        "e": "LDL binds specific LDL (apo B-100) receptors that cluster in clathrin-coated pits. These pits bud inwards to form coated vesicles. This is receptor-mediated endocytosis, described by Brown and Goldstein.",
+        "topicId": "u1-t02",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "Because plasma proteins are non-diffusible anions, the Gibbs-Donnan effect makes plasma, compared with interstitial fluid, slightly richer in:",
+        "o": [
+          "Diffusible anions such as chloride",
+          "Urea",
+          "Glucose",
+          "Diffusible cations such as sodium"
+        ],
+        "a": 3,
+        "e": "Non-diffusible protein anions in plasma attract extra diffusible cations (Na+) and repel diffusible anions (Cl-). At equilibrium plasma therefore has slightly more Na+ and slightly less Cl- than interstitial fluid.",
+        "topicId": "u1-t03",
+        "subSection": "u1-s1",
+        "diff": 3
+      },
+      {
+        "q": "A Donnan membrane potential develops across a semipermeable membrane because at equilibrium:",
+        "o": [
+          "The diffusible ions are unequally distributed on the two sides",
+          "The non-diffusible ions slowly leak across the membrane",
+          "The membrane actively pumps ions using ATP",
+          "All ion concentrations become equal on both sides"
+        ],
+        "a": 0,
+        "e": "The non-diffusible ion causes diffusible ions to be distributed unequally. This uneven distribution of charge creates a potential difference (the Donnan potential), with no pumping involved.",
+        "topicId": "u1-t03",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "If the hydrogen ion concentration of a solution is 1 x 10^-9 mol/L, its pH is:",
+        "o": [
+          "5",
+          "9",
+          "-9",
+          "14"
+        ],
+        "a": 1,
+        "e": "pH = -log[H+] = -log(10^-9) = 9. The solution is alkaline.",
+        "topicId": "u1-t04",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "A tenfold increase in the hydrogen ion concentration of blood changes its pH by:",
+        "o": [
+          "An increase of 1 unit",
+          "A decrease of 10 units",
+          "A decrease of 1 unit",
+          "A decrease of 0.1 unit"
+        ],
+        "a": 2,
+        "e": "pH is a negative logarithmic scale. Multiplying [H+] by 10 lowers the pH by exactly one unit, e.g. from 7.4 to 6.4.",
+        "topicId": "u1-t04",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "The phosphate buffer system (H2PO4- / HPO4 2-, pKa about 6.8) is physiologically most important in:",
+        "o": [
+          "Gastric juice",
+          "Blood plasma, where it is the main extracellular buffer",
+          "Intracellular fluid and renal tubular fluid",
+          "Bile"
+        ],
+        "a": 2,
+        "e": "Phosphate is concentrated inside cells and in the renal tubules, where it buffers H+ secreted into urine as titratable acid. Its plasma concentration is too low to be the main extracellular buffer; bicarbonate plays that role.",
+        "topicId": "u1-t04",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "Calculate the pH of a buffer containing 0.1 M acetic acid and 0.01 M sodium acetate (pKa = 4.76).",
+        "o": [
+          "3.76",
+          "5.76",
+          "4.76",
+          "2.76"
+        ],
+        "a": 0,
+        "e": "pH = pKa + log([A-]/[HA]) = 4.76 + log(0.01/0.1) = 4.76 + log(0.1) = 4.76 - 1 = 3.76.",
+        "topicId": "u1-t05",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "In the plasma form of the Henderson-Hasselbalch equation, pH = 6.1 + log([HCO3-] / (0.03 x pCO2)), the factor 0.03 represents:",
+        "o": [
+          "The pKa of carbonic acid",
+          "The normal bicarbonate to carbonic acid ratio",
+          "The ion product of water",
+          "The solubility coefficient of CO2 in plasma (mmol/L per mmHg)"
+        ],
+        "a": 3,
+        "e": "0.03 is the solubility coefficient of CO2 in plasma. Multiplying pCO2 (mmHg) by 0.03 converts it into mmol/L of dissolved CO2 (carbonic acid). For example, 40 mmHg x 0.03 = 1.2 mmol/L.",
+        "topicId": "u1-t05",
+        "subSection": "u1-s1",
+        "diff": 3
+      },
+      {
+        "q": "An aldohexose such as glucose has four asymmetric carbon atoms. The number of possible stereoisomers is:",
+        "o": [
+          "4",
+          "8",
+          "16",
+          "32"
+        ],
+        "a": 2,
+        "e": "Number of stereoisomers = 2^n, where n is the number of asymmetric carbons. 2^4 = 16 (8 D-forms and 8 L-forms).",
+        "topicId": "u1-t06",
+        "subSection": "u1-s2",
+        "diff": 2
+      },
+      {
+        "q": "Glucose (an aldose) and fructose (a ketose) have the same molecular formula C6H12O6. They are:",
+        "o": [
+          "Epimers",
+          "Anomers",
+          "Enantiomers",
+          "Functional group (aldose-ketose) isomers"
+        ],
+        "a": 3,
+        "e": "Glucose carries an aldehyde group and fructose a keto group. Isomers that differ in their functional group are aldose-ketose (functional group) isomers.",
+        "topicId": "u1-t06",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Isomaltose, released during digestion of amylopectin and glycogen, consists of two glucose units joined by:",
+        "o": [
+          "An alpha(1->4) glycosidic bond",
+          "An alpha(1->6) glycosidic bond",
+          "A beta(1->4) glycosidic bond",
+          "An alpha(1->1) glycosidic bond"
+        ],
+        "a": 1,
+        "e": "Isomaltose comes from the branch points of amylopectin and glycogen, which are alpha(1->6) linkages. Maltose has alpha(1->4) bonds.",
+        "topicId": "u1-t07",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Lactose intolerance in adult animals is due to a deficiency of the intestinal enzyme:",
+        "o": [
+          "Sucrase",
+          "Maltase",
+          "Alpha-amylase",
+          "Beta-galactosidase (lactase)"
+        ],
+        "a": 3,
+        "e": "Lactase (beta-galactosidase) splits lactose into glucose and galactose. If lactase is deficient, undigested lactose is fermented in the colon, causing osmotic diarrhoea and gas.",
+        "topicId": "u1-t07",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Dextrins are best described as:",
+        "o": [
+          "Intermediate products formed by partial hydrolysis of starch",
+          "Bacterial glucose polymers used as plasma expanders",
+          "Polymers of fructose",
+          "Structural polymers of N-acetylglucosamine"
+        ],
+        "a": 0,
+        "e": "Dextrins are breakdown products of starch (amylodextrin, erythrodextrin, achrodextrin) formed by acid or amylase. Do not confuse them with dextrans, which are bacterial glucose polymers used as plasma volume expanders.",
+        "topicId": "u1-t08",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Glycogen gives which colour with iodine solution?",
+        "o": [
+          "Blue-black",
+          "Green",
+          "No colour",
+          "Red-brown"
+        ],
+        "a": 3,
+        "e": "Glycogen gives a red-brown colour with iodine because its short, highly branched chains cannot form long helices. Amylose gives blue-black and amylopectin gives reddish-violet.",
+        "topicId": "u1-t08",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "The glycosaminoglycan of cornea and cartilage that contains galactose instead of a uronic acid is:",
+        "o": [
+          "Keratan sulfate",
+          "Hyaluronic acid",
+          "Heparin",
+          "Dermatan sulfate"
+        ],
+        "a": 0,
+        "e": "Keratan sulfate is the only glycosaminoglycan without uronic acid. Its repeating unit is galactose plus N-acetylglucosamine sulfate. It helps keep the cornea transparent.",
+        "topicId": "u1-t09",
+        "subSection": "u1-s2",
+        "diff": 3
+      },
+      {
+        "q": "Teichoic acids are polymers found characteristically in the cell walls of:",
+        "o": [
+          "Gram-positive bacteria",
+          "Gram-negative bacteria",
+          "Fungi",
+          "Plant cells"
+        ],
+        "a": 0,
+        "e": "Teichoic acids (polymers of glycerol phosphate or ribitol phosphate) are embedded in the thick peptidoglycan wall of Gram-positive bacteria. Gram-negative bacteria have an outer membrane containing lipopolysaccharide instead.",
+        "topicId": "u1-t09",
+        "subSection": "u1-s2",
+        "diff": 2
+      },
+      {
+        "q": "The lipopolysaccharide (LPS, endotoxin) of Gram-negative bacteria is located in the:",
+        "o": [
+          "Cytoplasmic (inner) membrane",
+          "Capsule only",
+          "Outer membrane",
+          "Ribosomes"
+        ],
+        "a": 2,
+        "e": "LPS makes up the outer leaflet of the outer membrane of Gram-negative bacteria. Its lipid A part is responsible for fever, shock and the other toxic effects of endotoxaemia.",
+        "topicId": "u1-t09",
+        "subSection": "u1-s2",
+        "diff": 2
+      },
+      {
+        "q": "Gangliosides differ from cerebrosides because gangliosides contain:",
+        "o": [
+          "A phosphate group",
+          "A glycerol backbone",
+          "No fatty acid",
+          "One or more sialic acid (NANA) residues"
+        ],
+        "a": 3,
+        "e": "Both are glycosphingolipids built on ceramide. Cerebrosides carry a single sugar. Gangliosides carry an oligosaccharide with one or more sialic acid residues and are abundant in nerve tissue.",
+        "topicId": "u1-t10",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "Rancidity caused by oxygen attacking the double bonds of unsaturated fatty acids, forming peroxides, aldehydes and ketones, is called:",
+        "o": [
+          "Hydrogenation",
+          "Hydrolytic rancidity",
+          "Saponification",
+          "Oxidative rancidity"
+        ],
+        "a": 3,
+        "e": "Oxidative rancidity involves free-radical peroxidation at double bonds. Hydrolytic rancidity is caused by lipases releasing free fatty acids. Antioxidants such as vitamin E and BHT delay oxidative rancidity.",
+        "topicId": "u1-t10",
+        "subSection": "u1-s3",
+        "diff": 1
+      },
+      {
+        "q": "VLDL, synthesised in the liver, mainly transports:",
+        "o": [
+          "Dietary (exogenous) triacylglycerol from the intestine",
+          "Endogenous triacylglycerol from the liver to peripheral tissues",
+          "Cholesterol from peripheral tissues back to the liver",
+          "Free fatty acids bound to albumin"
+        ],
+        "a": 1,
+        "e": "VLDL carries triacylglycerol made in the liver to muscle and adipose tissue. Chylomicrons carry dietary fat, HDL carries cholesterol back to the liver, and albumin carries free fatty acids.",
+        "topicId": "u1-t11",
+        "subSection": "u1-s3",
+        "diff": 1
+      },
+      {
+        "q": "The apolipoprotein that activates lipoprotein lipase on the capillary endothelium is:",
+        "o": [
+          "Apo A-I",
+          "Apo B-48",
+          "Apo C-II",
+          "Apo E"
+        ],
+        "a": 2,
+        "e": "Apo C-II, carried on chylomicrons and VLDL, activates lipoprotein lipase, which releases fatty acids from their triacylglycerol. Apo A-I activates LCAT, and Apo E binds hepatic receptors.",
+        "topicId": "u1-t11",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "Aspirin inhibits prostaglandin synthesis by:",
+        "o": [
+          "Reversibly inhibiting phospholipase A2",
+          "Blocking prostaglandin receptors",
+          "Inhibiting 5-lipoxygenase",
+          "Irreversibly acetylating cyclooxygenase (COX)"
+        ],
+        "a": 3,
+        "e": "Aspirin transfers an acetyl group to a serine at the active site of COX, inactivating it permanently. Platelets cannot make new COX, so their thromboxane A2 synthesis stays blocked for their whole lifespan.",
+        "topicId": "u1-t12",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "Glucocorticoids reduce the formation of both prostaglandins and leukotrienes mainly by inhibiting:",
+        "o": [
+          "Cyclooxygenase-1 only",
+          "Phospholipase A2 (via lipocortin / annexin-1)",
+          "Thromboxane synthase",
+          "Prostacyclin synthase"
+        ],
+        "a": 1,
+        "e": "Glucocorticoids induce lipocortin (annexin-1), which inhibits phospholipase A2. This limits release of arachidonic acid, the common precursor of both the COX and lipoxygenase pathways.",
+        "topicId": "u1-t12",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "Keratin, collagen and elastin are classified by shape as:",
+        "o": [
+          "Globular proteins",
+          "Conjugated proteins",
+          "Fibrous proteins",
+          "Derived proteins"
+        ],
+        "a": 2,
+        "e": "Fibrous proteins are long, insoluble and structural (keratin of hair, hooves and horn; collagen of tendon and bone; elastin of ligaments). Globular proteins such as enzymes and albumin are compact and soluble.",
+        "topicId": "u1-t13",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Myoglobin, the oxygen-storing protein of muscle, has structural organisation only up to the:",
+        "o": [
+          "Primary level",
+          "Secondary level",
+          "Tertiary level",
+          "Quaternary level"
+        ],
+        "a": 2,
+        "e": "Myoglobin is a single polypeptide chain folded around one haem group, so its highest level is tertiary structure. Haemoglobin, with four subunits, has quaternary structure.",
+        "topicId": "u1-t13",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Which of the following is an acidic amino acid?",
+        "o": [
+          "Lysine",
+          "Aspartic acid",
+          "Arginine",
+          "Histidine"
+        ],
+        "a": 1,
+        "e": "Aspartic acid and glutamic acid carry an extra carboxyl group, so they are acidic. Lysine, arginine and histidine are basic amino acids.",
+        "topicId": "u1-t14",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Which amino acid has a hydroxyl group in its side chain and is a common site of protein phosphorylation?",
+        "o": [
+          "Serine",
+          "Valine",
+          "Alanine",
+          "Leucine"
+        ],
+        "a": 0,
+        "e": "Serine (like threonine and tyrosine) has a side-chain -OH that protein kinases can phosphorylate. This is how enzymes such as glycogen phosphorylase are regulated.",
+        "topicId": "u1-t14",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "At physiological pH, a monoamino-monocarboxylic amino acid exists predominantly as a:",
+        "o": [
+          "Neutral uncharged molecule",
+          "Anion only",
+          "Cation only",
+          "Zwitterion (dipolar ion)"
+        ],
+        "a": 3,
+        "e": "At pH 7.4 the carboxyl group is ionised (-COO-) and the amino group is protonated (-NH3+). The molecule carries both charges but no net charge; this is a zwitterion. It explains the amphoteric nature of amino acids.",
+        "topicId": "u1-t15",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "The optical activity of all standard amino acids except glycine is due to:",
+        "o": [
+          "An asymmetric (chiral) alpha-carbon",
+          "An aromatic ring",
+          "The peptide bond",
+          "A free amino group"
+        ],
+        "a": 0,
+        "e": "The alpha-carbon of these amino acids carries four different groups, making it chiral. The molecules can therefore rotate plane-polarised light. Glycine's alpha-carbon carries two hydrogens, so it is optically inactive.",
+        "topicId": "u1-t15",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Which of the following is a nucleoside?",
+        "o": [
+          "Adenine",
+          "Adenosine",
+          "AMP",
+          "ATP"
+        ],
+        "a": 1,
+        "e": "A nucleoside is a base plus a sugar (adenine + ribose = adenosine). Adenine is the free base, while AMP and ATP are nucleotides because they carry phosphate.",
+        "topicId": "u1-t16",
+        "subSection": "u1-s5",
+        "diff": 1
+      },
+      {
+        "q": "Caffeine, theophylline and theobromine, which inhibit phosphodiesterase, are methylated derivatives of:",
+        "o": [
+          "Uracil",
+          "Thymine",
+          "Cytosine",
+          "Xanthine"
+        ],
+        "a": 3,
+        "e": "These methylxanthines are purine derivatives. By inhibiting phosphodiesterase they raise cAMP, causing bronchodilation (theophylline) and CNS stimulation.",
+        "topicId": "u1-t16",
+        "subSection": "u1-s5",
+        "diff": 2
+      },
+      {
+        "q": "Watson and Crick's 1953 double-helix model of DNA relied heavily on X-ray diffraction data obtained by:",
+        "o": [
+          "Rosalind Franklin and Maurice Wilkins",
+          "Erwin Chargaff",
+          "Linus Pauling",
+          "Meselson and Stahl"
+        ],
+        "a": 0,
+        "e": "Franklin's X-ray diffraction images (notably 'Photo 51') and Wilkins' work revealed the helical structure. Chargaff's base-ratio rules supplied the pairing clue.",
+        "topicId": "u1-t17",
+        "subSection": "u1-s5",
+        "diff": 1
       }
     ],
     "tf": [
@@ -1630,6 +2138,142 @@ var quizBank = {
         "topicId": "u1-t16",
         "subSection": "u1-s5",
         "diff": 1
+      },
+      {
+        "q": "Hans Adolf Krebs shared the 1953 Nobel Prize in Physiology or Medicine for discovering the citric acid cycle.",
+        "a": true,
+        "e": "True. Krebs shared the 1953 Nobel Prize with Fritz Lipmann (discoverer of coenzyme A). The citric acid cycle is therefore also called the Krebs cycle.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "Cardiac glycosides such as ouabain and digoxin inhibit the Na+/K+-ATPase by binding to its extracellular face.",
+        "a": true,
+        "e": "True. They bind the extracellular side of the alpha subunit. The resulting rise in intracellular Na+ slows Ca2+ removal by the Na+/Ca2+ exchanger, so more Ca2+ is available for contraction (positive inotropic effect).",
+        "topicId": "u1-t02",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "In a Donnan system, the concentration of diffusible chloride is higher on the side containing the non-diffusible protein anion.",
+        "a": false,
+        "e": "False. Diffusible anions such as Cl- are repelled by the non-diffusible protein anion, so their concentration is LOWER on the protein side. Diffusible cations are higher on that side.",
+        "topicId": "u1-t03",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "According to the Brønsted-Lowry concept, an acid is a proton acceptor.",
+        "a": false,
+        "e": "False. A Brønsted-Lowry acid is a proton (H+) DONOR and a base is a proton ACCEPTOR. Each acid has a conjugate base (e.g. H2CO3 / HCO3-).",
+        "topicId": "u1-t04",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "Although its pKa (6.1) is far from 7.4, bicarbonate is the most important blood buffer because CO2 is controlled by the lungs and HCO3- by the kidneys.",
+        "a": true,
+        "e": "True. Bicarbonate is an 'open' buffer system: the lungs adjust pCO2 and the kidneys adjust HCO3-. This makes it far more powerful in the body than its pKa alone would suggest.",
+        "topicId": "u1-t05",
+        "subSection": "u1-s1",
+        "diff": 3
+      },
+      {
+        "q": "In amino sugars such as glucosamine, the hydroxyl group at carbon-6 is replaced by an amino group.",
+        "a": false,
+        "e": "False. In glucosamine and galactosamine the -OH at carbon-2 is replaced by -NH2. They are components of hyaluronic acid, chondroitin sulfate, chitin and bacterial cell walls.",
+        "topicId": "u1-t06",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Like sucrose, cellobiose gives a negative Benedict's test.",
+        "a": false,
+        "e": "False. Cellobiose consists of two glucose units joined by beta(1->4). The anomeric carbon of the second glucose is free, so cellobiose is a REDUCING sugar. Sucrose and trehalose are the common non-reducing disaccharides.",
+        "topicId": "u1-t07",
+        "subSection": "u1-s2",
+        "diff": 2
+      },
+      {
+        "q": "Cellulose is a branched homopolysaccharide of glucose joined by alpha(1->4) and alpha(1->6) glycosidic bonds.",
+        "a": false,
+        "e": "False. Cellulose is an UNBRANCHED polymer of glucose joined by beta(1->4) bonds. The linear chains lie side by side, held by hydrogen bonds, forming strong fibres.",
+        "topicId": "u1-t08",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Penicillin kills susceptible bacteria by inhibiting the transpeptidase-catalysed cross-linking of peptidoglycan.",
+        "a": true,
+        "e": "True. Beta-lactam antibiotics bind the transpeptidases (penicillin-binding proteins) that cross-link peptidoglycan chains. The weakened cell wall bursts under osmotic pressure.",
+        "topicId": "u1-t09",
+        "subSection": "u1-s2",
+        "diff": 2
+      },
+      {
+        "q": "Phosphatidic acid is the simplest glycerophospholipid and a precursor of both triacylglycerols and other phospholipids.",
+        "a": true,
+        "e": "True. Phosphatidic acid (glycerol + 2 fatty acids + phosphate) is dephosphorylated to diacylglycerol, which is used to make triacylglycerols, lecithin and cephalin.",
+        "topicId": "u1-t10",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "The Polenske number measures volatile, water-insoluble fatty acids and helps detect adulteration of ghee or butter with coconut oil.",
+        "a": true,
+        "e": "True. Coconut oil is rich in volatile but water-insoluble fatty acids (caprylic, capric, lauric), so it has a high Polenske number. The Reichert-Meissl number measures volatile water-SOLUBLE fatty acids.",
+        "topicId": "u1-t11",
+        "subSection": "u1-s3",
+        "diff": 3
+      },
+      {
+        "q": "Leukotrienes are synthesised from arachidonic acid by the cyclooxygenase pathway.",
+        "a": false,
+        "e": "False. Leukotrienes are made by the LIPOXYGENASE (5-LOX) pathway. The cyclooxygenase pathway produces prostaglandins, prostacyclin and thromboxanes.",
+        "topicId": "u1-t12",
+        "subSection": "u1-s3",
+        "diff": 1
+      },
+      {
+        "q": "Glycoproteins, lipoproteins and nucleoproteins are examples of derived proteins.",
+        "a": false,
+        "e": "False. They are CONJUGATED proteins (protein + non-protein prosthetic group). Derived proteins are breakdown products of proteins, such as proteoses, peptones and peptides.",
+        "topicId": "u1-t13",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Arginine is essential for cats, and a single arginine-free meal can cause acute hyperammonaemia in them.",
+        "a": true,
+        "e": "True. Cats synthesise very little ornithine or citrulline and depend on dietary arginine to keep the urea cycle running. Without it, ammonia accumulates within hours, causing vomiting, neurological signs and possibly death.",
+        "topicId": "u1-t14",
+        "subSection": "u1-s4",
+        "diff": 2
+      },
+      {
+        "q": "The xanthoproteic test gives a yellow colour with tyrosine and tryptophan when they are heated with concentrated nitric acid.",
+        "a": true,
+        "e": "True. Nitric acid nitrates their aromatic rings, giving yellow nitro derivatives that turn orange with alkali. The yellow staining of skin by nitric acid is the same reaction.",
+        "topicId": "u1-t15",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "In a nucleoside, pyrimidine bases are attached to the pentose sugar through their N-9 atom.",
+        "a": false,
+        "e": "False. PYRIMIDINES attach through N-1 and PURINES through N-9, each by a beta-N-glycosidic bond to C-1' of the sugar.",
+        "topicId": "u1-t16",
+        "subSection": "u1-s5",
+        "diff": 2
+      },
+      {
+        "q": "In B-DNA the two strands are held together only by hydrogen bonds; base-stacking interactions contribute nothing to helix stability.",
+        "a": false,
+        "e": "False. Hydrophobic and van der Waals stacking between neighbouring base pairs is a MAJOR stabilising force, contributing more than the hydrogen bonds. Hydrogen bonds mainly provide specificity of pairing.",
+        "topicId": "u1-t17",
+        "subSection": "u1-s5",
+        "diff": 2
       }
     ],
     "fib": [
@@ -2189,6 +2833,224 @@ var quizBank = {
         "topicId": "u1-t16",
         "subSection": "u1-s5",
         "diff": 1
+      },
+      {
+        "q": "The old belief that organic compounds could only be formed inside living organisms by a special 'vital force' is called _____.",
+        "a": [
+          "vitalism",
+          "vitalistic theory",
+          "vital force theory",
+          "theory of vitalism"
+        ],
+        "a_display": "Vitalism",
+        "e": "Vitalism was disproved by Wöhler's synthesis of urea (1828), which showed that the chemistry of living things obeys the same laws as ordinary chemistry.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "The word 'enzyme', meaning 'in yeast', was coined by the German physiologist Wilhelm _____.",
+        "a": [
+          "kühne",
+          "kuhne",
+          "kuehne"
+        ],
+        "a_display": "Kühne",
+        "e": "Wilhelm Kühne introduced the term 'enzyme' (Greek en = in, zyme = leaven/yeast) in 1877 to describe the catalysts of living cells.",
+        "topicId": "u1-t01",
+        "subSection": "u1-s1",
+        "diff": 3
+      },
+      {
+        "q": "Transport of two different solutes in the same direction across a membrane by a single carrier protein is called _____.",
+        "a": [
+          "symport",
+          "cotransport",
+          "co-transport",
+          "symporter"
+        ],
+        "a_display": "Symport (cotransport)",
+        "e": "Symport moves two solutes in the same direction (e.g. Na+-glucose via SGLT1). Antiport moves them in opposite directions. Uniport moves a single solute.",
+        "topicId": "u1-t02",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "In the classic Donnan system of sodium chloride with sodium proteinate, the non-diffusible ion is the _____ anion.",
+        "a": [
+          "protein",
+          "proteinate",
+          "protein anion"
+        ],
+        "a_display": "Protein (proteinate)",
+        "e": "The large protein anion cannot cross the semipermeable membrane. It is the non-diffusible ion that produces the Donnan distribution of Na+ and Cl-.",
+        "topicId": "u1-t03",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "The negative logarithm of the acid dissociation constant (Ka) of a weak acid is written as _____.",
+        "a": [
+          "pka",
+          "p ka",
+          "pk"
+        ],
+        "a_display": "pKa",
+        "e": "pKa = -log Ka. A smaller pKa means a stronger acid. A buffer works best when the pH is within about 1 unit of its pKa.",
+        "topicId": "u1-t04",
+        "subSection": "u1-s1",
+        "diff": 1
+      },
+      {
+        "q": "According to the Henderson-Hasselbalch equation, when the ratio [A-]/[HA] is 1:10, the pH equals pKa minus _____.",
+        "a": [
+          "1",
+          "one",
+          "1 unit",
+          "one unit"
+        ],
+        "a_display": "1",
+        "e": "log(1/10) = -1, so pH = pKa - 1. Similarly a ratio of 10:1 gives pH = pKa + 1.",
+        "topicId": "u1-t05",
+        "subSection": "u1-s1",
+        "diff": 2
+      },
+      {
+        "q": "Two sugars that differ in configuration around only one specific carbon atom (other than the anomeric carbon) are called _____.",
+        "a": [
+          "epimers",
+          "epimer"
+        ],
+        "a_display": "Epimers",
+        "e": "Glucose and galactose are C-4 epimers, and glucose and mannose are C-2 epimers.",
+        "topicId": "u1-t06",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "The enzyme sucrase (invertase) hydrolyses sucrose into glucose and _____.",
+        "a": [
+          "fructose",
+          "d-fructose"
+        ],
+        "a_display": "Fructose",
+        "e": "Hydrolysis of sucrose gives an equimolar mixture of glucose and fructose, called invert sugar, because the optical rotation changes from dextro to laevo.",
+        "topicId": "u1-t07",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Ruminants can digest cellulose because rumen microorganisms secrete the enzyme _____.",
+        "a": [
+          "cellulase",
+          "cellulases"
+        ],
+        "a_display": "Cellulase",
+        "e": "Mammals have no cellulase. Rumen bacteria, protozoa and fungi hydrolyse cellulose, and the released glucose is fermented to volatile fatty acids (acetate, propionate, butyrate) that the animal absorbs.",
+        "topicId": "u1-t08",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "The toxic lipid component of Gram-negative bacterial lipopolysaccharide (endotoxin) is lipid _____.",
+        "a": [
+          "a",
+          "lipid a"
+        ],
+        "a_display": "Lipid A",
+        "e": "Lipid A anchors LPS in the outer membrane. It triggers release of cytokines (TNF-alpha, IL-1) from macrophages, causing fever and endotoxic shock.",
+        "topicId": "u1-t09",
+        "subSection": "u1-s2",
+        "diff": 1
+      },
+      {
+        "q": "Hydrolysis of fats by alkali to give glycerol and salts of fatty acids (soaps) is called _____.",
+        "a": [
+          "saponification"
+        ],
+        "a_display": "Saponification",
+        "e": "Boiling a triacylglycerol with NaOH or KOH gives glycerol and sodium or potassium soaps. The saponification number is derived from this reaction.",
+        "topicId": "u1-t10",
+        "subSection": "u1-s3",
+        "diff": 1
+      },
+      {
+        "q": "The plasma enzyme, activated by apolipoprotein A-I, that esterifies cholesterol within HDL is abbreviated _____.",
+        "a": [
+          "lcat",
+          "lecithin cholesterol acyltransferase",
+          "lecithin-cholesterol acyltransferase",
+          "lecithin:cholesterol acyltransferase"
+        ],
+        "a_display": "LCAT",
+        "e": "Lecithin-cholesterol acyltransferase transfers a fatty acid from lecithin to cholesterol. The cholesteryl ester moves into the core of HDL, allowing HDL to keep collecting cholesterol (reverse cholesterol transport).",
+        "topicId": "u1-t11",
+        "subSection": "u1-s3",
+        "diff": 2
+      },
+      {
+        "q": "Prostaglandins contain a five-membered ring and are derived from the hypothetical C20 parent compound called _____ acid.",
+        "a": [
+          "prostanoic"
+        ],
+        "a_display": "Prostanoic acid",
+        "e": "Prostanoic acid is a C20 fatty acid with a cyclopentane ring between carbons 8 and 12. All prostaglandins are named as derivatives of it (PGA to PGI).",
+        "topicId": "u1-t12",
+        "subSection": "u1-s3",
+        "diff": 3
+      },
+      {
+        "q": "Proteins that yield only amino acids on complete hydrolysis are called _____ proteins.",
+        "a": [
+          "simple"
+        ],
+        "a_display": "Simple",
+        "e": "Simple proteins (albumins, globulins, histones, scleroproteins) contain only amino acids. Conjugated proteins also contain a prosthetic group.",
+        "topicId": "u1-t13",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "The branched-chain amino acids are valine, leucine and _____.",
+        "a": [
+          "isoleucine",
+          "iso-leucine"
+        ],
+        "a_display": "Isoleucine",
+        "e": "Valine, leucine and isoleucine have branched aliphatic side chains. They are essential and are mainly metabolised in skeletal muscle.",
+        "topicId": "u1-t14",
+        "subSection": "u1-s4",
+        "diff": 1
+      },
+      {
+        "q": "Glycine has pKa1 = 2.34 and pKa2 = 9.60. Its isoelectric point (pI) is approximately _____.",
+        "a": [
+          "5.97",
+          "5.97.",
+          "6",
+          "6.0",
+          "5.9"
+        ],
+        "a_display": "5.97",
+        "e": "For an amino acid with no ionisable side chain, pI = (pKa1 + pKa2) / 2 = (2.34 + 9.60) / 2 = 5.97.",
+        "topicId": "u1-t15",
+        "subSection": "u1-s4",
+        "diff": 3
+      },
+      {
+        "q": "The coenzymes NAD+, FAD and coenzyme A all contain a nucleotide made from the base _____.",
+        "a": [
+          "adenine",
+          "adenosine",
+          "amp",
+          "adenylate",
+          "adenosine monophosphate"
+        ],
+        "a_display": "Adenine (AMP)",
+        "e": "NAD+ and FAD each contain an AMP unit, and coenzyme A contains 3'-phospho-ADP. This shows the wider biological role of nucleotides beyond nucleic acids.",
+        "topicId": "u1-t16",
+        "subSection": "u1-s5",
+        "diff": 2
       }
     ]
   },
@@ -3453,6 +4315,510 @@ var quizBank = {
         "topicId": "u2-t22",
         "subSection": "u2-s6",
         "diff": 1
+      },
+      {
+        "q": "According to the IUBMB system, enzymes that catalyse oxidation-reduction reactions belong to:",
+        "o": [
+          "EC 3 (Hydrolases)",
+          "EC 2 (Transferases)",
+          "EC 1 (Oxidoreductases)",
+          "EC 6 (Ligases)"
+        ],
+        "a": 2,
+        "e": "The six IUBMB classes are 1 Oxidoreductases, 2 Transferases, 3 Hydrolases, 4 Lyases, 5 Isomerases and 6 Ligases (a 7th class, Translocases, was added in 2018). Dehydrogenases and oxidases are EC 1 enzymes.",
+        "topicId": "u2-t01",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Aldolase splits fructose-1,6-bisphosphate into two trioses without using water or oxidation. It belongs to the class:",
+        "o": [
+          "Hydrolases",
+          "Ligases",
+          "Isomerases",
+          "Lyases"
+        ],
+        "a": 3,
+        "e": "Lyases (EC 4) break C-C, C-O or C-N bonds by means other than hydrolysis or oxidation, often forming a double bond or adding groups to one. Aldolase and fumarase are classic lyases.",
+        "topicId": "u2-t01",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "Thiamine pyrophosphate (TPP) is the coenzyme required by:",
+        "o": [
+          "Transaminases",
+          "Acetyl-CoA carboxylase",
+          "Hydroxylases",
+          "Pyruvate dehydrogenase and alpha-ketoglutarate dehydrogenase"
+        ],
+        "a": 3,
+        "e": "TPP, the active form of vitamin B1, is needed for oxidative decarboxylation of alpha-keto acids (pyruvate DH, alpha-KG DH) and for transketolase. Thiamine deficiency causes polioencephalomalacia in ruminants.",
+        "topicId": "u2-t02",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "Biotin serves as the coenzyme for:",
+        "o": [
+          "Transamination",
+          "Decarboxylation of amino acids",
+          "Carboxylation reactions such as pyruvate carboxylase",
+          "Transfer of one-carbon units such as methyl groups"
+        ],
+        "a": 2,
+        "e": "Biotin carries activated CO2 for carboxylases: pyruvate carboxylase, acetyl-CoA carboxylase and propionyl-CoA carboxylase. Raw egg white avidin binds biotin and can cause deficiency.",
+        "topicId": "u2-t02",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "The creatine kinase isoenzyme CK-MM is found predominantly in:",
+        "o": [
+          "Brain",
+          "Skeletal muscle",
+          "Liver",
+          "Kidney"
+        ],
+        "a": 1,
+        "e": "CK-BB is in brain, CK-MB is enriched in heart and CK-MM is in skeletal muscle. A raised serum CK in animals mainly indicates muscle damage, e.g. exertional rhabdomyolysis or recumbency.",
+        "topicId": "u2-t02",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "The 'lock and key' model of enzyme-substrate interaction was proposed by:",
+        "o": [
+          "Daniel Koshland",
+          "Lineweaver and Burk",
+          "Michaelis and Menten",
+          "Emil Fischer"
+        ],
+        "a": 3,
+        "e": "Emil Fischer (1894) proposed that the substrate fits a rigid, pre-shaped active site like a key in a lock. Koshland's induced fit model (1958) later described a flexible active site.",
+        "topicId": "u2-t03",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Urease acts only on urea and on no other substrate. This is an example of:",
+        "o": [
+          "Group specificity",
+          "Bond specificity",
+          "Stereospecificity",
+          "Absolute specificity"
+        ],
+        "a": 3,
+        "e": "Absolute (substrate) specificity means the enzyme acts on one substrate only. Other examples are carbonic anhydrase (CO2) and catalase (H2O2).",
+        "topicId": "u2-t03",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "L-amino acid oxidase acts only on L-amino acids and not on their D-isomers. This is an example of:",
+        "o": [
+          "Stereo (optical) specificity",
+          "Absolute specificity",
+          "Group specificity",
+          "Reaction specificity"
+        ],
+        "a": 0,
+        "e": "Enzymes recognise the 3-D arrangement of groups around a chiral centre, so they act on only one optical isomer. Separate D-amino acid oxidases exist for D-isomers.",
+        "topicId": "u2-t03",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Pepsin shows maximum activity at a pH of about:",
+        "o": [
+          "1.5 - 2.0",
+          "5.0",
+          "7.4",
+          "8.5"
+        ],
+        "a": 0,
+        "e": "Pepsin works in the acid of the stomach (abomasum) at pH 1.5-2. Trypsin works best around pH 8, and most intracellular enzymes near pH 7.4.",
+        "topicId": "u2-t04",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "One katal is approximately equal to how many International Units (IU)?",
+        "o": [
+          "60",
+          "1,000",
+          "6 x 10^7",
+          "1.67 x 10^-8"
+        ],
+        "a": 2,
+        "e": "1 katal = 1 mol/second = 60 mol/min = 6 x 10^7 micromol/min = 6 x 10^7 IU. Conversely, 1 IU = 16.67 nkat.",
+        "topicId": "u2-t05",
+        "subSection": "u2-s1",
+        "diff": 3
+      },
+      {
+        "q": "During enzyme purification, a rising specific activity indicates:",
+        "o": [
+          "A shift in the optimum pH",
+          "Increasing purity of the enzyme preparation",
+          "Increased affinity for the substrate",
+          "Loss of enzyme by denaturation"
+        ],
+        "a": 1,
+        "e": "Specific activity = units of enzyme activity per mg of total protein. As contaminating proteins are removed, activity per mg rises. A constant maximum value suggests the enzyme is pure.",
+        "topicId": "u2-t05",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "In uncompetitive inhibition:",
+        "o": [
+          "Both Km and Vmax decrease",
+          "Km is unchanged and Vmax decreases",
+          "Km increases and Vmax is unchanged",
+          "Both Km and Vmax increase"
+        ],
+        "a": 0,
+        "e": "An uncompetitive inhibitor binds only the enzyme-substrate complex. It lowers Vmax and apparent Km by the same factor, so Lineweaver-Burk plots give parallel lines.",
+        "topicId": "u2-t06",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "Aspartate transcarbamoylase, the committed enzyme of pyrimidine synthesis in bacteria, is inhibited by the end product CTP. This is a classic example of:",
+        "o": [
+          "Competitive inhibition",
+          "Allosteric feedback inhibition",
+          "Suicide inhibition",
+          "Irreversible covalent inhibition"
+        ],
+        "a": 1,
+        "e": "CTP binds a regulatory site separate from the active site and lowers ATCase activity. When CTP accumulates it switches off its own synthesis. ATP, an allosteric activator, has the opposite effect.",
+        "topicId": "u2-t06",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "NAD+ and NADP+ are coenzymes derived from the vitamin:",
+        "o": [
+          "Niacin (B3)",
+          "Riboflavin (B2)",
+          "Thiamine (B1)",
+          "Pantothenic acid (B5)"
+        ],
+        "a": 0,
+        "e": "Niacin (nicotinic acid / nicotinamide) forms NAD+ and NADP+. Riboflavin forms FAD and FMN, thiamine forms TPP and pantothenic acid forms coenzyme A.",
+        "topicId": "u2-t07",
+        "subSection": "u2-s2",
+        "diff": 1
+      },
+      {
+        "q": "Oxidases differ from dehydrogenases because oxidases:",
+        "o": [
+          "Use NAD+ as the hydrogen acceptor",
+          "Occur only in the cytosol",
+          "Incorporate oxygen atoms into the substrate",
+          "Use molecular oxygen as the hydrogen (electron) acceptor"
+        ],
+        "a": 3,
+        "e": "Oxidases pass hydrogen to O2, forming H2O or H2O2 (e.g. cytochrome oxidase, xanthine oxidase). Dehydrogenases use NAD+, NADP+ or FAD. Oxygenases incorporate oxygen into the substrate.",
+        "topicId": "u2-t07",
+        "subSection": "u2-s2",
+        "diff": 2
+      },
+      {
+        "q": "About how many protons are pumped into the intermembrane space for each pair of electrons passing from NADH to oxygen?",
+        "o": [
+          "10",
+          "6",
+          "4",
+          "12"
+        ],
+        "a": 0,
+        "e": "Complex I pumps 4, Complex III pumps 4 and Complex IV pumps 2 protons: 10 in total. About 4 protons are needed per ATP (including transport), giving roughly 2.5 ATP per NADH.",
+        "topicId": "u2-t08",
+        "subSection": "u2-s2",
+        "diff": 3
+      },
+      {
+        "q": "The glycolytic enzyme that produces NADH is:",
+        "o": [
+          "Aldolase",
+          "Enolase",
+          "Glyceraldehyde-3-phosphate dehydrogenase",
+          "Pyruvate kinase"
+        ],
+        "a": 2,
+        "e": "Glyceraldehyde-3-phosphate dehydrogenase oxidises G3P to 1,3-bisphosphoglycerate, reducing NAD+ to NADH. This is the only oxidation step of glycolysis.",
+        "topicId": "u2-t10",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "How many molecules of NADH are produced in one turn of the citric acid cycle?",
+        "o": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "a": 2,
+        "e": "Isocitrate dehydrogenase, alpha-ketoglutarate dehydrogenase and malate dehydrogenase each produce one NADH. Succinate dehydrogenase produces one FADH2, and succinyl-CoA synthetase one GTP.",
+        "topicId": "u2-t11",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "Using modern P:O values, complete oxidation of one acetyl-CoA via the citric acid cycle and oxidative phosphorylation yields:",
+        "o": [
+          "12 ATP",
+          "15 ATP",
+          "10 ATP",
+          "38 ATP"
+        ],
+        "a": 2,
+        "e": "3 NADH x 2.5 = 7.5; 1 FADH2 x 1.5 = 1.5; 1 GTP = 1. Total = 10 ATP. Older textbooks give 12 ATP (P:O values of 3 and 2).",
+        "topicId": "u2-t11",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "The HMP shunt does NOT produce:",
+        "o": [
+          "NADPH",
+          "Ribose-5-phosphate",
+          "CO2",
+          "ATP"
+        ],
+        "a": 3,
+        "e": "The HMP shunt produces NADPH (for reductive synthesis and glutathione reduction), ribose-5-phosphate (for nucleotides) and CO2. It neither makes nor consumes ATP directly.",
+        "topicId": "u2-t12",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "The TPP-dependent enzyme of the non-oxidative HMP shunt, whose erythrocyte activity is used to assess thiamine status, is:",
+        "o": [
+          "Transaldolase",
+          "Transketolase",
+          "6-Phosphogluconate dehydrogenase",
+          "Glucose-6-phosphate dehydrogenase"
+        ],
+        "a": 1,
+        "e": "Transketolase transfers two-carbon units and needs TPP. Low erythrocyte transketolase activity that rises when TPP is added in vitro indicates thiamine deficiency.",
+        "topicId": "u2-t12",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "The gluconeogenic enzyme that bypasses the phosphofructokinase-1 step of glycolysis is:",
+        "o": [
+          "Fructose-1,6-bisphosphatase",
+          "Glucose-6-phosphatase",
+          "PEP carboxykinase",
+          "Pyruvate carboxylase"
+        ],
+        "a": 0,
+        "e": "Fructose-1,6-bisphosphatase hydrolyses F-1,6-BP to F-6-P. Glucose-6-phosphatase bypasses hexokinase, and pyruvate carboxylase plus PEPCK together bypass pyruvate kinase.",
+        "topicId": "u2-t13",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "Which of the following CANNOT provide carbon for net glucose synthesis in animals?",
+        "o": [
+          "Acetyl-CoA from even-chain fatty acids",
+          "Lactate",
+          "Glycerol",
+          "Propionate"
+        ],
+        "a": 0,
+        "e": "Pyruvate dehydrogenase is irreversible, and the two carbons of acetyl-CoA are lost as 2 CO2 in the citric acid cycle. So even-chain fatty acids give no net glucose. Propionate, lactate, glycerol and glucogenic amino acids can.",
+        "topicId": "u2-t13",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "The rate-limiting enzyme of glycogen synthesis (glycogenesis) is:",
+        "o": [
+          "Glycogen phosphorylase",
+          "Glycogen synthase",
+          "Branching enzyme",
+          "Phosphoglucomutase"
+        ],
+        "a": 1,
+        "e": "Glycogen synthase adds glucose units from UDP-glucose by alpha(1->4) bonds. It is activated by insulin (dephosphorylation) and inhibited by glucagon and adrenaline (phosphorylation).",
+        "topicId": "u2-t14",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "The activated glucose donor for glycogen synthesis in animals is:",
+        "o": [
+          "UDP-glucose",
+          "Glucose-1-phosphate",
+          "Glucose-6-phosphate",
+          "ADP-glucose"
+        ],
+        "a": 0,
+        "e": "UDP-glucose pyrophosphorylase forms UDP-glucose from glucose-1-phosphate and UTP. ADP-glucose is the donor for starch synthesis in plants.",
+        "topicId": "u2-t14",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "Glycogen phosphorylase cleaves alpha(1->4) glycosidic bonds by adding inorganic phosphate, releasing:",
+        "o": [
+          "Free glucose",
+          "Glucose-1-phosphate",
+          "Glucose-6-phosphate",
+          "UDP-glucose"
+        ],
+        "a": 1,
+        "e": "This is phosphorolysis (not hydrolysis). The product glucose-1-phosphate is converted to glucose-6-phosphate by phosphoglucomutase. Phosphorylase needs pyridoxal phosphate.",
+        "topicId": "u2-t14",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "In non-ruminants, acetyl-CoA formed inside mitochondria reaches the cytosol for fatty acid synthesis in the form of:",
+        "o": [
+          "Carnitine esters",
+          "Malonyl-CoA",
+          "Citrate",
+          "Acetoacetate"
+        ],
+        "a": 2,
+        "e": "The inner mitochondrial membrane is impermeable to acetyl-CoA. It is exported as citrate, which ATP-citrate lyase cleaves in the cytosol back to acetyl-CoA and oxaloacetate (the citrate shuttle). Ruminants use acetate activated directly in the cytosol instead.",
+        "topicId": "u2-t16",
+        "subSection": "u2-s4",
+        "diff": 2
+      },
+      {
+        "q": "The universal initiation (start) codon in protein synthesis is:",
+        "o": [
+          "UAA",
+          "UAG",
+          "AUG",
+          "UGA"
+        ],
+        "a": 2,
+        "e": "AUG codes for methionine (N-formylmethionine in bacteria) and marks the start of translation. UAA, UAG and UGA are stop codons.",
+        "topicId": "u2-t17",
+        "subSection": "u2-s5",
+        "diff": 1
+      },
+      {
+        "q": "Aminoacyl-tRNA synthetases attach each amino acid to:",
+        "o": [
+          "The anticodon loop of its tRNA",
+          "The 5'-end of the mRNA",
+          "The 3'-CCA end of its specific tRNA",
+          "The D-arm of the tRNA"
+        ],
+        "a": 2,
+        "e": "The amino acid is joined by an ester bond to the 3'-OH of the terminal adenosine of the CCA end. Activation uses ATP (-> AMP + PPi). These enzymes 'read' the genetic code, and many have proofreading activity.",
+        "topicId": "u2-t17",
+        "subSection": "u2-s5",
+        "diff": 2
+      },
+      {
+        "q": "Peptide bond formation on the ribosome is catalysed by peptidyl transferase, which is:",
+        "o": [
+          "A protein of the small ribosomal subunit",
+          "A ribozyme (the rRNA of the large subunit)",
+          "The elongation factor EF-Tu",
+          "An aminoacyl-tRNA synthetase"
+        ],
+        "a": 1,
+        "e": "Peptidyl transferase activity resides in the 23S rRNA (prokaryotes) or 28S rRNA (eukaryotes) of the large subunit, making the ribosome a ribozyme. Chloramphenicol inhibits it in bacteria.",
+        "topicId": "u2-t17",
+        "subSection": "u2-s5",
+        "diff": 2
+      },
+      {
+        "q": "Alanine aminotransferase (ALT) transfers the amino group of alanine to alpha-ketoglutarate, forming:",
+        "o": [
+          "Oxaloacetate and glutamate",
+          "Lactate and glutamine",
+          "Pyruvate and aspartate",
+          "Pyruvate and glutamate"
+        ],
+        "a": 3,
+        "e": "Alanine + alpha-ketoglutarate <-> pyruvate + glutamate (needs PLP). AST forms oxaloacetate and glutamate from aspartate. Both enzymes are important in diagnosing liver disease.",
+        "topicId": "u2-t18",
+        "subSection": "u2-s5",
+        "diff": 1
+      },
+      {
+        "q": "The semi-conservative nature of DNA replication was first demonstrated experimentally by:",
+        "o": [
+          "Watson and Crick",
+          "Meselson and Stahl",
+          "Hershey and Chase",
+          "Avery, MacLeod and McCarty"
+        ],
+        "a": 1,
+        "e": "In 1958 Meselson and Stahl grew E. coli in 15N then 14N medium. Density-gradient centrifugation showed each daughter DNA contained one old strand and one new strand.",
+        "topicId": "u2-t21",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "Okazaki fragments are formed during DNA replication on the:",
+        "o": [
+          "Lagging strand",
+          "Leading strand",
+          "Both strands equally",
+          "RNA primer"
+        ],
+        "a": 0,
+        "e": "DNA polymerase works only 5' -> 3'. The lagging strand therefore has to be made discontinuously as short Okazaki fragments, which are later joined by DNA ligase.",
+        "topicId": "u2-t21",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "The enzyme that relieves torsional strain (supercoiling) ahead of the replication fork is:",
+        "o": [
+          "Helicase",
+          "DNA topoisomerase (DNA gyrase in bacteria)",
+          "Primase",
+          "DNA ligase"
+        ],
+        "a": 1,
+        "e": "Topoisomerases cut and rejoin DNA strands to remove supercoils created by helicase unwinding. Fluoroquinolone antibiotics (enrofloxacin) inhibit bacterial DNA gyrase.",
+        "topicId": "u2-t21",
+        "subSection": "u2-s6",
+        "diff": 2
+      },
+      {
+        "q": "In the fasting state, the hormone that mainly stimulates hepatic glycogenolysis and gluconeogenesis is:",
+        "o": [
+          "Insulin",
+          "Aldosterone",
+          "Thyroxine",
+          "Glucagon"
+        ],
+        "a": 3,
+        "e": "Glucagon, released by pancreatic alpha cells when blood glucose falls, acts through cAMP on the liver to increase glycogen breakdown and glucose synthesis.",
+        "topicId": "u2-t22",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "In the well-fed state, insulin acts on key regulatory enzymes by promoting:",
+        "o": [
+          "Phosphorylation and activation of glycogen phosphorylase",
+          "Activation of hormone-sensitive lipase",
+          "Inhibition of acetyl-CoA carboxylase",
+          "Dephosphorylation and activation of glycogen synthase and pyruvate dehydrogenase"
+        ],
+        "a": 3,
+        "e": "Insulin activates protein phosphatases. Dephosphorylation activates glycogen synthase, PDH and acetyl-CoA carboxylase (storage), and inactivates glycogen phosphorylase and hormone-sensitive lipase.",
+        "topicId": "u2-t22",
+        "subSection": "u2-s6",
+        "diff": 3
       }
     ],
     "tf": [
@@ -3812,6 +5178,142 @@ var quizBank = {
         "q": "Skeletal muscle can export glucose into systemic circulation to maintain normoglycemia during intense exercise.",
         "a": false,
         "e": "False. Skeletal muscle lacks glucose-6-phosphatase; it cannot convert glucose-6-phosphate to free glucose and consumes all its glycogen internally via glycolysis.",
+        "topicId": "u2-t22",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "The EC number of an enzyme consists of three numbers separated by dots.",
+        "a": false,
+        "e": "False. An EC number has FOUR numbers: class, subclass, sub-subclass and serial number. For example, hexokinase is EC 2.7.1.1.",
+        "topicId": "u2-t01",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "A prosthetic group is tightly (often covalently) bound to its enzyme, whereas a co-substrate type coenzyme such as NAD+ binds loosely and leaves after each reaction.",
+        "a": true,
+        "e": "True. FAD in succinate dehydrogenase and biotin in carboxylases are prosthetic groups. NAD+ behaves like a second substrate, shuttling between different dehydrogenases.",
+        "topicId": "u2-t02",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "The active site of an enzyme occupies a large part of the total volume of the enzyme molecule.",
+        "a": false,
+        "e": "False. The active site is a SMALL three-dimensional cleft or pocket formed by a few amino acid residues brought together by folding. The rest of the protein maintains its shape.",
+        "topicId": "u2-t03",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "At substrate concentrations far above Km, the reaction velocity becomes practically independent of substrate concentration (zero-order kinetics).",
+        "a": true,
+        "e": "True. When the enzyme is saturated, adding more substrate cannot increase velocity, which stays at Vmax (zero order). At low [S], well below Km, velocity is proportional to [S] (first order).",
+        "topicId": "u2-t04",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "The turnover number of an enzyme is the number of enzyme molecules needed to convert one substrate molecule per second.",
+        "a": false,
+        "e": "False. Turnover number (kcat) is the number of SUBSTRATE molecules converted to product per enzyme molecule (or active site) per unit time when the enzyme is saturated. Carbonic anhydrase has one of the highest, about 10^6 per second.",
+        "topicId": "u2-t05",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "Allosteric effectors bind at the catalytic (active) site of the enzyme.",
+        "a": false,
+        "e": "False. Allosteric effectors bind at a separate REGULATORY (allosteric) site. This changes the enzyme's conformation and so its activity, giving a sigmoidal velocity-substrate curve.",
+        "topicId": "u2-t06",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "FAD and FMN are coenzyme forms of niacin (vitamin B3).",
+        "a": false,
+        "e": "False. FAD and FMN are made from RIBOFLAVIN (vitamin B2). Niacin gives NAD+ and NADP+. Flavin coenzymes accept two hydrogen atoms (FAD -> FADH2).",
+        "topicId": "u2-t07",
+        "subSection": "u2-s2",
+        "diff": 1
+      },
+      {
+        "q": "Malonate inhibits succinate dehydrogenase non-competitively.",
+        "a": false,
+        "e": "False. Malonate is a structural analogue of succinate and inhibits succinate dehydrogenase (Complex II) COMPETITIVELY. Adding excess succinate reverses the inhibition.",
+        "topicId": "u2-t09",
+        "subSection": "u2-s2",
+        "diff": 1
+      },
+      {
+        "q": "Arsenate uncouples glycolysis at the glyceraldehyde-3-phosphate dehydrogenase step, so no ATP is formed at the phosphoglycerate kinase step.",
+        "a": true,
+        "e": "True. Arsenate replaces phosphate, forming 1-arseno-3-phosphoglycerate, which hydrolyses spontaneously to 3-phosphoglycerate. The ATP-forming step is bypassed, so the net ATP yield of glycolysis falls to zero.",
+        "topicId": "u2-t10",
+        "subSection": "u2-s3",
+        "diff": 3
+      },
+      {
+        "q": "The alpha-ketoglutarate dehydrogenase complex requires the same five coenzymes as the pyruvate dehydrogenase complex.",
+        "a": true,
+        "e": "True. Both complexes use TPP, lipoic acid, coenzyme A, FAD and NAD+ for oxidative decarboxylation, and both are inhibited by arsenite (which binds lipoic acid).",
+        "topicId": "u2-t11",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "Acetyl-CoA is an obligatory allosteric activator of pyruvate carboxylase.",
+        "a": true,
+        "e": "True. When fatty acid oxidation produces abundant acetyl-CoA, it activates pyruvate carboxylase to make oxaloacetate. This directs pyruvate into gluconeogenesis during fasting.",
+        "topicId": "u2-t13",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "Glycogen synthase is activated by phosphorylation by cAMP-dependent protein kinase A.",
+        "a": false,
+        "e": "False. Phosphorylation INACTIVATES glycogen synthase and ACTIVATES glycogen phosphorylase. This reciprocal control prevents synthesis and breakdown from running at the same time.",
+        "topicId": "u2-t14",
+        "subSection": "u2-s3",
+        "diff": 2
+      },
+      {
+        "q": "Acetyl-CoA carboxylase requires biotin, is activated by citrate and is inhibited by long-chain acyl-CoA.",
+        "a": true,
+        "e": "True. Citrate signals plentiful acetyl-CoA and ATP. Long-chain acyl-CoA (end product) causes feedback inhibition. Glucagon and adrenaline inactivate it by phosphorylation.",
+        "topicId": "u2-t16",
+        "subSection": "u2-s4",
+        "diff": 2
+      },
+      {
+        "q": "The genetic code is degenerate, meaning that most amino acids are coded by more than one codon.",
+        "a": true,
+        "e": "True. 61 sense codons code for 20 amino acids, so most amino acids have several codons (leucine, serine and arginine have six each). Only methionine and tryptophan have a single codon.",
+        "topicId": "u2-t17",
+        "subSection": "u2-s5",
+        "diff": 1
+      },
+      {
+        "q": "Ornithine transcarbamoylase, which forms citrulline, is a cytosolic enzyme of the urea cycle.",
+        "a": false,
+        "e": "False. Ornithine transcarbamoylase is MITOCHONDRIAL, like carbamoyl phosphate synthetase I. Citrulline then moves to the cytosol, where the remaining three enzymes act.",
+        "topicId": "u2-t19",
+        "subSection": "u2-s5",
+        "diff": 2
+      },
+      {
+        "q": "DNA polymerases synthesise new DNA strands in the 3' -> 5' direction.",
+        "a": false,
+        "e": "False. All DNA polymerases synthesise in the 5' -> 3' direction, adding nucleotides to the free 3'-OH of the growing strand. Their 3' -> 5' EXONUCLEASE activity is used for proofreading.",
+        "topicId": "u2-t21",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "Insulin is the only major hormone that lowers blood glucose concentration.",
+        "a": true,
+        "e": "True. Insulin lowers blood glucose by increasing uptake into muscle and fat, glycogen synthesis and lipogenesis. The counter-regulatory hormones (glucagon, adrenaline, cortisol, growth hormone) all raise it.",
         "topicId": "u2-t22",
         "subSection": "u2-s6",
         "diff": 1
@@ -4361,6 +5863,232 @@ var quizBank = {
         ],
         "a_display": "Liver",
         "e": "The liver functions as the primary metabolic clearinghouse and buffer of circulating fuels in the animal body.",
+        "topicId": "u2-t22",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "The protein part of a conjugated enzyme, which is inactive without its cofactor, is called the _____.",
+        "a": [
+          "apoenzyme",
+          "apo-enzyme",
+          "apoprotein"
+        ],
+        "a_display": "Apoenzyme",
+        "e": "Apoenzyme (protein) + cofactor/coenzyme = holoenzyme (the active enzyme).",
+        "topicId": "u2-t01",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Metal ions such as Mg2+, Zn2+ and Mn2+ that are required for enzyme activity are called metal _____.",
+        "a": [
+          "activators",
+          "activator",
+          "cofactors",
+          "cofactor",
+          "ions"
+        ],
+        "a_display": "Activators (cofactors)",
+        "e": "Inorganic cofactors (metal activators) include Mg2+ for kinases, Zn2+ for carbonic anhydrase and Cu2+ for cytochrome oxidase. Metal-activated enzymes differ from metalloenzymes, in which the metal is tightly bound.",
+        "topicId": "u2-t02",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Hexokinase phosphorylates glucose, fructose and mannose. Because it acts on a group of structurally related substrates, it shows _____ specificity.",
+        "a": [
+          "group",
+          "relative",
+          "group (relative)",
+          "broad"
+        ],
+        "a_display": "Group (relative)",
+        "e": "Group specificity means the enzyme acts on a class of related compounds sharing a feature, e.g. hexokinase on hexoses, or pepsin on peptide bonds next to aromatic residues.",
+        "topicId": "u2-t03",
+        "subSection": "u2-s1",
+        "diff": 2
+      },
+      {
+        "q": "Most mammalian enzymes have an optimum temperature close to _____ degrees Celsius.",
+        "a": [
+          "37",
+          "37 degrees",
+          "37 c",
+          "37°c",
+          "37 °c",
+          "37 degree"
+        ],
+        "a_display": "37 °C",
+        "e": "Activity rises with temperature up to the optimum (about 37-40 °C in mammals). Above this, heat denaturation destroys the enzyme's shape and activity falls sharply.",
+        "topicId": "u2-t04",
+        "subSection": "u2-s1",
+        "diff": 1
+      },
+      {
+        "q": "Enzymes that insert one atom of molecular oxygen into the substrate and reduce the other to water are called mixed-function oxidases or _____.",
+        "a": [
+          "monooxygenases",
+          "monooxygenase",
+          "mono-oxygenases",
+          "mono-oxygenase",
+          "hydroxylases",
+          "hydroxylase"
+        ],
+        "a_display": "Monooxygenases (hydroxylases)",
+        "e": "Monooxygenases such as the cytochrome P450 system and phenylalanine hydroxylase need a reductant (NADPH). Dioxygenases insert both oxygen atoms into the substrate.",
+        "topicId": "u2-t07",
+        "subSection": "u2-s2",
+        "diff": 2
+      },
+      {
+        "q": "ATP synthase, which uses the proton gradient to make ATP from ADP and Pi, is also called Complex _____ of the respiratory chain.",
+        "a": [
+          "v",
+          "5",
+          "five"
+        ],
+        "a_display": "V",
+        "e": "ATP synthase (F0F1-ATPase) is Complex V. Protons flowing back through F0 rotate the enzyme, and conformational changes in F1 synthesise ATP (Boyer's binding-change mechanism).",
+        "topicId": "u2-t08",
+        "subSection": "u2-s2",
+        "diff": 1
+      },
+      {
+        "q": "In erythrocytes, 2,3-bisphosphoglycerate, which lowers the oxygen affinity of haemoglobin, is formed in the _____ shunt.",
+        "a": [
+          "rapoport-luebering",
+          "rapoport luebering",
+          "luebering-rapoport",
+          "rapoport-leubering",
+          "rapoport"
+        ],
+        "a_display": "Rapoport-Luebering",
+        "e": "Bisphosphoglycerate mutase converts 1,3-BPG to 2,3-BPG. 2,3-BPG binds deoxyhaemoglobin and promotes O2 release to tissues, at the cost of the ATP normally made at the phosphoglycerate kinase step.",
+        "topicId": "u2-t10",
+        "subSection": "u2-s3",
+        "diff": 3
+      },
+      {
+        "q": "The first reaction of the citric acid cycle, condensation of acetyl-CoA with oxaloacetate, is catalysed by _____ synthase.",
+        "a": [
+          "citrate"
+        ],
+        "a_display": "Citrate synthase",
+        "e": "Citrate synthase forms citrate. The reaction is strongly exergonic because the thioester bond of citryl-CoA is hydrolysed, which drives the cycle forward.",
+        "topicId": "u2-t11",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "The oxidative phase of the HMP shunt produces _____ molecules of NADPH per molecule of glucose-6-phosphate oxidised.",
+        "a": [
+          "2",
+          "two"
+        ],
+        "a_display": "2",
+        "e": "G6PD and 6-phosphogluconate dehydrogenase each produce one NADPH, giving 2 NADPH and 1 CO2 per glucose-6-phosphate converted to ribulose-5-phosphate.",
+        "topicId": "u2-t12",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "The enzyme that creates alpha(1->6) branch points during glycogen synthesis is the _____ enzyme.",
+        "a": [
+          "branching",
+          "branching enzyme",
+          "amylo-(1,4->1,6)-transglycosylase",
+          "glycosyl-(4,6)-transferase"
+        ],
+        "a_display": "Branching enzyme",
+        "e": "Branching enzyme transfers a block of about 6-7 glucose residues to an alpha(1->6) position. Branching increases solubility and creates many ends for rapid synthesis and breakdown.",
+        "topicId": "u2-t14",
+        "subSection": "u2-s3",
+        "diff": 1
+      },
+      {
+        "q": "Very-long-chain fatty acids (longer than about 20 carbons) begin their beta-oxidation in the _____.",
+        "a": [
+          "peroxisomes",
+          "peroxisome"
+        ],
+        "a_display": "Peroxisomes",
+        "e": "Peroxisomal beta-oxidation shortens very-long-chain fatty acids, and the resulting medium-chain acyl-CoA is completed in mitochondria. Its first enzyme (acyl-CoA oxidase) produces H2O2 rather than FADH2.",
+        "topicId": "u2-t15",
+        "subSection": "u2-s4",
+        "diff": 2
+      },
+      {
+        "q": "The number of stop (termination) codons in the standard genetic code is _____.",
+        "a": [
+          "3",
+          "three"
+        ],
+        "a_display": "3",
+        "e": "UAA (ochre), UAG (amber) and UGA (opal) have no tRNA. Release factors recognise them and free the completed polypeptide.",
+        "topicId": "u2-t17",
+        "subSection": "u2-s5",
+        "diff": 1
+      },
+      {
+        "q": "Decarboxylation of DOPA produces the neurotransmitter _____, which is the precursor of noradrenaline.",
+        "a": [
+          "dopamine"
+        ],
+        "a_display": "Dopamine",
+        "e": "Tyrosine -> DOPA (tyrosine hydroxylase) -> dopamine (aromatic L-amino acid decarboxylase, PLP-dependent) -> noradrenaline -> adrenaline.",
+        "topicId": "u2-t18",
+        "subSection": "u2-s5",
+        "diff": 2
+      },
+      {
+        "q": "In pyrimidine catabolism, thymine is broken down to the water-soluble end product beta-_____.",
+        "a": [
+          "aminoisobutyrate",
+          "aminoisobutyric acid",
+          "amino isobutyric acid",
+          "aminoisobutyric",
+          "amino-isobutyrate"
+        ],
+        "a_display": "beta-Aminoisobutyrate",
+        "e": "Thymine -> beta-aminoisobutyrate, while cytosine and uracil -> beta-alanine, CO2 and NH3. Unlike purine breakdown (uric acid), pyrimidine end products are highly soluble.",
+        "topicId": "u2-t20",
+        "subSection": "u2-s6",
+        "diff": 3
+      },
+      {
+        "q": "The enzyme that seals nicks between adjacent Okazaki fragments by forming a phosphodiester bond is DNA _____.",
+        "a": [
+          "ligase"
+        ],
+        "a_display": "DNA ligase",
+        "e": "DNA ligase joins the 3'-OH of one fragment to the 5'-phosphate of the next, using ATP (eukaryotes) or NAD+ (bacteria).",
+        "topicId": "u2-t21",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "In the high-yielding dairy cow after calving, when energy lost in milk exceeds dietary energy intake, the cow is in negative energy _____.",
+        "a": [
+          "balance"
+        ],
+        "a_display": "Balance",
+        "e": "Negative energy balance mobilises body fat. If the liver's capacity to oxidise the released fatty acids is exceeded, fatty liver and ketosis develop.",
+        "topicId": "u2-t22",
+        "subSection": "u2-s6",
+        "diff": 1
+      },
+      {
+        "q": "Glucagon and adrenaline act through the second messenger _____ to activate protein kinase A.",
+        "a": [
+          "camp",
+          "cyclic amp",
+          "cyclic adenosine monophosphate",
+          "3',5'-camp",
+          "3,5-camp"
+        ],
+        "a_display": "cAMP",
+        "e": "Hormone binding activates a Gs protein, which stimulates adenylyl cyclase to make cAMP from ATP. cAMP activates protein kinase A, which phosphorylates enzymes of glycogen and lipid metabolism.",
         "topicId": "u2-t22",
         "subSection": "u2-s6",
         "diff": 1

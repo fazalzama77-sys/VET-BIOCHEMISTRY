@@ -2,8 +2,8 @@
    quiz.js  —  The Veterinary Biochemistry Quiz Engine
    ------------------------------------------------------------
    Features:
-     - 540 curriculum-standard questions across Theory Units 1 to 3
-     - Strict 2 : 1 : 1 ratio (90 MCQ : 45 TF : 45 FIB per unit)
+     - 680 curriculum-standard questions across Theory Units 1 to 3
+     - 2 : 1 : 1 ratio of MCQ : TF : FIB (Units 1-2: 250 each, Unit 3: 180)
      - 15 thematic sub-sections with dedicated module testing
      - Sequence Mode (curriculum order) vs. Shuffle Mode (randomised)
      - Difficulty filter (Foundational / Core UG / Rank-1 Classic)
@@ -26,7 +26,7 @@ var quizApp = (function () {
   /* Sub-section metadata for Veterinary Biochemistry Units 1 to 3 */
   var subSectionsByUnit = {
     "unit-1": [
-      { id: "u1-s1", icon: "🔬", title: "Membranes, Transport & Buffers", desc: "Biological membranes, transport mechanisms, Donnan equilibrium, pH & Henderson-Hasselbalch" },
+      { id: "u1-s1", icon: "🔬", title: "Membranes, Transport & Buffers", desc: "Scope of biochemistry, biological membranes, transport, Donnan equilibrium, pH & Henderson-Hasselbalch" },
       { id: "u1-s2", icon: "🍬", title: "Carbohydrate Chemistry", desc: "Monosaccharides, amino sugars, disaccharides, polysaccharides & mucopolysaccharides" },
       { id: "u1-s3", icon: "🥑", title: "Lipid Chemistry & Prostaglandins", desc: "Simple, compound, derived lipids, lipoproteins, fat indices & prostaglandins" },
       { id: "u1-s4", icon: "🥩", title: "Amino Acids & Protein Chemistry", desc: "Amino acid classification, properties, peptide bonds, protein levels & properties" },
@@ -94,7 +94,13 @@ var quizApp = (function () {
       var b = (window.quizBank || {})[uid];
       if (!b) return;
       formats.forEach(function (f) {
-        (b[f] || []).forEach(function (q, i) {
+        // New questions are appended to the end of each list so saved keys
+        // (unit:format:index) never shift. Visit them in syllabus-topic order
+        // so Sequence Mode still follows the curriculum.
+        var order = (b[f] || []).map(function (q, i) { return i; });
+        order.sort(function (x, y) { return topicNo(b[f][x]) - topicNo(b[f][y]) || x - y; });
+        order.forEach(function (i) {
+          var q = b[f][i];
           if (!q || !q.q || !String(q.q).trim()) return;   // skip empty template rows
           if (subSectionId && subSectionId !== "all" && q.subSection !== subSectionId) return;
           var d = q.diff || 1;
@@ -116,6 +122,22 @@ var quizApp = (function () {
       });
     });
     return out;
+  }
+
+  function formatMix() {
+    var c = { mcq: 0, tf: 0, fib: 0 };
+    var bank = window.quizBank || {};
+    Object.keys(bank).forEach(function (u) {
+      ["mcq", "tf", "fib"].forEach(function (f) {
+        (bank[u][f] || []).forEach(function (q) { if (q && q.q && String(q.q).trim()) c[f]++; });
+      });
+    });
+    return c.mcq + " MCQ • " + c.tf + " T/F • " + c.fib + " FIB";
+  }
+
+  function topicNo(q) {
+    var m = q && q.topicId ? /-t(\d+)$/.exec(q.topicId) : null;
+    return m ? parseInt(m[1], 10) : 9999;
   }
 
   function scopeUnits(kind, id) {
@@ -335,7 +357,7 @@ var quizApp = (function () {
       '<div class="pagehead quiz-hub-head">' +
         '<div class="row row--wrap items-center gap-2 mb-2">' +
           '<span class="chip chip--accent font-mono">🌟 ' + totalAll + ' Questions Bank</span>' +
-          '<span class="chip chip--ok">Exact 2:1:1 Ratio (90 MCQ • 45 T/F • 45 FIB)</span>' +
+          '<span class="chip chip--ok">' + formatMix() + '</span>' +
           '<span class="chip">' + subCount() + ' Sub-sections</span>' +
         '</div>' +
         '<h1>' + app.icon("quiz") + ' Veterinary Biochemistry Examination Suite</h1>' +
