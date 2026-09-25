@@ -1580,8 +1580,34 @@ var app = (function () {
      each text node the match passes through in its own <mark>.
      ------------------------------------------------------------ */
 
+  /* Page furniture that is not lesson prose. A student dragging from one
+     paragraph into the next must never end up with the toolbar buttons or the
+     side rail wrapped in a highlight. */
+  var HL_SKIP = "script, style, button, select, textarea, input, " +
+    "mark.hl-inline, .block--hl, .toolbar, .hlpicker, .hlpicker-wrap, .hl-popup, " +
+    ".lesson__rail, .pager, .crumbs, .speakbtn, .notebox, .gloss-tooltip";
+
+  /* Elements that start a new line of text on screen. Two adjacent blocks read
+     as separate lines, so the flattened string needs a separator between them —
+     see the comment in wrapFirstMatch. */
+  var HL_BLOCK_TAGS = {
+    P: 1, DIV: 1, LI: 1, UL: 1, OL: 1, TD: 1, TH: 1, TR: 1, TABLE: 1, THEAD: 1, TBODY: 1,
+    H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1, SECTION: 1, ARTICLE: 1, HEADER: 1, FOOTER: 1,
+    BLOCKQUOTE: 1, PRE: 1, FIGCAPTION: 1, FIGURE: 1, DT: 1, DD: 1, DL: 1, BR: 1, HR: 1
+  };
+
+  function blockAncestorOf(node) {
+    var el = node.parentElement;
+    while (el) {
+      if (HL_BLOCK_TAGS[el.tagName]) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
   /* Text nodes we are allowed to highlight — never inside an existing mark,
-     and never inside the "My highlights" summary list at the top. */
+     never inside the "My highlights" summary list, and never inside the
+     surrounding page controls. */
   function collectTextNodes(root) {
     var out = [];
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -1589,8 +1615,7 @@ var app = (function () {
         if (!n.nodeValue || !n.nodeValue.length) return NodeFilter.FILTER_REJECT;
         var p = n.parentElement;
         if (!p) return NodeFilter.FILTER_REJECT;
-        if (p.closest("mark.hl-inline")) return NodeFilter.FILTER_REJECT;
-        if (p.closest(".block--hl")) return NodeFilter.FILTER_REJECT;
+        if (p.closest(HL_SKIP)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -1603,10 +1628,23 @@ var app = (function () {
     var nodes = collectTextNodes(root);
     if (!nodes.length) return false;
 
-    // Flatten to a single string, remembering where each node sits in it.
+    /* Flatten to a single string, remembering where each node sits in it.
+
+       A newline is inserted wherever the text crosses into a new block. The
+       browser puts one there too when it builds getSelection().toString(), so
+       without it a highlight that spans two paragraphs could never be found
+       again: the saved text read "...production.\n\nBiochemistry is..." while
+       the flattened page read "...production.Biochemistry is...", and the
+       \s+ in the search pattern had no whitespace to match. The highlight was
+       saved and listed at the top of the lesson but never painted on the text. */
     var full = "";
     var bounds = [];
+    var prevBlock = null;
     for (var i = 0; i < nodes.length; i++) {
+      var block = blockAncestorOf(nodes[i]);
+      if (i > 0 && block !== prevBlock) full += "\n";
+      prevBlock = block;
+
       var v = nodes[i].nodeValue;
       bounds.push({ start: full.length, end: full.length + v.length, i: i });
       full += v;
@@ -1616,18 +1654,30 @@ var app = (function () {
     var m = re.exec(full);
     if (!m || !m[0].length) return false;
 
-    function locate(pos) {
+    /* Map a position in the flattened string back to a text node. The inserted
+       block separators belong to no node, so a position can land between two
+       of them; `dir` says which way to step out to the nearest real character. */
+    function locate(pos, dir) {
       for (var b = 0; b < bounds.length; b++) {
         if (pos >= bounds[b].start && pos < bounds[b].end) {
           return { n: bounds[b].i, o: pos - bounds[b].start };
         }
       }
+      if (dir > 0) {
+        for (var f = 0; f < bounds.length; f++) {
+          if (bounds[f].start >= pos) return { n: bounds[f].i, o: 0 };
+        }
+      } else {
+        for (var r = bounds.length - 1; r >= 0; r--) {
+          if (bounds[r].end <= pos) return { n: bounds[r].i, o: bounds[r].end - bounds[r].start - 1 };
+        }
+      }
       return null;
     }
 
-    var from = locate(m.index);
-    var to = locate(m.index + m[0].length - 1);
-    if (!from || !to) return false;
+    var from = locate(m.index, 1);
+    var to = locate(m.index + m[0].length - 1, -1);
+    if (!from || !to || to.n < from.n) return false;
 
     // Wrap from the LAST node backwards, so offsets in earlier nodes stay valid.
     for (var k = to.n; k >= from.n; k--) {
@@ -1638,6 +1688,10 @@ var app = (function () {
       var e = (k === to.n) ? to.o + 1 : node.nodeValue.length;
       if (e <= s) continue;
 
+      // A run that spans blocks passes through the whitespace between them.
+      // Wrapping that would leave a stray coloured gap, so skip it.
+      if (!node.nodeValue.slice(s, e).trim()) continue;
+
       var mid = node;
       if (e < mid.nodeValue.length) mid.splitText(e);   // trim the tail off
       if (s > 0) mid = mid.splitText(s);                // trim the head off
@@ -1646,7 +1700,7 @@ var app = (function () {
       mark.className = "hl-inline hl-inline--" + color;
       mark.setAttribute("data-hl-color", color);
       mark.setAttribute("data-hl-text", key);
-      mark.title = "Highlighted in " + color + " — click to remove";
+      mark.title = "Highlighted passage — click for options";
       mid.parentNode.replaceChild(mark, mid);
       mark.appendChild(mid);
     }
@@ -1790,6 +1844,7 @@ var app = (function () {
       }
       old.remove();
     }
+    closeMarkMenu();   // never leave a highlight's toolbar floating after a route change
   }
 
   function attachHighlightSelectionUI(panel, topicId) {
@@ -1950,21 +2005,160 @@ var app = (function () {
   function wireUnhlButtons(topicId) {
     els("[data-unhl]").forEach(function (b) {
       b.onclick = function () {
-        store.removeHighlight(topicId, b.getAttribute("data-unhl"));
-        renderTopic();
+        removeHighlightEverywhere(topicId, b.getAttribute("data-unhl"));
       };
     });
   }
 
+  /* ------------------------------------------------------------
+     Editing a highlight that is already on the page.
+
+     Clicking a highlight used to delete it on the spot, which meant one
+     stray tap while reading destroyed a passage the student had marked.
+     A click now opens a small toolbar over the highlight: recolour it,
+     copy it, or remove it deliberately.
+     ------------------------------------------------------------ */
+
+  /* Refresh the "My highlights" card without rebuilding the whole lesson,
+     so the page does not jump back to the top. */
+  function refreshHighlightSummary(topicId) {
+    var box = el("#topic-highlights-container");
+    if (!box) return;
+    box.innerHTML = renderHighlights(topicId);
+    wireUnhlButtons(topicId);
+  }
+
+  function marksFor(text) {
+    return els("mark.hl-inline").filter(function (m) {
+      return m.getAttribute("data-hl-text") === text;
+    });
+  }
+
+  function removeHighlightEverywhere(topicId, text) {
+    store.removeHighlight(topicId, text);
+    marksFor(text).forEach(function (m) {
+      var parent = m.parentNode;
+      if (!parent) return;
+      while (m.firstChild) parent.insertBefore(m.firstChild, m);
+      parent.removeChild(m);
+      parent.normalize();          // glue the split text nodes back together
+    });
+    closeMarkMenu();
+    refreshHighlightSummary(topicId);
+    toast("Highlight removed");
+  }
+
+  function recolourHighlight(topicId, text, color) {
+    store.addHighlight(topicId, text, color);   // replaces the colour in place
+    store.setHighlightColor(color);
+    marksFor(text).forEach(function (m) {
+      m.className = "hl-inline hl-inline--" + color;
+      m.setAttribute("data-hl-color", color);
+    });
+    refreshHighlightSummary(topicId);
+  }
+
+  var markMenu = null;
+
+  function closeMarkMenu() {
+    if (!markMenu) return;
+    if (markMenu._outside) document.removeEventListener("mousedown", markMenu._outside, true);
+    if (markMenu._key) document.removeEventListener("keydown", markMenu._key);
+    if (markMenu._repos) {
+      window.removeEventListener("scroll", markMenu._repos, true);
+      window.removeEventListener("resize", markMenu._repos);
+    }
+    if (markMenu.parentNode) markMenu.parentNode.removeChild(markMenu);
+    markMenu = null;
+  }
+
+  function openMarkMenu(mark, topicId) {
+    closeMarkMenu();
+
+    var text = mark.getAttribute("data-hl-text");
+    var current = mark.getAttribute("data-hl-color") || "yellow";
+    var colors = store.VALID_HL_COLORS || ["yellow", "green", "blue", "pink", "orange", "purple"];
+
+    var menu = document.createElement("div");
+    menu.className = "hl-popup hl-popup-selection hl-mark-menu";
+    menu.style.display = "flex";
+    menu.innerHTML =
+      '<span class="hl-popup-label">' + icon("pen") + ' Highlight</span>' +
+      colors.map(function (c) {
+        return '<button type="button" class="hl-popup-btn hl-' + c +
+          (c === current ? ' is-current' : '') + '" data-recolour="' + c +
+          '" title="Recolour to ' + c + '" aria-label="Recolour to ' + c + '"></button>';
+      }).join("") +
+      '<span class="hl-popup-sep"></span>' +
+      '<button type="button" class="hl-popup-action" data-hl-copy>' + icon("copy") + ' Copy</button>' +
+      '<button type="button" class="hl-popup-action hl-remove-action" data-hl-remove>' + icon("trash") + ' Remove</button>' +
+      '<button type="button" class="hl-popup-action hl-close-action" data-hl-dismiss aria-label="Close">&times;</button>';
+
+    document.body.appendChild(menu);
+    markMenu = menu;
+
+    function place() {
+      var r = mark.getBoundingClientRect();
+      var h = menu.offsetHeight || 40;
+      var top = r.top - h - 8;
+      if (top < 8) top = r.bottom + 8;                 // flip below when it would clip
+      var left = Math.min(Math.max(r.left + r.width / 2, 12 + menu.offsetWidth / 2),
+                          window.innerWidth - 12 - menu.offsetWidth / 2);
+      menu.style.top = top + "px";
+      menu.style.left = left + "px";
+    }
+    place();
+
+    menu.querySelectorAll("[data-recolour]").forEach(function (b) {
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        recolourHighlight(topicId, text, b.getAttribute("data-recolour"));
+        closeMarkMenu();
+      });
+    });
+
+    var copyBtn = menu.querySelector("[data-hl-copy]");
+    if (copyBtn) copyBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { toast("Highlight copied"); })
+          .catch(function () { toast("Could not copy"); });
+      } else {
+        toast("Copying is not supported in this browser");
+      }
+      closeMarkMenu();
+    });
+
+    var removeBtn = menu.querySelector("[data-hl-remove]");
+    if (removeBtn) removeBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      removeHighlightEverywhere(topicId, text);
+    });
+
+    var dismissBtn = menu.querySelector("[data-hl-dismiss]");
+    if (dismissBtn) dismissBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      closeMarkMenu();
+    });
+
+    menu._outside = function (e) {
+      if (!menu.contains(e.target) && e.target !== mark && !mark.contains(e.target)) closeMarkMenu();
+    };
+    menu._key = function (e) { if (e.key === "Escape") closeMarkMenu(); };
+    menu._repos = function () { requestAnimationFrame(place); };
+
+    document.addEventListener("mousedown", menu._outside, true);
+    document.addEventListener("keydown", menu._key);
+    window.addEventListener("scroll", menu._repos, true);
+    window.addEventListener("resize", menu._repos);
+  }
+
   function wireInlineMarks(topicId) {
-    els(".hl-inline").forEach(function (m) {
+    els("mark.hl-inline").forEach(function (m) {
       m.onclick = function (e) {
         e.stopPropagation();
-        var txt = m.getAttribute("data-hl-text");
-        var col = m.getAttribute("data-hl-color") || "highlight";
-        store.removeHighlight(topicId, txt);
-        toast("Removed " + col + " highlight");
-        renderTopic();
+        e.preventDefault();
+        openMarkMenu(m, topicId);
       };
     });
   }

@@ -4669,3 +4669,35 @@
 @media (max-width: 640px) {
   .hm-frame { min-width: 420px; }
 }
+
+/* ============================================================
+   HIGHLIGHT MARK MENU
+   ------------------------------------------------------------
+   Opened by clicking a highlight already painted on the lesson.
+   Clicking a highlight used to delete it instantly; it now offers
+   recolour / copy / remove instead.
+   ============================================================ */
+.hl-mark-menu { position: fixed !important; }
+.hl-popup-btn.is-current {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-line);
+}
+.hl-popup-action.hl-remove-action {
+  background: var(--danger-soft);
+  border-color: transparent;
+  color: var(--danger);
+}
+.hl-popup-action.hl-remove-action:hover {
+  background: var(--danger);
+  color: var(--text-invert);
+}
+.hl-popup-action .ico { width: 13px; height: 13px; }
+
+/* The painted highlight itself should invite a click */
+mark.hl-inline { cursor: pointer; }
+mark.hl-inline:hover { filter: brightness(.96); }
+
+@media (max-width: 640px) {
+  .hl-mark-menu .hl-popup-label { display: none; }
+  .hl-mark-menu .hl-popup-action { padding: 4px 8px; font-size: 10.5px; }
+}
