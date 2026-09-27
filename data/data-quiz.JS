@@ -30,9 +30,9 @@ var quizBank = {
       {
         "q": "The primary driving force for the spontaneous formation of phospholipid bilayers in aqueous media is:",
         "o": [
-          "Covalent bond formation between head groups",
-          "Hydrogen bonding between hydrocarbon tails",
-          "Electrostatic attraction between glycerol backbones",
+          "Spontaneous covalent ester cross-linking between polar phospholipid head groups",
+          "Intermolecular hydrogen bonding networks between nonpolar aliphatic hydrocarbon tails",
+          "Electrostatic attraction between polar glycerol backbones and divalent cations",
           "Hydrophobic interactions and van der Waals forces between fatty acyl chains"
         ],
         "a": 3,
@@ -72,10 +72,10 @@ var quizBank = {
       {
         "q": "Glucose absorption across the apical border of ruminant and monogastric intestinal enterocytes occurs via:",
         "o": [
-          "GLUT-2 facilitated uniporter",
-          "Simple passive lipophilic partition",
+          "GLUT-2 bidirectional facilitated hexose uniporter",
+          "Simple passive lipophilic transcellular partition",
           "SGLT-1 Na+-dependent secondary active symport",
-          "Direct ATP-dependent ABC cassette pump"
+          "Direct ATP-driven primary active ABC cassette pump"
         ],
         "a": 2,
         "e": "SGLT-1 (Sodium-Glucose Cotransporter 1) transports 1 glucose molecule along with 2 Na+ ions down the Na+ electrochemical gradient maintained by the basolateral Na+/K+ pump.",
@@ -86,10 +86,10 @@ var quizBank = {
       {
         "q": "Donnan membrane equilibrium occurs across a semi-permeable membrane when:",
         "o": [
-          "All ions can freely cross the membrane in equal numbers",
-          "No electrical potential gradient exists across the membrane",
+          "All small monovalent and divalent inorganic ions diffuse freely down concentration gradients",
+          "Active transport mechanisms establish equal electrochemical potentials across both compartments",
           "A non-diffusible charged macromolecule (like protein) is confined to one compartment",
-          "Water movement is completely arrested by high hydrostatic pressure"
+          "Hydrostatic filtration pressure exactly counterbalances total colloid oncotic pressure"
         ],
         "a": 2,
         "e": "The presence of a non-diffusible, impermeable polyvalent ion (such as an intracellular polyanionic protein) forces an unequal distribution of diffusible cations and anions at equilibrium.",
@@ -114,10 +114,10 @@ var quizBank = {
       {
         "q": "Which physiological compartment exhibits significant Gibbs-Donnan effects due to high non-diffusible protein content?",
         "o": [
-          "Glomerular filtrate in Bowman's capsule",
+          "Glomerular ultrafiltrate compared to tubular fluid in Bowman's capsule",
           "Blood plasma compared to interstitial fluid across capillary walls",
-          "Cerebrospinal fluid compared to aqueous humor",
-          "Gastric juice compared to bile"
+          "Cerebrospinal fluid compared to intraocular aqueous humor in the eye",
+          "Acidic gastric secretions compared to alkaline pancreatic juice in duodenum"
         ],
         "a": 1,
         "e": "Plasma proteins (chiefly albumin) cannot cross capillary endothelium, creating a Gibbs-Donnan distribution: plasma has slightly higher diffusible cation concentration and lower diffusible anion concentration than interstitial fluid.",
@@ -142,9 +142,9 @@ var quizBank = {
       {
         "q": "A chemical buffer solution resists changes in pH because it consists of:",
         "o": [
-          "A strong acid and its conjugate strong base",
-          "Equimolar concentrations of strong HCl and NaOH",
-          "A neutral salt dissolved in distilled water",
+          "A concentrated strong mineral acid paired with an equimolar strong alkaline base",
+          "An insoluble polyvalent inorganic salt suspended in pure deionized distilled water",
+          "A neutral zwitterionic amino acid dissolved at its precise isoelectric point",
           "A weak acid and its conjugate base (or weak base and conjugate acid)"
         ],
         "a": 3,
@@ -213,9 +213,9 @@ var quizBank = {
         "q": "The most effective physiological intracellular buffer system in erythrocytes is:",
         "o": [
           "Hemoglobin buffer system",
-          "Bicarbonate buffer",
-          "Ammonium buffer",
-          "Acetate buffer"
+          "Carbonic acid-bicarbonate",
+          "Phosphate buffer system",
+          "Plasma albumin protein"
         ],
         "a": 0,
         "e": "Hemoglobin contains 38 histidine residues with imidazole side chains having pKa near 6.8, providing powerful intracellular buffering in RBCs.",
@@ -240,10 +240,10 @@ var quizBank = {
       {
         "q": "Cholesterol modulates animal plasma membrane fluidity by:",
         "o": [
-          "Completely preventing any protein from inserting into membranes",
+          "Selectively hydrolyzing unsaturated fatty acyl chains to promote rigid crystalline gel phases",
           "Always increasing fluidity at low temperatures and decreasing fluidity at high temperatures",
-          "Inducing permanent crystallization of all hydrocarbon chains",
-          "Dissolving sphingolipids into single fatty acids"
+          "Covalently cross-linking polar phospholipid head groups to prevent integral protein lateral drift",
+          "Facilitating rapid flip-flop transbilayer movement of charged phospholipids between leaflets"
         ],
         "a": 1,
         "e": "Cholesterol acts as a membrane bidirectional fluidity buffer: its rigid steroid ring prevents fatty acyl crystallization at low temperatures while restricting excessive lipid motion at physiological temperatures.",
@@ -326,8 +326,8 @@ var quizBank = {
         "o": [
           "N-Acetylglucosamine (NAG)",
           "N-Acetylgalactosamine",
-          "Sorbitol",
-          "Gluconolactone"
+          "Glucuronic acid ester",
+          "D-Gluconolactone-6-P"
         ],
         "a": 0,
         "e": "Bacterial peptidoglycan consists of alternating units of N-acetylglucosamine (NAG) and N-acetylmuramic acid (NAM) linked by beta-1,4 glycosidic bonds.",
@@ -338,9 +338,9 @@ var quizBank = {
       {
         "q": "Sialic acid (N-acetylneuraminic acid, NANA) is derived chemically from condensation of:",
         "o": [
-          "Glucose and acetate",
-          "Fructose and succinate",
-          "Galactose and glycerol",
+          "Glucosamine and oxaloacetate",
+          "Galactosamine and succinate",
+          "Fructosamine and alpha-KG",
           "Mannosamine and pyruvate"
         ],
         "a": 3,
@@ -380,10 +380,10 @@ var quizBank = {
       {
         "q": "Sucrose is a non-reducing disaccharide because:",
         "o": [
-          "It contains no ketone or aldehyde groups in its structure",
+          "The presence of an intramolecular hemiacetal prevents mutarotation and enolization in aqueous alkaline solution",
           "Both anomeric carbons (C-1 of glucose and C-2 of fructose) participate in the glycosidic bond",
-          "It cannot be hydrolyzed by dilute acids",
-          "It lacks hydroxyl groups on C-3 and C-4"
+          "Hydrolysis of its beta-fructofuranoside linkage is sterically blocked by adjacent glucopyranose bulky rings",
+          "Its open-chain tautomer is locked in an unreactive furanose conformation devoid of free reducing groups"
         ],
         "a": 1,
         "e": "In sucrose (alpha-D-glucopyranosyl-(1->2)-beta-D-fructofuranoside), the anomeric carbons of both glucose and fructose are tied up in the linkage, leaving no free hemiacetal/hemiketal group.",
@@ -409,9 +409,9 @@ var quizBank = {
         "q": "In plant starch, amylopectin differs from amylose because amylopectin contains:",
         "o": [
           "Branch points with alpha-1,6-glycosidic bonds every 24 to 30 glucose units",
-          "Only beta-1,4 linkages",
-          "Only alpha-1,3-glycosidic bonds",
-          "Fructose units interspersed with glucose"
+          "Alternating linear beta-1,4-glucosidic bonds producing rigid, extended sheets",
+          "Branch points with alpha-1,3-glycosidic cross-links every 50 to 60 residues",
+          "Copious beta-D-fructofuranosyl residues arranged in unbranched helical arrays"
         ],
         "a": 0,
         "e": "Amylose is a linear polymer of alpha-1,4-linked D-glucose, whereas amylopectin is branched with alpha-1,6 linkages occurring every 24-30 residues.",
@@ -422,10 +422,10 @@ var quizBank = {
       {
         "q": "Glycogen, the animal storage homopolysaccharide, is structurally most similar to amylopectin but:",
         "o": [
-          "Has fewer branches with beta linkages",
-          "Contains galactose residues in branches",
+          "Has fewer branch points with beta-1,4-glycosidic linkages occurring every 40 to 50 residues",
+          "Contains repeating beta-D-galactose residues alternating within linear branch segments",
           "Is more extensively branched with alpha-1,6 linkages every 8 to 12 residues",
-          "Is insoluble in water and unreactive"
+          "Forms an insoluble, crystalline cross-linked matrix completely resistant to enzymatic lysis"
         ],
         "a": 2,
         "e": "Glycogen has higher branching density (branch points every 8-12 glucose units), providing abundant non-reducing ends for rapid phosphorolytic release of glucose-1-phosphate.",
@@ -436,10 +436,10 @@ var quizBank = {
       {
         "q": "Inulin is a fructosan polysaccharide clinically utilized in veterinary diagnostics for measuring:",
         "o": [
-          "Total blood volume",
+          "Effective renal plasma flow (ERPF)",
           "Glomerular filtration rate (GFR)",
-          "Hepatic glycogen reserve",
-          "Pancreatic lipase efficiency"
+          "Total extracellular fluid volume",
+          "Hepatic microsomal enzyme reserve"
         ],
         "a": 1,
         "e": "Inulin is freely filtered at the renal glomerulus and is neither reabsorbed nor secreted by the nephron tubules, making inulin clearance the gold standard for GFR measurement.",
@@ -450,10 +450,10 @@ var quizBank = {
       {
         "q": "Chitin, the major structural polymer in the exoskeleton of arthropods and fungal cell walls, consists of:",
         "o": [
-          "alpha-1,4-linked galactosamine units",
+          "alpha-1,4-linked N-acetylgalactosamine units",
           "beta-1,4-linked N-acetylglucosamine units",
-          "beta-1,3-linked glucuronic acid units",
-          "alpha-1,6-linked mannose units"
+          "beta-1,3-linked D-glucuronic acid residues",
+          "alpha-1,6-linked D-mannopyranose polymers"
         ],
         "a": 1,
         "e": "Chitin is a linear homopolysaccharide of N-acetyl-D-glucosamine (NAG) units joined by beta-1,4 glycosidic bonds, giving it high tensile strength.",
@@ -478,10 +478,10 @@ var quizBank = {
       {
         "q": "Heparin is a powerful physiological anticoagulant produced by mast cells; its anticoagulant action is mediated by activating:",
         "o": [
-          "Thrombin directly",
+          "Active thrombin directly",
           "Antithrombin III (AT-III)",
-          "Fibrinogen",
-          "Factor VIII"
+          "Protein C zymogen factor",
+          "Fibrin stabilizing factor"
         ],
         "a": 1,
         "e": "Heparin binds to and induces an allosteric conformational change in Antithrombin III, increasing its rate of inhibiting thrombin and Factor Xa by over 1,000-fold.",
@@ -492,10 +492,10 @@ var quizBank = {
       {
         "q": "The enzyme lysozyme found in tears, egg white, and milk exerts antibacterial action by hydrolyzing:",
         "o": [
-          "Peptide cross-links between D-alanine residues",
+          "Pentaglycine peptide cross-bridges connecting adjacent D-alanine peptide side chains",
           "beta-1,4 glycosidic bonds between NAM and NAG in bacterial peptidoglycan",
-          "alpha-1,4 bonds of teichoic acids",
-          "Phosphodiester bonds of bacterial mRNA"
+          "Glycerol phosphate phosphodiester bonds present in Gram-positive cell wall teichoic acids",
+          "Lipid A beta-1,6-glucosamine disaccharide backbones in Gram-negative lipopolysaccharides"
         ],
         "a": 1,
         "e": "Lysozyme specifically cleaves the beta-1,4 glycosidic linkage between N-acetylmuramic acid (NAM) and N-acetylglucosamine (NAG), lysing Gram-positive bacterial cell walls.",
@@ -506,10 +506,10 @@ var quizBank = {
       {
         "q": "Mutarotation of D-glucose in aqueous solution is caused by:",
         "o": [
-          "Hydrolysis of the pyranose ring into two trioses",
-          "Epimerization into D-mannose at neutral pH",
+          "Non-enzymatic cleavage of the pyranose ring into two phosphorylated triose intermediates",
+          "Base-catalyzed epimerization at carbon-2 producing an equilibrium mixture with D-mannose",
           "Spontaneous interconversion between alpha and beta anomers via the open-chain aldehyde form",
-          "Oxidation of C-6 into glucuronic acid"
+          "Progressive spontaneous oxidation of the C-6 hydroxymethyl group to form D-glucuronic acid"
         ],
         "a": 2,
         "e": "Mutarotation is the change in specific optical rotation that accompanies the equilibration between alpha (+112.2 deg) and beta (+18.7 deg) anomers of D-glucose via the transient open-chain intermediate until reaching +52.7 deg.",
@@ -520,10 +520,10 @@ var quizBank = {
       {
         "q": "Triacylglycerols (neutral fats) are chemically defined as:",
         "o": [
-          "Sphingosine linked to two fatty acids",
+          "Sphingosine backbone linked to two acyl groups",
           "Glycerol esters of three fatty acid molecules",
-          "Glycerol phosphate linked to choline",
-          "Steroid esters of long-chain fatty alcohols"
+          "Glycerol phosphate diesters linked to ethanolamine",
+          "Steroid cyclopentanoperhydrophenanthrene esters"
         ],
         "a": 1,
         "e": "Triacylglycerols (TAG) are triesters of the trihydric alcohol glycerol with three fatty acids, serving as the chief energy storage form in animal adipose tissue.",
@@ -562,10 +562,10 @@ var quizBank = {
       {
         "q": "Which phospholipid acts as an essential precursor for intracellular secondary messengers IP3 and DAG upon phospholipase C activation?",
         "o": [
-          "Phosphatidylserine",
+          "Phosphatidylserine amino-phospholipid donor",
           "Phosphatidylinositol 4,5-bisphosphate (PIP2)",
-          "Phosphatidylcholine",
-          "Sphingomyelin"
+          "Phosphatidylcholine zwitterionic surfactant",
+          "Sphingomyelin ceramide-phosphocholine lipid"
         ],
         "a": 1,
         "e": "Receptor-stimulated Phospholipase C cleaves PIP2 into inositol 1,4,5-trisphosphate (IP3, mobilizes Ca2+) and diacylglycerol (DAG, activates Protein Kinase C).",
@@ -576,9 +576,9 @@ var quizBank = {
       {
         "q": "Sphingomyelin differs structurally from glycerophospholipids because its backbone is:",
         "o": [
-          "Glycerol",
-          "Sterol nucleus",
-          "Inositol",
+          "Glycerol-3-phosphate backbone",
+          "Sterol four-ring phenanthrene",
+          "Cyclic inositol hexahydroxy ring",
           "Sphingosine (an amino alcohol)"
         ],
         "a": 3,
@@ -591,9 +591,9 @@ var quizBank = {
         "q": "Which fatty acid is strictly dietary essential for domestic cats (felines) because they lack delta-6 desaturase activity?",
         "o": [
           "Arachidonic acid",
-          "Linoleic acid",
-          "Oleic acid",
-          "Palmitic acid"
+          "Linolenic acid",
+          "Palmitoleic acid",
+          "Eicosapentaenoic"
         ],
         "a": 0,
         "e": "Cats lack sufficient hepatic delta-6 desaturase enzyme activity to convert linoleic acid to arachidonic acid, making dietary arachidonic acid strictly essential in feline nutrition.",
@@ -618,10 +618,10 @@ var quizBank = {
       {
         "q": "Butter fat has a uniquely high Reichert-Meissl (RM) number compared to vegetable oils because it is rich in:",
         "o": [
-          "Polyunsaturated long-chain fatty acids",
-          "Trans-fatty acids",
+          "Polyunsaturated long-chain essential fatty acids containing multiple double bonds",
+          "Trans-fatty acids generated during non-enzymatic industrial catalytic hydrogenation",
           "Steam-volatile, water-soluble short-chain fatty acids (like butyric acid)",
-          "Phospholipids and glycolipids"
+          "High-molecular-weight non-volatile structural wax esters and long-chain sterols"
         ],
         "a": 2,
         "e": "RM number measures steam-volatile, water-soluble fatty acids (chiefly butyric and caproic acids). Butterfat has an RM value of 26-32, whereas vegetable oils have RM < 1.",
@@ -632,9 +632,9 @@ var quizBank = {
       {
         "q": "The Iodine Number of a lipid indicates its degree of:",
         "o": [
-          "Rancidity and free acid content",
-          "Saponification velocity",
-          "Chain length of fatty acids",
+          "Hydrolytic rancidity and free acid value",
+          "Molecular weight and mean saponification",
+          "Peroxide value from auto-oxidation steps",
           "Unsaturation (number of double bonds)"
         ],
         "a": 3,
@@ -647,9 +647,9 @@ var quizBank = {
         "q": "The Acid Number of an oil measures the extent of hydrolytic rancidity by quantifying:",
         "o": [
           "Free fatty acids liberated by lipase or moisture action",
-          "Total ester bonds present in 10 g of oil",
-          "Peroxides formed by auto-oxidation",
-          "Soluble short-chain fatty acids"
+          "Total ester bonds susceptible to ethanolic KOH cleavage",
+          "Lipid hydroperoxides generated during auto-oxidation",
+          "Steam-volatile water-insoluble fatty acid milligrams"
         ],
         "a": 0,
         "e": "Acid number is the mg of KOH required to neutralize free fatty acids in 1 g of fat; an elevated acid number indicates deterioration and hydrolytic rancidity.",
@@ -688,10 +688,10 @@ var quizBank = {
       {
         "q": "The primary physiological precursor for the enzymatic biosynthesis of all series-2 prostaglandins in animals is:",
         "o": [
-          "Oleic acid",
+          "Dihomo-gamma-linolenic acid (20:3, delta-8,11,14)",
           "Arachidonic acid (20:4, delta-5,8,11,14)",
-          "Palmitic acid",
-          "Alpha-linolenic acid"
+          "Eicosapentaenoic acid (20:5, delta-5,8,11,14,17)",
+          "Alpha-linolenic acid (18:3, delta-9,12,15)"
         ],
         "a": 1,
         "e": "Arachidonic acid (eicosatetraenoic acid, 20:4 omega-6) is liberated from membrane phospholipids by Phospholipase A2 and converted by Cyclooxygenase (COX) into PG series 2.",
@@ -702,9 +702,9 @@ var quizBank = {
       {
         "q": "In veterinary reproductive practice, Prostaglandin F2alpha (PGF2alpha) is widely administered for:",
         "o": [
-          "Stimulating continuous lactation in heifers",
-          "Promoting maternal recognition of pregnancy",
-          "Suppressing uterine contractions during dystocia",
+          "Stimulating continuous alveolar milk secretion in dairy heifers postpartum",
+          "Promoting maternal recognition of pregnancy by suppressing endometrial PGF",
+          "Suppressing myometrial contractions during severe obstetrical uterine inertia",
           "Inducing luteolysis (corpus luteum regression) and synchronizing estrus"
         ],
         "a": 3,
@@ -716,10 +716,10 @@ var quizBank = {
       {
         "q": "Non-steroidal anti-inflammatory drugs (NSAIDs) such as flunixin meglumine and meloxicam reduce inflammation by inhibiting:",
         "o": [
-          "Phospholipase A2 directly",
+          "Phospholipase A2 membrane release directly",
           "Cyclooxygenase (COX-1 and COX-2) enzymes",
-          "Lipoxygenase (LOX)",
-          "Thromboxane synthase exclusively"
+          "Lipoxygenase (5-LOX) leukotriene pathway",
+          "Endothelial prostacyclin synthase selectively"
         ],
         "a": 1,
         "e": "NSAIDs selectively or non-selectively inhibit cyclooxygenase enzymes, preventing the conversion of arachidonic acid to pro-inflammatory prostaglandins and thromboxanes.",
@@ -730,9 +730,9 @@ var quizBank = {
       {
         "q": "Thromboxane A2 (TXA2) produced by platelets causes:",
         "o": [
-          "Vasodilation and inhibition of platelet aggregation",
-          "Lysis of fibrin clots",
-          "Bronchodilation and systemic hypotension",
+          "Vasodilation and potent inhibition of platelet plug formation",
+          "Enzymatic degradation of fibrin strands in circulating thrombi",
+          "Systemic peripheral vasodilation and severe bronchial dilation",
           "Vasoconstriction and promotion of platelet aggregation"
         ],
         "a": 3,
@@ -758,9 +758,9 @@ var quizBank = {
       {
         "q": "Dipalmitoylphosphatidylcholine (DPPC) acts as an indispensable pulmonary surfactant; its absence causes:",
         "o": [
-          "Fatty Liver Syndrome",
-          "Bovine Ketosis",
-          "Steatitis (Yellow fat disease)",
+          "Acute Bovine Pulmonary Emphysema and Edema (Fog Fever)",
+          "Severe Nutritional Hepatic Lipidosis and Ketoacidosis",
+          "Steatitis and Generalized Nutritional Myopathy in Calves",
           "Neonatal Respiratory Distress Syndrome (Atelectasis)"
         ],
         "a": 3,
@@ -829,9 +829,9 @@ var quizBank = {
         "q": "The peptide bond linking amino acid residues in polypeptide chains is chemically a/an:",
         "o": [
           "Substituted amide linkage",
-          "Ester bond",
-          "Ether bond",
-          "Anhydride bond"
+          "Aliphatic ester bond",
+          "Phosphodiester link",
+          "Carboxylic anhydride"
         ],
         "a": 0,
         "e": "A peptide bond (-CO-NH-) is a substituted amide linkage formed by condensation between the alpha-carboxyl group of one amino acid and the alpha-amino group of the next.",
@@ -842,10 +842,10 @@ var quizBank = {
       {
         "q": "Due to resonance between the carbonyl oxygen and nitrogen, the peptide bond exhibits:",
         "o": [
-          "Complete free rotation like a single C-C bond",
+          "Complete unrestricted rotational freedom around the carbon-nitrogen covalent axis",
           "Partial (~40%) double-bond character, planarity, and rigid trans configuration",
-          "Triple-bond rigidity with cis geometry",
-          "Ionic character with instantaneous dissociation in water"
+          "Triple-bond character causing an exclusive, sterically crowded cis conformation",
+          "Weak electrostatic attraction resulting in spontaneous rapid aqueous dissociation"
         ],
         "a": 1,
         "e": "Pauling and Corey demonstrated that the C-N peptide bond has ~40% double bond character, is rigid and planar, and almost always adopts the lower-energy trans conformation.",
@@ -856,10 +856,10 @@ var quizBank = {
       {
         "q": "In the classical alpha-helix of protein secondary structure, intra-chain hydrogen bonds form between:",
         "o": [
-          "Side chains of neighboring hydrophobic residues",
           "The carbonyl oxygen of residue n and the amide hydrogen of residue n+2",
+          "The carbonyl oxygen of residue n and the amide hydrogen of residue n+3",
           "The carbonyl oxygen of residue n and the amide hydrogen of residue n+4",
-          "Terminal amino and carboxyl groups only"
+          "The carbonyl oxygen of residue n and the amide hydrogen of residue n+5"
         ],
         "a": 2,
         "e": "In an alpha-helix, every carbonyl oxygen of residue n forms a hydrogen bond with the amide hydrogen of residue n+4, with 3.6 residues per turn and pitch of 0.54 nm.",
@@ -885,9 +885,9 @@ var quizBank = {
         "q": "Which non-standard amino acid is essential in domestic cats to prevent dilated cardiomyopathy and central retinal degeneration?",
         "o": [
           "Taurine (2-aminoethanesulfonic acid)",
-          "Citrulline",
-          "Ornithine",
-          "Homoserine"
+          "Citrulline (carbamoyl-ornithine)",
+          "Ornithine (diaminovaleric acid)",
+          "Homocysteine (mercaptobutanoic)"
         ],
         "a": 0,
         "e": "Cats have very low cysteine sulfinic acid decarboxylase activity and conjugate bile acids exclusively with taurine; deficiency causes retinal degeneration and cardiomyopathy.",
@@ -898,10 +898,10 @@ var quizBank = {
       {
         "q": "Proteins that contain non-protein prosthetic groups firmly attached to the polypeptide chain are called:",
         "o": [
-          "Simple proteins",
+          "Unmodified simple proteins",
           "Conjugated proteins",
-          "Derived proteins",
-          "Fibrous proteins"
+          "Derived cleavage proteins",
+          "Insoluble fibrous proteins"
         ],
         "a": 1,
         "e": "Conjugated proteins consist of an apoprotein linked to a non-amino acid prosthetic group (e.g., hemoglobin contains heme, mucoproteins contain carbohydrate).",
@@ -913,9 +913,9 @@ var quizBank = {
         "q": "The primary structure of a protein refers specifically to its:",
         "o": [
           "Linear sequence of amino acids joined by covalent peptide bonds",
-          "Association of multiple polypeptide subunits",
-          "Three-dimensional globular folding pattern",
-          "Local periodic alpha-helical arrangements"
+          "Spatial quaternary association of multiple folded polypeptide subunits",
+          "Overall three-dimensional thermodynamically stable globular conformation",
+          "Local periodic spatial arrangements like alpha-helices and beta-sheets"
         ],
         "a": 0,
         "e": "Primary structure is the unique linear sequence of amino acids in a polypeptide chain encoded genetically by mRNA and maintained by covalent peptide bonds.",
@@ -926,10 +926,10 @@ var quizBank = {
       {
         "q": "Which chemical agent denatures proteins specifically by disrupting non-covalent hydrophobic and hydrogen bonds without breaking peptide bonds?",
         "o": [
-          "Cyanogen bromide",
+          "Cyanogen bromide (CNBr)",
           "8 M Urea or Guanidine HCl",
-          "Trypsin",
-          "Pepsin"
+          "Pancreatic trypsin enzyme",
+          "Gastric pepsin hydrolase"
         ],
         "a": 1,
         "e": "Urea and guanidinium chloride are chaotropic agents that disrupt hydrogen bonds and the hydrophobic core, unfolding native protein conformations without cleaving peptide backbones.",
@@ -955,9 +955,9 @@ var quizBank = {
         "q": "Hemoglobin is an oligomeric protein exhibiting quaternary structure consisting of:",
         "o": [
           "Four polypeptide chains (two alpha and two beta) each with a heme group",
-          "Two identical subunits",
-          "A single polypeptide chain with four heme rings",
-          "Three alpha chains wound as a triple helix"
+          "Two identical alpha-beta polypeptide dimers lacking any prosthetic heme rings",
+          "A single heavy polypeptide chain folded around four central iron-porphyrin cores",
+          "Three identical polypeptide chains intertwined in an elongated fibrous triple helix"
         ],
         "a": 0,
         "e": "Adult hemoglobin (HbA) is a tetramer of two alpha and two beta globin subunits (alpha2beta2), with each subunit binding one oxygen-carrying iron-protoporphyrin IX (heme).",
@@ -982,10 +982,10 @@ var quizBank = {
       {
         "q": "Collagen, the most abundant structural protein in the animal body, is characterized by a high content of:",
         "o": [
-          "Tryptophan and cysteine",
-          "Histidine and methionine",
+          "Tryptophan, cysteine, and methionine",
+          "Histidine, lysine, and hydroxylysine",
           "Glycine, proline, and 4-hydroxyproline",
-          "Glutamate and aspartate"
+          "Glutamate, aspartate, and asparagine"
         ],
         "a": 2,
         "e": "Collagen has a repeating Gly-X-Y triplet (where X is often proline and Y is hydroxyproline), allowing tight winding of three polypeptide chains into a tropocollagen triple helix.",
@@ -1038,9 +1038,9 @@ var quizBank = {
       {
         "q": "Thymine differs chemically from Uracil by possessing:",
         "o": [
-          "An additional amino group at C-4",
-          "A purine ring backbone",
-          "An extra hydroxyl group at C-2",
+          "An additional amino group at the C-4 position",
+          "A fused imidazole ring forming a purine core",
+          "An extra keto oxygen atom placed at carbon-6",
           "A methyl group at carbon-5 (5-methyluracil)"
         ],
         "a": 3,
@@ -1052,10 +1052,10 @@ var quizBank = {
       {
         "q": "A nucleoside consists of a nitrogenous base attached to a pentose sugar via which covalent bond?",
         "o": [
-          "Phosphodiester linkage",
-          "alpha-peptide bond",
+          "Phosphodiester backbone",
+          "Alpha-helical peptide",
           "beta-N-glycosidic bond",
-          "Thioester bond"
+          "High-energy thioester"
         ],
         "a": 2,
         "e": "In nucleosides, the base is linked via a beta-N-glycosidic bond from N-9 of purines or N-1 of pyrimidines to C-1' of the pentose sugar.",
@@ -1067,9 +1067,9 @@ var quizBank = {
         "q": "A nucleotide is chemically distinct from a nucleoside because it contains:",
         "o": [
           "One or more esterified phosphate groups attached to the pentose sugar",
-          "A second nitrogenous base",
-          "An additional ribose unit",
-          "An amino acid side chain"
+          "A second nitrogenous purine or pyrimidine base linked to the C-5 position",
+          "An extra D-ribose unit attached via a beta-N-glycosidic bond at nitrogen-9",
+          "A sulfur-containing thiol side chain coordinated to the purine ring core"
         ],
         "a": 0,
         "e": "A nucleotide is a phosphorylated nucleoside (nucleoside mono-, di-, or triphosphate), with phosphate esterified typically at the 5'-hydroxyl of the pentose.",
@@ -1080,10 +1080,10 @@ var quizBank = {
       {
         "q": "Which cyclic nucleotide acts as an intracellular second messenger mediating the physiological actions of glucagon and epinephrine?",
         "o": [
-          "cGMP",
+          "cGMP (cyclic 3',5'-guanosine monophosphate)",
           "cAMP (cyclic 3',5'-adenosine monophosphate)",
-          "cUMP",
-          "cIMP"
+          "cIMP (cyclic 3',5'-inosine monophosphate)",
+          "cUMP (cyclic 3',5'-uridine monophosphate)"
         ],
         "a": 1,
         "e": "cAMP is synthesized from ATP by adenylyl cyclase upon beta-adrenergic or glucagon stimulation and activates Protein Kinase A (PKA).",
@@ -1108,10 +1108,10 @@ var quizBank = {
       {
         "q": "According to Chargaff's rules of base composition for double-stranded DNA:",
         "o": [
-          "A = C and G = T",
-          "A + T = G + C always",
+          "A = C and G = T; therefore A + G = C + T",
+          "A + T = G + C in all phylogenetic taxa",
           "A = T and G = C; therefore A + G = T + C",
-          "Purines / Pyrimidines = 0.5"
+          "Purines / Pyrimidines = 0.5 in duplex DNA"
         ],
         "a": 2,
         "e": "Erwin Chargaff demonstrated that in dsDNA, adenine equals thymine (A=T) and guanine equals cytosine (G=C), meaning total purines equal total pyrimidines (A+G = T+C).",
@@ -1151,9 +1151,9 @@ var quizBank = {
         "q": "Thermal denaturation of native double-stranded DNA causes a marked increase in ultraviolet absorbance at 260 nm, a phenomenon known as:",
         "o": [
           "Hyperchromic effect (hyperchromicity)",
-          "Hypochromism",
-          "Optical rotary dispersion",
-          "Fluorescence quenching"
+          "Hypochromic shift (hypochromicity)",
+          "Optical rotatory dispersion (ORD)",
+          "Fluorescence resonance energy (FRET)"
         ],
         "a": 0,
         "e": "In native dsDNA, tight base-stacking suppresses UV absorbance; upon denaturation, unstacked bases absorb UV light more freely, increasing absorbance at 260 nm by ~30-40%.",
@@ -1164,10 +1164,10 @@ var quizBank = {
       {
         "q": "The two polynucleotide strands in Watson-Crick B-DNA are described as:",
         "o": [
-          "Parallel with identical 5' to 3' polarity",
-          "Perpendicular and branched",
+          "Parallel with identical 5' to 3' linear polarity directions",
+          "Perpendicular with branched phosphodiester interstrand bridges",
           "Antiparallel with 5' to 3' and 3' to 5' opposing polarities",
-          "Covalently linked through end-to-end ribose bonds"
+          "Covalently cross-linked through end-to-end ribosyl pyrophosphates"
         ],
         "a": 2,
         "e": "The two complementary strands run in opposite directions: one strand runs 5' -> 3' while the other runs 3' -> 5' (antiparallel orientation).",
@@ -1206,10 +1206,10 @@ var quizBank = {
       {
         "q": "Eukaryotic mRNA is structurally characterized at its 5'-end by:",
         "o": [
-          "A poly-A tail of 200 adenines",
+          "A polyadenylate tail of 200–250 adenines",
           "A 7-methylguanosine (m7G) triphosphate cap",
-          "A non-hydrolyzable CCA trinucleotide",
-          "A stem-loop iron-response element"
+          "A non-hydrolyzable trinucleotide CCA arm",
+          "An iron-responsive hairpin stem-loop motif"
         ],
         "a": 1,
         "e": "Eukaryotic mRNA possesses a 5' cap consisting of 7-methylguanosine linked via a 5'-to-5' triphosphate bridge, protecting mRNA from 5'-exonucleases and aiding ribosome binding.",
@@ -1221,9 +1221,9 @@ var quizBank = {
         "q": "Which class of cellular RNA constitutes approximately 80% of total cellular RNA in animal cells?",
         "o": [
           "rRNA (ribosomal RNA)",
-          "tRNA",
-          "mRNA",
-          "miRNA"
+          "tRNA (transfer RNA)",
+          "mRNA (messenger RNA)",
+          "snRNA (small nuclear)"
         ],
         "a": 0,
         "e": "Ribosomal RNA (rRNA) is the most abundant RNA species in living cells (~80% of total RNA), forming the structural and catalytic core of ribosomes.",
@@ -1262,9 +1262,9 @@ var quizBank = {
       {
         "q": "Synthetic nucleotide analogues such as 5-fluorouracil (5-FU) act as chemotherapeutic drugs by inhibiting:",
         "o": [
-          "DNA ligase directly",
-          "Ribosomal peptidyl transferase",
-          "Adenylate kinase",
+          "DNA ligase IV, preventing phosphodiester ligation",
+          "Ribosomal peptidyl transferase, blocking elongation",
+          "Adenylate kinase, preventing ATP phosphorylation",
           "Thymidylate synthase, blocking dTMP synthesis"
         ],
         "a": 3,
@@ -1290,10 +1290,10 @@ var quizBank = {
       {
         "q": "Friedrich Wöhler's synthesis of urea from ammonium cyanate in 1828 was a landmark in biochemistry because it:",
         "o": [
-          "Identified urea as the main end product of protein metabolism in mammals",
+          "Identified urea as the primary end product of hepatic deamination and amino acid catabolism",
           "Showed that an organic compound could be made from inorganic precursors, disproving vitalism",
-          "Established the sequence of reactions of the urea cycle",
-          "Demonstrated the first cell-free enzyme reaction"
+          "Established the complete sequence of enzymatic reactions comprising the hepatic urea cycle",
+          "Demonstrated that cell-free yeast extracts were capable of fermenting glucose into ethanol"
         ],
         "a": 1,
         "e": "Before 1828, organic compounds were believed to require a 'vital force' of living organisms. Wöhler's laboratory synthesis of urea disproved this vitalism theory and laid the foundation of organic chemistry and biochemistry.",
@@ -1318,10 +1318,10 @@ var quizBank = {
       {
         "q": "The Na+/Ca2+ exchanger of cardiac muscle cells, which uses the sodium gradient to expel calcium, is an example of:",
         "o": [
-          "Primary active transport",
+          "Primary active transport (ATP-driven)",
           "Secondary active transport (antiport)",
-          "Facilitated diffusion (uniport)",
-          "Receptor-mediated endocytosis"
+          "Facilitated diffusion (carrier uniport)",
+          "Electrogenic receptor-mediated symport"
         ],
         "a": 1,
         "e": "The exchanger uses no ATP directly. It uses the Na+ gradient created by the Na+/K+-ATPase to move Ca2+ out of the cell against its gradient, in the opposite direction to Na+. This is secondary active transport by antiport.",
@@ -1332,10 +1332,10 @@ var quizBank = {
       {
         "q": "Cells take up cholesterol-rich LDL particles from blood by:",
         "o": [
-          "Simple diffusion across the lipid bilayer",
-          "Pinocytosis without any specific receptor",
+          "Simple passive diffusion directly across the lipid bilayer",
+          "Non-specific fluid-phase macropinocytosis without receptors",
           "Receptor-mediated endocytosis through clathrin-coated pits",
-          "Exocytosis"
+          "Apolipoprotein-triggered caveolar exocytosis into vesicles"
         ],
         "a": 2,
         "e": "LDL binds specific LDL (apo B-100) receptors that cluster in clathrin-coated pits. These pits bud inwards to form coated vesicles. This is receptor-mediated endocytosis, described by Brown and Goldstein.",
@@ -1361,9 +1361,9 @@ var quizBank = {
         "q": "A Donnan membrane potential develops across a semipermeable membrane because at equilibrium:",
         "o": [
           "The diffusible ions are unequally distributed on the two sides",
-          "The non-diffusible ions slowly leak across the membrane",
-          "The membrane actively pumps ions using ATP",
-          "All ion concentrations become equal on both sides"
+          "The non-diffusible polyanionic proteins slowly penetrate the membrane",
+          "The semipermeable membrane actively pumps inorganic cations using ATP",
+          "All diffusible cation and anion concentrations become strictly equal"
         ],
         "a": 0,
         "e": "The non-diffusible ion causes diffusible ions to be distributed unequally. This uneven distribution of charge creates a potential difference (the Donnan potential), with no pumping involved.",
@@ -1430,9 +1430,9 @@ var quizBank = {
       {
         "q": "In the plasma form of the Henderson-Hasselbalch equation, pH = 6.1 + log([HCO3-] / (0.03 x pCO2)), the factor 0.03 represents:",
         "o": [
-          "The pKa of carbonic acid",
-          "The normal bicarbonate to carbonic acid ratio",
-          "The ion product of water",
+          "The negative logarithm of the apparent dissociation constant (pKa)",
+          "The physiological normal ratio of bicarbonate to carbonic acid gas",
+          "The ion product of water autoionization at mammalian body temp",
           "The solubility coefficient of CO2 in plasma (mmol/L per mmHg)"
         ],
         "a": 3,
@@ -1458,9 +1458,9 @@ var quizBank = {
       {
         "q": "Glucose (an aldose) and fructose (a ketose) have the same molecular formula C6H12O6. They are:",
         "o": [
-          "Epimers",
-          "Anomers",
-          "Enantiomers",
+          "Diastereomeric C-2 and C-4 epimers",
+          "Cyclic hemiacetal-hemiketal anomers",
+          "Non-superimposable optical enantiomers",
           "Functional group (aldose-ketose) isomers"
         ],
         "a": 3,
@@ -1486,9 +1486,9 @@ var quizBank = {
       {
         "q": "Lactose intolerance in adult animals is due to a deficiency of the intestinal enzyme:",
         "o": [
-          "Sucrase",
-          "Maltase",
-          "Alpha-amylase",
+          "Alpha-glucosidase (maltase)",
+          "Sucrose alpha-glucohydrolase",
+          "Pancreatic alpha-amylase enzyme",
           "Beta-galactosidase (lactase)"
         ],
         "a": 3,
@@ -1501,9 +1501,9 @@ var quizBank = {
         "q": "Dextrins are best described as:",
         "o": [
           "Intermediate products formed by partial hydrolysis of starch",
-          "Bacterial glucose polymers used as plasma expanders",
-          "Polymers of fructose",
-          "Structural polymers of N-acetylglucosamine"
+          "High-molecular-weight bacterial glucose polymers used as expanders",
+          "Unbranched fructose storage polymers extracted from inulin tubers",
+          "Cross-linked structural polymers consisting of N-acetylglucosamine"
         ],
         "a": 0,
         "e": "Dextrins are breakdown products of starch (amylodextrin, erythrodextrin, achrodextrin) formed by acid or amylase. Do not confuse them with dextrans, which are bacterial glucose polymers used as plasma volume expanders.",
@@ -1544,8 +1544,8 @@ var quizBank = {
         "o": [
           "Gram-positive bacteria",
           "Gram-negative bacteria",
-          "Fungi",
-          "Plant cells"
+          "Acid-fast mycobacteria",
+          "Filamentous fungi molds"
         ],
         "a": 0,
         "e": "Teichoic acids (polymers of glycerol phosphate or ribitol phosphate) are embedded in the thick peptidoglycan wall of Gram-positive bacteria. Gram-negative bacteria have an outer membrane containing lipopolysaccharide instead.",
@@ -1570,9 +1570,9 @@ var quizBank = {
       {
         "q": "Gangliosides differ from cerebrosides because gangliosides contain:",
         "o": [
-          "A phosphate group",
-          "A glycerol backbone",
-          "No fatty acid",
+          "A phosphodiester-linked choline headgroup",
+          "A glycerol-3-phosphate backbone structure",
+          "Only branched-chain saturated fatty acids",
           "One or more sialic acid (NANA) residues"
         ],
         "a": 3,
@@ -1598,10 +1598,10 @@ var quizBank = {
       {
         "q": "VLDL, synthesised in the liver, mainly transports:",
         "o": [
-          "Dietary (exogenous) triacylglycerol from the intestine",
+          "Dietary exogenous triacylglycerols from gut enterocytes to muscle",
           "Endogenous triacylglycerol from the liver to peripheral tissues",
-          "Cholesterol from peripheral tissues back to the liver",
-          "Free fatty acids bound to albumin"
+          "Cholesterol esters from peripheral capillary beds back to the liver",
+          "Unesterified free fatty acids non-covalently bound to serum albumin"
         ],
         "a": 1,
         "e": "VLDL carries triacylglycerol made in the liver to muscle and adipose tissue. Chylomicrons carry dietary fat, HDL carries cholesterol back to the liver, and albumin carries free fatty acids.",
@@ -1626,9 +1626,9 @@ var quizBank = {
       {
         "q": "Aspirin inhibits prostaglandin synthesis by:",
         "o": [
-          "Reversibly inhibiting phospholipase A2",
-          "Blocking prostaglandin receptors",
-          "Inhibiting 5-lipoxygenase",
+          "Reversibly chelating calcium in phospholipase A2",
+          "Allosterically blocking membrane prostanoid receptors",
+          "Directly inhibiting 5-lipoxygenase enzyme catalysis",
           "Irreversibly acetylating cyclooxygenase (COX)"
         ],
         "a": 3,
@@ -1640,10 +1640,10 @@ var quizBank = {
       {
         "q": "Glucocorticoids reduce the formation of both prostaglandins and leukotrienes mainly by inhibiting:",
         "o": [
-          "Cyclooxygenase-1 only",
+          "Cyclooxygenase-1 selectively via allosteric binding",
           "Phospholipase A2 (via lipocortin / annexin-1)",
-          "Thromboxane synthase",
-          "Prostacyclin synthase"
+          "Thromboxane synthase in circulating blood platelets",
+          "Prostacyclin synthase in vascular endothelial cells"
         ],
         "a": 1,
         "e": "Glucocorticoids induce lipocortin (annexin-1), which inhibits phospholipase A2. This limits release of arachidonic acid, the common precursor of both the COX and lipoxygenase pathways.",
@@ -1725,9 +1725,9 @@ var quizBank = {
         "q": "The optical activity of all standard amino acids except glycine is due to:",
         "o": [
           "An asymmetric (chiral) alpha-carbon",
-          "An aromatic ring",
-          "The peptide bond",
-          "A free amino group"
+          "A planar resonance-stabilized peptide bond",
+          "A conjugated aromatic ring system in side chain",
+          "An ionizable free alpha-amino zwitterion group"
         ],
         "a": 0,
         "e": "The alpha-carbon of these amino acids carries four different groups, making it chiral. The molecules can therefore rotate plane-polarised light. Glycine's alpha-carbon carries two hydrogens, so it is optically inactive.",
@@ -1740,8 +1740,8 @@ var quizBank = {
         "o": [
           "Adenine",
           "Adenosine",
-          "AMP",
-          "ATP"
+          "Guanylate",
+          "Cytidylate"
         ],
         "a": 1,
         "e": "A nucleoside is a base plus a sugar (adenine + ribose = adenosine). Adenine is the free base, while AMP and ATP are nucleotides because they carry phosphate.",
@@ -1754,7 +1754,7 @@ var quizBank = {
         "o": [
           "Uracil",
           "Thymine",
-          "Cytosine",
+          "Guanine",
           "Xanthine"
         ],
         "a": 3,
@@ -1767,9 +1767,9 @@ var quizBank = {
         "q": "Watson and Crick's 1953 double-helix model of DNA relied heavily on X-ray diffraction data obtained by:",
         "o": [
           "Rosalind Franklin and Maurice Wilkins",
-          "Erwin Chargaff",
-          "Linus Pauling",
-          "Meselson and Stahl"
+          "Erwin Chargaff and Seymour Benzer",
+          "Linus Pauling and Robert Corey",
+          "Matthew Meselson and Franklin Stahl"
         ],
         "a": 0,
         "e": "Franklin's X-ray diffraction images (notably 'Photo 51') and Wilkins' work revealed the helical structure. Chargaff's base-ratio rules supplied the pairing clue.",
@@ -3171,9 +3171,9 @@ var quizBank = {
       {
         "q": "An enzyme unit (International Unit, IU) is defined as the amount of enzyme that catalyzes the transformation of:",
         "o": [
-          "1 mole of substrate per second",
-          "1 gram of substrate per second",
-          "1 milligram of substrate per hour",
+          "1 mole of substrate converted per second under optimal conditions",
+          "1 millimole of substrate transformed per minute at standard temperature",
+          "1 milligram of total protein converted per hour in continuous assay",
           "1 micromole of substrate per minute under standard conditions"
         ],
         "a": 3,
@@ -3186,9 +3186,9 @@ var quizBank = {
         "q": "The SI unit of enzyme catalytic activity, the Katal (kat), corresponds to:",
         "o": [
           "1 mole of substrate converted per second",
-          "1 micromole per minute",
-          "1 millimole per hour",
-          "1 nanomole per second"
+          "1 micromole of substrate per minute",
+          "1 millimole of substrate per hour",
+          "1 nanomole of substrate per second"
         ],
         "a": 0,
         "e": "1 Katal = 1 mol of substrate transformed per second (1 kat = 6 x 10^7 IU).",
@@ -3200,9 +3200,9 @@ var quizBank = {
         "q": "Specific activity of an enzyme preparation is expressed as:",
         "o": [
           "Enzyme units (IU) per milligram of total protein",
-          "Total substrate consumed per liter",
-          "Reaction velocity multiplied by time",
-          "Molecular weight divided by turnover number"
+          "Total micromoles of substrate consumed per liter",
+          "Maximum reaction velocity multiplied by time",
+          "Turnover number divided by subunit molecular weight"
         ],
         "a": 0,
         "e": "Specific activity = Enzyme Units / mg protein; it is the definitive measure of enzyme purity, increasing steadily during progressive purification steps.",
@@ -3227,10 +3227,10 @@ var quizBank = {
       {
         "q": "Lactate dehydrogenase (LDH) exists as five distinct tetrameric isoenzymes (LDH1 to LDH5) composed of combinations of:",
         "o": [
-          "Three chains: A, B, and C",
+          "Three distinct chains: A (acidic), B (basic), and C",
           "Two polypeptide chains: H (heart) and M (muscle)",
-          "Four distinct catalytic subunits",
-          "Two non-protein coenzyme rings"
+          "Four independent homodimeric catalytic subunits",
+          "Two non-protein coenzymes: NAD+ and FAD prosthetic"
         ],
         "a": 1,
         "e": "LDH is a tetramer of H and M subunits: LDH-1 (H4, cardiac muscle), LDH-2 (H3M1), LDH-3 (H2M2), LDH-4 (HM3), and LDH-5 (M4, skeletal muscle and liver).",
@@ -3312,9 +3312,9 @@ var quizBank = {
         "q": "The mobile lipid-soluble electron carrier in the inner mitochondrial membrane that shuttles electrons from Complexes I and II to Complex III is:",
         "o": [
           "Ubiquinone (Coenzyme Q)",
-          "Cytochrome c",
-          "Plastoquinone",
-          "Ferredoxin"
+          "Cytochrome c hemeprotein",
+          "Plastoquinone electron carrier",
+          "Iron-sulfur protein cluster"
         ],
         "a": 0,
         "e": "Ubiquinone (Coenzyme Q10) has a long isoprenoid hydrophobic tail that dissolves in the lipid bilayer, allowing it to accept electrons and protons to form ubiquinol (QH2).",
@@ -3326,9 +3326,9 @@ var quizBank = {
         "q": "Cytochrome c is a water-soluble peripheral hemeprotein located on the:",
         "o": [
           "Outer surface of the inner mitochondrial membrane facing the intermembrane space",
-          "Matrix side of the inner mitochondrial membrane",
-          "Outer mitochondrial membrane facing the cytosol",
-          "Inner surface of the cristae lumen"
+          "Matrix-facing surface of the inner mitochondrial membrane adjacent to Complex II",
+          "Outer mitochondrial membrane surface directly exposed to the cytosolic compartment",
+          "Intracristal lumen anchored firmly to the hydrophilic head of ATP synthase rotor"
         ],
         "a": 0,
         "e": "Cytochrome c is a peripheral membrane protein loosely attached to the outer surface of the inner mitochondrial membrane, shuttling single electrons from Complex III to Complex IV.",
@@ -3340,9 +3340,9 @@ var quizBank = {
         "q": "Complex IV (Cytochrome c oxidase) contains two heme groups (a and a3) and two copper centers (CuA and CuB), and catalyzes the reduction of:",
         "o": [
           "Molecular O2 to two molecules of H2O",
-          "Ubiquinone to ubiquinol",
-          "NAD+ to NADH",
-          "Pyruvate to lactate"
+          "Ubiquinone to reduced ubiquinol",
+          "Oxidized NAD+ to reduced NADH",
+          "Pyruvate to L-lactate in cytosol"
         ],
         "a": 0,
         "e": "Complex IV transfers four electrons from four reduced cytochrome c molecules to molecular oxygen (O2), reducing it completely to two H2O molecules while pumping 2 protons.",
@@ -3381,9 +3381,9 @@ var quizBank = {
       {
         "q": "Chemical uncouplers of oxidative phosphorylation (such as 2,4-dinitrophenol, DNP) act by:",
         "o": [
-          "Inhibiting electron transfer through Complex IV",
-          "Blocking oxygen delivery by hemoglobin",
-          "Binding irreversibly to the active site of ATP synthase",
+          "Competitively inhibiting the adenine nucleotide translocase to prevent ADP import into the mitochondrial matrix",
+          "Binding specifically to the c-ring of the F0 rotor to mechanically block rotation without dissipating the pH gradient",
+          "Directly transferring electrons from reduced ubiquinol to molecular oxygen, completely bypassing Complexes III and IV",
           "Dissipating the proton gradient across the inner mitochondrial membrane as heat without halting electron transport"
         ],
         "a": 3,
@@ -3395,10 +3395,10 @@ var quizBank = {
       {
         "q": "Thermogenin (Uncoupling Protein-1, UCP-1) is a physiological uncoupler found abundantly in brown adipose tissue that functions to:",
         "o": [
-          "Synthesize glycogen during torpor",
+          "Accelerate rapid hepatic gluconeogenesis and glycogenolysis to supply circulating glucose during severe hypothermia",
           "Generate non-shivering thermogenesis to protect newborn calves, lambs, and piglets from hypothermia",
-          "Increase ATP storage in muscle",
-          "Inhibit fatty acid oxidation during cold stress"
+          "Maximize mitochondrial ATP production per mole of consumed oxygen to support violent skeletal shivering contractions",
+          "Inhibit carnitine palmitoyltransferase-1 to prevent excessive beta-oxidation of fatty acids during cold weather shock"
         ],
         "a": 1,
         "e": "UCP-1 uncouples mitochondrial respiration in brown fat, converting proton gradient energy directly into heat (non-shivering thermogenesis), critical for neonatal animal survival.",
@@ -3409,10 +3409,10 @@ var quizBank = {
       {
         "q": "Oligomycin inhibits oxidative phosphorylation by:",
         "o": [
-          "Uncoupling proton transport from ATP synthesis",
+          "Uncoupling the proton motive force from ATP synthesis, dissipating energy as radiant thermal heat",
           "Binding to the F0 proton channel of ATP synthase, blocking H+ re-entry into the matrix",
-          "Inhibiting cytochrome c oxidase",
-          "Oxidizing reduced ubiquinone"
+          "Irreversibly coordinating with the binuclear copper center of cytochrome c oxidase in Complex IV",
+          "Inactivating adenine nucleotide translocase, trapping ADP and ATP in their respective compartments"
         ],
         "a": 1,
         "e": "Oligomycin binds directly to the F0 subunit of mitochondrial ATP synthase, blocking proton translocation back into the matrix and halting ATP generation.",
@@ -3437,10 +3437,10 @@ var quizBank = {
       {
         "q": "Atractyloside is a plant glycoside that inhibits cellular respiration by blocking:",
         "o": [
-          "Complex I",
-          "Cytochrome c",
+          "NADH:ubiquinone oxidoreductase (Complex I core)",
+          "Cytochrome c peripheral electron carrier protein",
           "Adenine Nucleotide Translocase (ADP/ATP translocase)",
-          "ATP synthase F1 head"
+          "Mitochondrial F1 catalytic head of ATP synthase"
         ],
         "a": 2,
         "e": "Atractyloside binds to the outer conformation of the adenine nucleotide translocase in the inner mitochondrial membrane, preventing cytosolic ADP entry and mitochondrial ATP exit.",
@@ -3452,9 +3452,9 @@ var quizBank = {
         "q": "In the respiratory chain, the direction of spontaneous electron flow between redox pairs is determined by:",
         "o": [
           "Standard reduction potential (from more negative E0' to more positive E0')",
-          "Molecular weight of electron carriers",
-          "Abundance of ATP in the matrix",
-          "Membrane cholesterol concentration"
+          "Molecular mass of electron carriers (flowing strictly from lighter to heavier proteins)",
+          "Intramitochondrial ATP concentration (flowing toward areas of lower phosphate potential)",
+          "Phospholipid membrane fluidity gradient across inner mitochondrial membrane bilayers"
         ],
         "a": 0,
         "e": "Electrons flow spontaneously down the thermodynamic gradient from redox pairs with standard reduction potentials that are electronegative (NADH, E0' = -0.32 V) toward electropositive acceptors (O2/H2O, E0' = +0.82 V).",
@@ -3465,10 +3465,10 @@ var quizBank = {
       {
         "q": "Antimycin A blocks mitochondrial electron transport by specifically inhibiting:",
         "o": [
-          "Complex I",
-          "Complex II",
+          "Complex I (NADH dehydrogenase)",
+          "Complex II (Succinate dehydrogenase)",
           "Complex III (Cytochrome bc1 complex)",
-          "Complex IV"
+          "Complex IV (Cytochrome c oxidase)"
         ],
         "a": 2,
         "e": "Antimycin A binds to the Qi site of Complex III (cytochrome bc1), preventing electron transfer from cytochrome b to ubiquinone in the Q-cycle.",
@@ -3479,10 +3479,10 @@ var quizBank = {
       {
         "q": "The committed and primary rate-limiting regulatory enzyme of the glycolytic pathway is:",
         "o": [
-          "Hexokinase",
-          "Aldolase",
+          "Hexokinase IV (Glucokinase)",
+          "Fructose-1,6-bisphosphate aldolase",
           "Phosphofructokinase-1 (PFK-1)",
-          "Pyruvate kinase"
+          "Pyruvate kinase M1/M2 isozyme"
         ],
         "a": 2,
         "e": "PFK-1 catalyzes the irreversible phosphorylation of fructose-6-phosphate to fructose-1,6-bisphosphate using ATP; it is allosterically activated by AMP and fructose-2,6-bisphosphate.",
@@ -3507,10 +3507,10 @@ var quizBank = {
       {
         "q": "Sodium fluoride is added to blood samples collected for clinical plasma glucose estimation because it specifically inhibits:",
         "o": [
-          "Hexokinase",
+          "Hexokinase (by binding allosterically to glucose-binding pockets)",
           "Enolase (by removing magnesium as magnesium fluorophosphate)",
-          "Glucokinase",
-          "Lactate dehydrogenase"
+          "Phosphofructokinase-1 (by permanently chelating catalytic ATP)",
+          "Lactate dehydrogenase (by competing with NAD+ cofactor binding)"
         ],
         "a": 1,
         "e": "Fluoride complexes with magnesium and phosphate to inhibit enolase, stopping red blood cell in vitro glycolysis and preventing false drop in blood glucose readings.",
@@ -3535,10 +3535,10 @@ var quizBank = {
       {
         "q": "The multi-enzyme Pyruvate Dehydrogenase (PDH) Complex requires how many distinct coenzymes derived from B-vitamins and metabolic intermediates?",
         "o": [
-          "Two (NAD+ and FAD)",
-          "Three (TPP, Lipoate, CoA)",
+          "Two (NAD+ and FAD redox coenzymes)",
+          "Three (TPP, Lipoate, and CoASH)",
           "Five (TPP, Lipoate, CoASH, FAD, and NAD+)",
-          "Six (including Biotin)"
+          "Six (including Biotin and Pyridoxal)"
         ],
         "a": 2,
         "e": "PDH complex consists of E1, E2, and E3 and requires 5 coenzymes: Thiamine pyrophosphate (TPP, Vit B1), Lipoamide, Coenzyme A (pantothenate), FAD (Vit B2), and NAD+ (niacin).",
@@ -3564,9 +3564,9 @@ var quizBank = {
         "q": "The only substrate-level phosphorylation step in the Citric Acid (Krebs) Cycle is catalyzed by:",
         "o": [
           "Succinyl-CoA synthetase (succinate thiokinase)",
-          "Isocitrate dehydrogenase",
-          "Citrate synthase",
-          "Malate dehydrogenase"
+          "Isocitrate dehydrogenase (NADH-generating)",
+          "Citrate synthase (condensing oxaloacetate)",
+          "Alpha-ketoglutarate dehydrogenase complex"
         ],
         "a": 0,
         "e": "Succinyl-CoA synthetase cleaves the high-energy thioester bond of succinyl-CoA to yield succinate and phosphorylates GDP (or ADP) to GTP (or ATP).",
@@ -3577,10 +3577,10 @@ var quizBank = {
       {
         "q": "The Krebs cycle is termed 'amphibolic' because it serves both:",
         "o": [
-          "Intracellular and extracellular buffering roles",
-          "Aerobic and anaerobic energy generation equally",
+          "Intracellular cytosolic glycolysis and extracellular lactic acid buffer operations",
+          "Aerobic mitochondrial respiration and anaerobic fermentation of glucose equally",
           "Oxidative catabolic degradation and biosynthetic anabolic precursor generation",
-          "Proton pumping and ATP hydrolysis"
+          "Proton motive force generation and reverse ATP synthase hydrolysis reactions"
         ],
         "a": 2,
         "e": "Krebs cycle catabolizes acetyl-CoA to CO2 and energy, while supplying carbon skeletons for anabolism (alpha-ketoglutarate for glutamate, oxaloacetate for aspartate and gluconeogenesis, succinyl-CoA for heme).",
@@ -3591,10 +3591,10 @@ var quizBank = {
       {
         "q": "The primary physiological function of the Hexose Monophosphate (HMP) Shunt in erythrocytes and adipose tissue is to generate:",
         "o": [
-          "Large amounts of ATP via oxidative phosphorylation",
+          "High yields of ATP and GTP via coupled oxidative phosphorylation within the mitochondrial matrix",
           "NADPH for reductive biosyntheses / antioxidant protection, and Ribose-5-phosphate for nucleotides",
-          "Lactate to feed the Cori cycle",
-          "Fructose for sperm energy"
+          "Abundant cytosolic L-lactate to sustain high flux through the hepatic Cori cycle during exercise",
+          "Fructose and sorbitol intermediates to provide specialized metabolic energy for bovine spermatozoa"
         ],
         "a": 1,
         "e": "The HMP shunt (pentose phosphate pathway) produces no ATP directly; it produces NADPH (essential to reduce glutathione in RBCs and synthesize fatty acids) and ribose-5-P.",
@@ -3605,10 +3605,10 @@ var quizBank = {
       {
         "q": "The rate-limiting and committed enzyme of the HMP Shunt whose deficiency causes hemolytic anemia in animals under oxidative challenge is:",
         "o": [
-          "Transketolase",
+          "Transketolase (thiamine pyrophosphate-dependent)",
           "Glucose-6-Phosphate Dehydrogenase (G6PD)",
-          "Transaldolase",
-          "6-Phosphogluconate dehydrogenase"
+          "Transaldolase (Schiff-base intermediate enzyme)",
+          "6-Phosphogluconate dehydrogenase (decarboxylating)"
         ],
         "a": 1,
         "e": "G6PD catalyzes the first step of the HMP shunt; lack of G6PD impairs NADPH generation, leaving RBC glutathione oxidized and precipitating Heinz-body hemolytic anemia.",
@@ -3620,9 +3620,9 @@ var quizBank = {
         "q": "In high-producing ruminants (dairy cows and sheep), the principal precursor for hepatic gluconeogenesis that provides over 60-70% of endogenous blood glucose is:",
         "o": [
           "Propionate (volatile fatty acid)",
-          "Glycerol",
-          "L-Lactate",
-          "Acetate"
+          "Glycerol (from lipolysis)",
+          "L-Lactate (from muscle)",
+          "Acetate (volatile fatty)"
         ],
         "a": 0,
         "e": "Propionate produced by rumen microbial fermentation is absorbed into portal blood and converted in the liver via propionyl-CoA, methylmalonyl-CoA, and succinyl-CoA to glucose.",
@@ -3662,9 +3662,9 @@ var quizBank = {
         "q": "The Cori Cycle (glucose-lactate cycle) involves metabolic cooperation between:",
         "o": [
           "Skeletal muscle / RBCs (producing lactate) and liver (converting lactate back to glucose)",
-          "Brain and kidney",
-          "Adipose tissue and heart",
-          "Rumen and small intestine"
+          "Cerebral neurons (consuming glucose) and renal cortex (producing glutamine and ammonia)",
+          "Subcutaneous adipocytes (releasing free fatty acids) and cardiac myocytes (oxidizing fats)",
+          "Ruminal microflora (fermenting cellulose) and small intestinal enterocytes (absorbing VFA)"
         ],
         "a": 0,
         "e": "Lactate produced by anaerobic muscle and RBCs enters circulation, is taken up by the liver for gluconeogenesis, and the generated glucose returns to peripheral tissues.",
@@ -3675,10 +3675,10 @@ var quizBank = {
       {
         "q": "Glycogen phosphorylase, the key regulatory enzyme of glycogenolysis, is activated by phosphorylation mediated by:",
         "o": [
-          "Insulin and protein phosphatase-1",
-          "High concentrations of glucose-6-phosphate",
+          "Insulin-activated protein phosphatase-1 (PP-1) in hepatic cytosol",
+          "Allosteric feedback binding of high glucose-6-phosphate levels",
           "Phosphorylase kinase stimulated by glucagon, epinephrine, and cAMP",
-          "Excess ATP"
+          "Direct substrate activation by excessive intramitochondrial ATP"
         ],
         "a": 2,
         "e": "Epinephrine and glucagon trigger adenylyl cyclase and PKA, which activates phosphorylase kinase; phosphorylase kinase converts inactive phosphorylase b to active phosphorylase a.",
@@ -3689,10 +3689,10 @@ var quizBank = {
       {
         "q": "Triacylglycerol mobilization from adipocytes during negative energy balance is catalyzed by Hormone-Sensitive Lipase (HSL), which is activated by:",
         "o": [
-          "Insulin",
+          "High postprandial insulin levels activating protein phosphatase-1",
           "Glucagon and catecholamines via cAMP-dependent Protein Kinase A (PKA)",
-          "High blood glucose",
-          "Excess dietary cholesterol"
+          "Elevated systemic blood glucose acting directly on adipocyte walls",
+          "Excess dietary cholesterol packaging into nascent chylomicrons"
         ],
         "a": 1,
         "e": "Glucagon and epinephrine stimulate beta-receptors, increasing cAMP and activating PKA, which phosphorylates and activates HSL to hydrolyze stored triacylglycerols into free fatty acids and glycerol.",
@@ -3704,9 +3704,9 @@ var quizBank = {
         "q": "Long-chain fatty acyl-CoA molecules require which carrier system to cross the inner mitochondrial membrane for beta-oxidation?",
         "o": [
           "Carnitine shuttle (CPT-I, translocase, CPT-II)",
-          "Malate-aspartate shuttle",
-          "Glycerol phosphate shuttle",
-          "Citrate shuttle"
+          "Malate-aspartate NADH mitochondrial shuttle",
+          "Glycerol-3-phosphate FAD electron shuttle",
+          "Citrate-malate tricarboxylate carrier"
         ],
         "a": 0,
         "e": "Carnitine palmitoyltransferase I (CPT-I) on the outer membrane conjugates fatty acyl-CoA with carnitine; acylcarnitine is translocated across the inner membrane and converted back to acyl-CoA by CPT-II.",
@@ -3717,10 +3717,10 @@ var quizBank = {
       {
         "q": "The rate-limiting enzyme of mitochondrial fatty acid beta-oxidation that is allosterically inhibited by malonyl-CoA is:",
         "o": [
-          "Acyl-CoA synthetase",
-          "Acyl-CoA dehydrogenase",
+          "Outer membrane fatty acyl-CoA synthetase",
+          "Matrix FAD-dependent acyl-CoA dehydrogenase",
           "Carnitine Palmitoyltransferase-I (CPT-I)",
-          "Thiolase"
+          "Mitochondrial beta-ketothiolase (thiolase)"
         ],
         "a": 2,
         "e": "CPT-I is the gatekeeper of beta-oxidation; when lipogenesis is active, high levels of malonyl-CoA inhibit CPT-I, preventing simultaneous futile oxidation of newly made fatty acids.",
@@ -3732,9 +3732,9 @@ var quizBank = {
         "q": "Each round of the four-step beta-oxidation spiral of fatty acids generates:",
         "o": [
           "1 FADH2, 1 NADH, and 1 Acetyl-CoA (shortened by 2 carbons)",
-          "1 ATP, 1 CO2, and 1 Pyruvate",
-          "2 NADPH and 1 Propionyl-CoA",
-          "1 FAD and 1 Acetoacetate"
+          "1 ATP directly, 1 CO2 molecule, and 1 molecule of pyruvate",
+          "2 NADPH equivalents, 1 Propionyl-CoA, and 1 free acetate",
+          "1 FAD, 1 Acetoacetate, and 2 molecules of malonyl-CoA"
         ],
         "a": 0,
         "e": "The 4 recurring steps (dehydrogenation by FAD, hydration, dehydrogenation by NAD+, thiolysis with CoASH) release 1 acetyl-CoA, 1 FADH2, and 1 NADH per cycle.",
@@ -3759,10 +3759,10 @@ var quizBank = {
       {
         "q": "The oxidation of odd-chain fatty acids terminates in the three-carbon compound propionyl-CoA, which is metabolized to succinyl-CoA requiring two B-vitamins:",
         "o": [
-          "Thiamine (B1) and Riboflavin (B2)",
+          "Thiamine pyrophosphate (B1) and Riboflavin",
           "Biotin (B7) and Cobalamin (Vitamin B12)",
-          "Niacin (B3) and Pyridoxine (B6)",
-          "Folate and Pantothenic acid"
+          "Niacinamide (B3) and Pyridoxine (B6 coenzyme)",
+          "Tetrahydrofolate (B9) and Pantothenic acid"
         ],
         "a": 1,
         "e": "Propionyl-CoA carboxylase requires Biotin (B7) to form D-methylmalonyl-CoA; methylmalonyl-CoA mutase requires 5'-deoxyadenosylcobalamin (B12) to form succinyl-CoA.",
@@ -3787,9 +3787,9 @@ var quizBank = {
       {
         "q": "In high-producing dairy cattle experiencing bovine ketosis, the predominant circulating ketone body in blood and milk is:",
         "o": [
-          "Acetone",
-          "Oxaloacetate",
-          "Acetoacetate",
+          "Volatile acetone vapor",
+          "Citric oxaloacetate",
+          "Acetoacetate diketone",
           "Beta-hydroxybutyrate (BHB)"
         ],
         "a": 3,
@@ -3816,9 +3816,9 @@ var quizBank = {
         "q": "Although the liver is the exclusive producer of ketone bodies, hepatic tissue cannot utilize ketones as fuel because it lacks:",
         "o": [
           "Thiophorase (Succinyl-CoA:3-ketoacid CoA transferase)",
-          "Acetoacetate decarboxylase",
-          "Acyl-CoA dehydrogenase",
-          "Thiolase"
+          "Acetoacetate decarboxylase generating acetone gas",
+          "Mitochondrial acyl-CoA dehydrogenase complex",
+          "Reversible beta-ketothiolase cleavage enzyme"
         ],
         "a": 0,
         "e": "The liver lacks thiophorase (beta-ketoacyl-CoA transferase), the enzyme that activates acetoacetate to acetoacetyl-CoA using succinyl-CoA; thus ketones must be exported to extrahepatic tissues.",
@@ -3843,10 +3843,10 @@ var quizBank = {
       {
         "q": "The rate-limiting and committed regulatory enzyme of fatty acid biosynthesis that converts acetyl-CoA to malonyl-CoA is:",
         "o": [
-          "Fatty Acid Synthase",
+          "Fatty Acid Synthase (FAS)",
           "Acetyl-CoA Carboxylase (ACC)",
-          "ATP-citrate lyase",
-          "Malic enzyme"
+          "ATP-Citrate Lyase enzyme",
+          "Malic Enzyme (decarboxylating)"
         ],
         "a": 1,
         "e": "Acetyl-CoA Carboxylase (ACC) requires biotin, ATP, and bicarbonate to synthesize malonyl-CoA; it is activated allosterically by citrate and inhibited by palmitoyl-CoA.",
@@ -3857,9 +3857,9 @@ var quizBank = {
       {
         "q": "The reducing power (NADPH) required for fatty acid biosynthesis is primarily provided by:",
         "o": [
-          "Complex I of the electron transport chain",
-          "The Krebs cycle",
-          "Glycolysis and beta-oxidation",
+          "Complex I of the inner mitochondrial electron transport chain",
+          "Succinate dehydrogenase step in the Citric Acid (Krebs) Cycle",
+          "Anaerobic lactate dehydrogenase reaction in muscle glycolysis",
           "The Hexose Monophosphate (HMP) Shunt and Malic Enzyme"
         ],
         "a": 3,
@@ -3871,10 +3871,10 @@ var quizBank = {
       {
         "q": "The primary carbon donor for fatty acid synthesis in the mammary gland and adipose tissue of ruminants is:",
         "o": [
-          "Glucose",
+          "Circulating arterial D-glucose",
           "Acetate (rumen volatile fatty acid)",
-          "Fructose",
-          "Glycerol"
+          "Dietary fructose monosaccharide",
+          "Lipolytic glycerol intermediate"
         ],
         "a": 1,
         "e": "Ruminants absorb negligible glucose; rumen-derived acetate is the major carbon source for lipogenesis, converted directly to acetyl-CoA by cytosolic acetyl-CoA synthetase.",
@@ -3885,10 +3885,10 @@ var quizBank = {
       {
         "q": "The end product released from the eukaryotic multi-enzyme Fatty Acid Synthase (FAS) complex by its thioesterase domain is:",
         "o": [
-          "Acetyl-CoA",
+          "Free Acetyl-CoA intermediate",
           "Palmitic acid (Palmitate, 16:0)",
-          "Malonyl-CoA",
-          "Stearic acid (18:0)"
+          "Activated Malonyl-CoA donor",
+          "Stearic acid (Stearate, 18:0)"
         ],
         "a": 1,
         "e": "FAS synthesizes fatty acids up to 16 carbons; the thioesterase domain specifically cleaves palmitoyl-ACP to release free palmitate (16:0).",
@@ -3927,9 +3927,9 @@ var quizBank = {
       {
         "q": "The major enzyme responsible for oxidative deamination of L-glutamate in mammalian liver mitochondria, releasing free toxic ammonia (NH3), is:",
         "o": [
-          "L-Amino acid oxidase",
-          "Aspartate aminotransferase",
-          "Glutaminase",
+          "Peroxisomal L-amino acid oxidase",
+          "Aspartate aminotransferase (AST)",
+          "Mitochondrial glutaminase enzyme",
           "Glutamate Dehydrogenase (GDH)"
         ],
         "a": 3,
@@ -3941,10 +3941,10 @@ var quizBank = {
       {
         "q": "In animal tissues, ammonia is safely transported from extrahepatic tissues (especially brain and muscle) to the liver in the non-toxic form of:",
         "o": [
-          "Urea",
-          "Uric acid",
+          "Soluble urea molecules",
+          "Insoluble uric acid",
           "Glutamine and Alanine",
-          "Ammonium chloride"
+          "Ionized ammonium salts"
         ],
         "a": 2,
         "e": "Glutamine synthetase traps free NH3 onto glutamate to form non-toxic glutamine (transported to liver/kidney); muscle also uses alanine via the Glucose-Alanine cycle.",
@@ -3955,8 +3955,8 @@ var quizBank = {
       {
         "q": "The rate-limiting and committed regulatory enzyme of the Urea Cycle located inside liver mitochondria is:",
         "o": [
-          "Ornithine transcarbamoylase (OTC)",
-          "Arginase",
+          "Ornithine transcarbamoylase (OTC enzyme)",
+          "Cytosolic arginase metalloenzyme",
           "Argininosuccinate synthetase (ASS)",
           "Carbamoyl Phosphate Synthetase I (CPS-I)"
         ],
@@ -3969,10 +3969,10 @@ var quizBank = {
       {
         "q": "The allosteric activator indispensable for the catalytic activity of Carbamoyl Phosphate Synthetase I (CPS-I) is:",
         "o": [
-          "Citrate",
+          "Mitochondrial citrate",
           "N-Acetylglutamate (NAG)",
-          "Malonyl-CoA",
-          "Succinyl-CoA"
+          "Cytosolic malonyl-CoA",
+          "Krebs succinyl-CoA"
         ],
         "a": 1,
         "e": "N-acetylglutamate (NAG) is synthesized from acetyl-CoA and glutamate by NAG synthase (activated by arginine); without NAG, CPS-I remains completely inactive.",
@@ -3983,10 +3983,10 @@ var quizBank = {
       {
         "q": "The two nitrogen atoms in a molecule of urea are derived respectively from:",
         "o": [
-          "Two molecules of free ammonia (NH3)",
-          "Glutamine and Alanine",
+          "Two molecules of free ammonia gas liberated by glutaminase",
+          "Circulating L-glutamine and transaminated skeletal alanine",
           "Free ammonia (NH4+) and the amino group of Aspartate",
-          "Uric acid and Glycine"
+          "Degraded purine uric acid and the alpha-amino of glycine"
         ],
         "a": 2,
         "e": "One nitrogen comes from free ammonia (incorporated into carbamoyl phosphate by CPS-I) and the second nitrogen enters from aspartate (condensed by argininosuccinate synthetase).",
@@ -3997,10 +3997,10 @@ var quizBank = {
       {
         "q": "How many high-energy phosphate bonds (ATP equivalents) are consumed for the synthesis of one molecule of urea?",
         "o": [
-          "One",
-          "Two",
+          "One high-energy phosphate bond",
+          "Two (from 2 molecules of ATP)",
           "Four (from 3 molecules of ATP)",
-          "Six"
+          "Six (from 4 molecules of ATP)"
         ],
         "a": 2,
         "e": "CPS-I consumes 2 ATP (yielding 2 ADP + 2 Pi), and Argininosuccinate synthetase consumes 1 ATP (yielding AMP + PPi, where PPi is hydrolyzed to 2 Pi), totaling 4 high-energy bonds.",
@@ -4011,9 +4011,9 @@ var quizBank = {
       {
         "q": "Which intermediate of the urea cycle is cleaved by argininosuccinate lyase to release fumarate, linking the urea cycle to the citric acid cycle (Krebs Bicycle)?",
         "o": [
-          "Citrulline",
-          "Ornithine",
-          "Arginine",
+          "Citrulline-carbamoyl",
+          "Ornithine-intermediate",
+          "Arginine-guanidino",
           "Argininosuccinate"
         ],
         "a": 3,
@@ -4040,9 +4040,9 @@ var quizBank = {
         "q": "Avian species (poultry) and terrestrial reptiles are described as 'uricotelic' because they excrete their excess nitrogenous waste primarily as:",
         "o": [
           "Uric acid (paste-like insoluble crystals)",
-          "Free ammonia gas",
-          "Urea",
-          "Creatinine"
+          "Free ammonia gas via respiratory surfaces",
+          "Concentrated water-soluble urea solutions",
+          "Creatinine derived from somatic phosphagen"
         ],
         "a": 0,
         "e": "Birds lack a functional urea cycle (lacking mitochondrial CPS-I and arginase) and convert excess amino nitrogen into insoluble uric acid to conserve water.",
@@ -4067,9 +4067,9 @@ var quizBank = {
       {
         "q": "The inhibitory neurotransmitter Gamma-Aminobutyric Acid (GABA) is produced by enzymatic decarboxylation of:",
         "o": [
-          "Serine",
-          "Glycine",
-          "Aspartate",
+          "L-Serine",
+          "L-Glycine",
+          "L-Aspartate",
           "L-Glutamate"
         ],
         "a": 3,
@@ -4109,10 +4109,10 @@ var quizBank = {
       {
         "q": "The committed and rate-limiting step of de novo purine nucleotide biosynthesis is catalyzed by:",
         "o": [
-          "PRPP synthetase",
-          "Adenylosuccinate synthetase",
+          "Ribose-phosphate PRPP synthetase",
+          "Adenylosuccinate synthetase enzyme",
           "Glutamine:PRPP Amidotransferase",
-          "IMP dehydrogenase"
+          "IMP dehydrogenase oxidation enzyme"
         ],
         "a": 2,
         "e": "Glutamine:PRPP amidotransferase transfers an amino group from glutamine to PRPP, forming 5-phosphoribosylamine; it is feedback-inhibited by AMP, GMP, and IMP.",
@@ -4140,7 +4140,7 @@ var quizBank = {
           "Carbamoyl Phosphate Synthetase I (CPS-I)",
           "Carbamoyl Phosphate Synthetase II (CPS-II)",
           "Aspartate transcarbamoylase (ATCase)",
-          "Dihydroorotase"
+          "Dihydroorotase cyclization catalyst"
         ],
         "a": 1,
         "e": "Cytosolic CPS-II uses glutamine and HCO3- to produce carbamoyl phosphate; it is inhibited by UTP and activated by PRPP, distinguishing it from mitochondrial CPS-I of the urea cycle.",
@@ -4152,7 +4152,7 @@ var quizBank = {
         "q": "The final end product of purine catabolism in humans, primates, birds, and Dalmatian dogs is:",
         "o": [
           "Allantoin",
-          "Urea",
+          "Urea gas",
           "Uric acid",
           "Ammonia"
         ],
@@ -4165,10 +4165,10 @@ var quizBank = {
       {
         "q": "In domestic mammals other than primates and Dalmatians (e.g., cattle, horses, normal dogs), uric acid is converted to soluble allantoin by the enzyme:",
         "o": [
-          "Xanthine oxidase",
-          "Urease",
+          "Xanthine dehydrogenase",
+          "Urease metalloenzyme",
           "Urate oxidase (Uricase)",
-          "Allantoinase"
+          "Allantoinase hydrolase"
         ],
         "a": 2,
         "e": "Hepatic urate oxidase (uricase) catalyzes the oxidative conversion of insoluble uric acid to water-soluble allantoin, preventing purine urolithiasis in most livestock.",
@@ -4193,9 +4193,9 @@ var quizBank = {
       {
         "q": "Ribonucleotide Reductase, which converts ribonucleotides (NDPs) into deoxyribonucleotides (dNDPs) for DNA synthesis, is active only during which cell cycle phase?",
         "o": [
-          "G0 phase",
-          "G2 phase",
-          "M phase",
+          "G0 phase (quiescent cellular state)",
+          "G2 phase (pre-mitotic gap period)",
+          "M phase (mitotic spindle division)",
           "S phase (DNA synthesis phase)"
         ],
         "a": 3,
@@ -4208,9 +4208,9 @@ var quizBank = {
         "q": "Thymidylate synthase converts dUMP to dTMP using which coenzyme as a methyl and methylene group donor?",
         "o": [
           "N5,N10-Methylene-tetrahydrofolate",
-          "S-Adenosylmethionine (SAM)",
-          "Methylcobalamin (B12)",
-          "Biotin"
+          "S-Adenosylmethionine (SAM cofactor)",
+          "Methylcobalamin (active B12 factor)",
+          "Biotin (vitamin B7 carboxyl carrier)"
         ],
         "a": 0,
         "e": "Thymidylate synthase transfers a one-carbon unit from N5,N10-methylene-THF to dUMP, forming dTMP and dihydrofolate (DHF).",
@@ -4221,9 +4221,9 @@ var quizBank = {
       {
         "q": "The salvage pathway for purine nucleotide synthesis salvages free purine bases (hypoxanthine and guanine) using the enzyme:",
         "o": [
-          "Purine nucleosidase",
-          "Adenine deaminase",
-          "Ribonucleotide reductase",
+          "Purine nucleoside phosphorylase (cleaving ribose-1-P)",
+          "Adenosine deaminase converting adenosine to inosine",
+          "Ribonucleotide reductase reducing NDPs to dNDP units",
           "HGPRT (Hypoxanthine-Guanine Phosphoribosyltransferase)"
         ],
         "a": 3,
@@ -4235,10 +4235,10 @@ var quizBank = {
       {
         "q": "In eukaryotic DNA replication, the RNA primers are synthesized by:",
         "o": [
-          "DNA Polymerase beta",
+          "DNA Polymerase beta (repair-specific endonuclease)",
           "DNA Primase (associated with DNA Polymerase alpha)",
-          "RNA Polymerase II",
-          "DNA Topoisomerase II"
+          "RNA Polymerase II (transcribing structural genes)",
+          "DNA Topoisomerase II (relieving superhelical strain)"
         ],
         "a": 1,
         "e": "DNA polymerase alpha-primase complex synthesizes a short RNA primer (~10 nucleotides) followed by a short stretch of initiator DNA before handing off to processive pol delta or epsilon.",
@@ -4263,10 +4263,10 @@ var quizBank = {
       {
         "q": "During prolonged starvation in monogastric animals, the brain adapts to utilize which alternative fuel source for up to 50-70% of its energy requirements?",
         "o": [
-          "Free fatty acids",
-          "Amino acids (Leucine)",
+          "Albumin-bound long-chain non-esterified fatty acids",
+          "Branched-chain amino acids (Leucine and Isoleucine)",
           "Ketone bodies (Acetoacetate and Beta-hydroxybutyrate)",
-          "Glycerol"
+          "Lipolytic glycerol converted directly to dihydroxyacetone"
         ],
         "a": 2,
         "e": "Fatty acids cannot cross the blood-brain barrier; during starvation, the brain induces monocarboxylate transporters to utilize circulating ketone bodies, sparing muscle protein breakdown.",
@@ -4291,10 +4291,10 @@ var quizBank = {
       {
         "q": "The primary metabolic fuel utilized by adult mammalian cardiac muscle under resting aerobic conditions is:",
         "o": [
-          "Glucose",
+          "Arterial blood D-glucose via GLUT-4 transport",
           "Free long-chain fatty acids (60-70% of energy)",
-          "Ketone bodies exclusively",
-          "L-Glutamine"
+          "Circulating acetoacetate and beta-hydroxybutyrate",
+          "L-Glutamine via mitochondrial transamination"
         ],
         "a": 1,
         "e": "Cardiac muscle is strictly aerobic and relies predominantly on beta-oxidation of free fatty acids for 60-70% of its ATP generation under physiological conditions.",
@@ -4306,9 +4306,9 @@ var quizBank = {
         "q": "The key metabolic crossroads molecule connecting carbohydrate, lipid, and amino acid metabolism is:",
         "o": [
           "Pyruvate and Acetyl-CoA",
-          "Ribose-5-phosphate",
-          "Succinate",
-          "Bilirubin"
+          "Ribose-5-P and PRPP",
+          "Succinate and Malate",
+          "Bilirubin and Biliverdin"
         ],
         "a": 0,
         "e": "Pyruvate and Acetyl-CoA sit at the central crossroad: carbohydrates, ketogenic amino acids, and fatty acids converge on acetyl-CoA for oxidation in the Krebs cycle or lipogenesis.",
@@ -4347,9 +4347,9 @@ var quizBank = {
       {
         "q": "Thiamine pyrophosphate (TPP) is the coenzyme required by:",
         "o": [
-          "Transaminases",
-          "Acetyl-CoA carboxylase",
-          "Hydroxylases",
+          "Alanine and aspartate aminotransferases in hepatic cytosol",
+          "Biotin-dependent acetyl-CoA carboxylase in lipogenesis",
+          "Ascorbate-dependent lysyl and prolyl hydroxylases in collagen",
           "Pyruvate dehydrogenase and alpha-ketoglutarate dehydrogenase"
         ],
         "a": 3,
@@ -4361,10 +4361,10 @@ var quizBank = {
       {
         "q": "Biotin serves as the coenzyme for:",
         "o": [
-          "Transamination",
-          "Decarboxylation of amino acids",
+          "Transamination reactions catalyzed by aminotransferases",
+          "Decarboxylation of amino acids by glutamate decarboxylase",
           "Carboxylation reactions such as pyruvate carboxylase",
-          "Transfer of one-carbon units such as methyl groups"
+          "Transfer of one-carbon methyl groups via tetrahydrofolate"
         ],
         "a": 2,
         "e": "Biotin carries activated CO2 for carboxylases: pyruvate carboxylase, acetyl-CoA carboxylase and propionyl-CoA carboxylase. Raw egg white avidin binds biotin and can cause deficiency.",
@@ -4375,10 +4375,10 @@ var quizBank = {
       {
         "q": "The creatine kinase isoenzyme CK-MM is found predominantly in:",
         "o": [
-          "Brain",
+          "Cerebral brain",
           "Skeletal muscle",
-          "Liver",
-          "Kidney"
+          "Hepatic tissue",
+          "Renal tubules"
         ],
         "a": 1,
         "e": "CK-BB is in brain, CK-MB is enriched in heart and CK-MM is in skeletal muscle. A raised serum CK in animals mainly indicates muscle damage, e.g. exertional rhabdomyolysis or recumbency.",
@@ -4403,9 +4403,9 @@ var quizBank = {
       {
         "q": "Urease acts only on urea and on no other substrate. This is an example of:",
         "o": [
-          "Group specificity",
-          "Bond specificity",
-          "Stereospecificity",
+          "Broad group specificity",
+          "Peptide bond specificity",
+          "Geometric stereospecificity",
           "Absolute specificity"
         ],
         "a": 3,
@@ -4418,9 +4418,9 @@ var quizBank = {
         "q": "L-amino acid oxidase acts only on L-amino acids and not on their D-isomers. This is an example of:",
         "o": [
           "Stereo (optical) specificity",
-          "Absolute specificity",
-          "Group specificity",
-          "Reaction specificity"
+          "Substrate absolute specificity",
+          "Aliphatic group specificity",
+          "Cofactor reaction specificity"
         ],
         "a": 0,
         "e": "Enzymes recognise the 3-D arrangement of groups around a chiral centre, so they act on only one optical isomer. Separate D-amino acid oxidases exist for D-isomers.",
@@ -4459,10 +4459,10 @@ var quizBank = {
       {
         "q": "During enzyme purification, a rising specific activity indicates:",
         "o": [
-          "A shift in the optimum pH",
+          "A progressive downward shift in the optimum pH",
           "Increasing purity of the enzyme preparation",
-          "Increased affinity for the substrate",
-          "Loss of enzyme by denaturation"
+          "Increased substrate affinity and lower Michaelis Km",
+          "Irreversible thermal denaturation of active centers"
         ],
         "a": 1,
         "e": "Specific activity = units of enzyme activity per mg of total protein. As contaminating proteins are removed, activity per mg rises. A constant maximum value suggests the enzyme is pure.",
@@ -4515,9 +4515,9 @@ var quizBank = {
       {
         "q": "Oxidases differ from dehydrogenases because oxidases:",
         "o": [
-          "Use NAD+ as the hydrogen acceptor",
-          "Occur only in the cytosol",
-          "Incorporate oxygen atoms into the substrate",
+          "Use oxidized NAD+ as the obligatory mobile hydrogen carrier",
+          "Operate exclusively within the non-aqueous inner membrane",
+          "Directly incorporate atomic oxygen into the substrate bonds",
           "Use molecular oxygen as the hydrogen (electron) acceptor"
         ],
         "a": 3,
@@ -4543,10 +4543,10 @@ var quizBank = {
       {
         "q": "The glycolytic enzyme that produces NADH is:",
         "o": [
-          "Aldolase",
-          "Enolase",
+          "Fructose-1,6-bisphosphate aldolase enzyme",
+          "Phosphopyruvate hydratase (enolase enzyme)",
           "Glyceraldehyde-3-phosphate dehydrogenase",
-          "Pyruvate kinase"
+          "Phosphofructokinase-1 regulatory isozyme"
         ],
         "a": 2,
         "e": "Glyceraldehyde-3-phosphate dehydrogenase oxidises G3P to 1,3-bisphosphoglycerate, reducing NAD+ to NADH. This is the only oxidation step of glycolysis.",
@@ -4614,9 +4614,9 @@ var quizBank = {
         "q": "The gluconeogenic enzyme that bypasses the phosphofructokinase-1 step of glycolysis is:",
         "o": [
           "Fructose-1,6-bisphosphatase",
-          "Glucose-6-phosphatase",
-          "PEP carboxykinase",
-          "Pyruvate carboxylase"
+          "Glucose-6-phosphatase enzyme",
+          "Phosphoenolpyruvate carboxykinase",
+          "Mitochondrial pyruvate carboxylase"
         ],
         "a": 0,
         "e": "Fructose-1,6-bisphosphatase hydrolyses F-1,6-BP to F-6-P. Glucose-6-phosphatase bypasses hexokinase, and pyruvate carboxylase plus PEPCK together bypass pyruvate kinase.",
@@ -4628,9 +4628,9 @@ var quizBank = {
         "q": "Which of the following CANNOT provide carbon for net glucose synthesis in animals?",
         "o": [
           "Acetyl-CoA from even-chain fatty acids",
-          "Lactate",
-          "Glycerol",
-          "Propionate"
+          "L-Lactate produced by anaerobic muscles",
+          "Glycerol liberated during adipocyte lipolysis",
+          "Propionate generated by ruminal fermentation"
         ],
         "a": 0,
         "e": "Pyruvate dehydrogenase is irreversible, and the two carbons of acetyl-CoA are lost as 2 CO2 in the citric acid cycle. So even-chain fatty acids give no net glucose. Propionate, lactate, glycerol and glucogenic amino acids can.",
@@ -4669,10 +4669,10 @@ var quizBank = {
       {
         "q": "Glycogen phosphorylase cleaves alpha(1->4) glycosidic bonds by adding inorganic phosphate, releasing:",
         "o": [
-          "Free glucose",
+          "Free D-glucose hexose",
           "Glucose-1-phosphate",
           "Glucose-6-phosphate",
-          "UDP-glucose"
+          "UDP-glucose precursor"
         ],
         "a": 1,
         "e": "This is phosphorolysis (not hydrolysis). The product glucose-1-phosphate is converted to glucose-6-phosphate by phosphoglucomutase. Phosphorylase needs pyridoxal phosphate.",
@@ -4711,10 +4711,10 @@ var quizBank = {
       {
         "q": "Aminoacyl-tRNA synthetases attach each amino acid to:",
         "o": [
-          "The anticodon loop of its tRNA",
-          "The 5'-end of the mRNA",
+          "The universal anticodon loop of tRNA",
+          "The 5'-methylguanosine cap of mRNA",
           "The 3'-CCA end of its specific tRNA",
-          "The D-arm of the tRNA"
+          "The dihydrouridine D-arm loop of tRNA"
         ],
         "a": 2,
         "e": "The amino acid is joined by an ester bond to the 3'-OH of the terminal adenosine of the CCA end. Activation uses ATP (-> AMP + PPi). These enzymes 'read' the genetic code, and many have proofreading activity.",
@@ -4725,10 +4725,10 @@ var quizBank = {
       {
         "q": "Peptide bond formation on the ribosome is catalysed by peptidyl transferase, which is:",
         "o": [
-          "A protein of the small ribosomal subunit",
+          "An integral basic protein of the small subunit",
           "A ribozyme (the rRNA of the large subunit)",
-          "The elongation factor EF-Tu",
-          "An aminoacyl-tRNA synthetase"
+          "The GTP-dependent elongation factor EF-Tu factor",
+          "An aminoacyl-tRNA synthetase docking protein"
         ],
         "a": 1,
         "e": "Peptidyl transferase activity resides in the 23S rRNA (prokaryotes) or 28S rRNA (eukaryotes) of the large subunit, making the ribosome a ribozyme. Chloramphenicol inhibits it in bacteria.",
@@ -4781,10 +4781,10 @@ var quizBank = {
       {
         "q": "The enzyme that relieves torsional strain (supercoiling) ahead of the replication fork is:",
         "o": [
-          "Helicase",
+          "Replicative DnaB helicase unwinding duplexes",
           "DNA topoisomerase (DNA gyrase in bacteria)",
-          "Primase",
-          "DNA ligase"
+          "DNA primase synthesizing short ribo-oligomers",
+          "DNA ligase I sealing phosphodiester nicks"
         ],
         "a": 1,
         "e": "Topoisomerases cut and rejoin DNA strands to remove supercoils created by helicase unwinding. Fluoroquinolone antibiotics (enrofloxacin) inhibit bacterial DNA gyrase.",
@@ -4809,9 +4809,9 @@ var quizBank = {
       {
         "q": "In the well-fed state, insulin acts on key regulatory enzymes by promoting:",
         "o": [
-          "Phosphorylation and activation of glycogen phosphorylase",
-          "Activation of hormone-sensitive lipase",
-          "Inhibition of acetyl-CoA carboxylase",
+          "Phosphorylation and allosteric activation of hepatic glycogen phosphorylase b",
+          "Phosphorylation and violent activation of hormone-sensitive lipase in fat cells",
+          "Phosphorylation and irreversible inhibition of cytosolic acetyl-CoA carboxylase",
           "Dephosphorylation and activation of glycogen synthase and pyruvate dehydrogenase"
         ],
         "a": 3,
@@ -6101,9 +6101,9 @@ var quizBank = {
         "q": "Canine diabetes mellitus is most commonly characterized pathophysiologically by:",
         "o": [
           "Type 1 absolute insulin deficiency resulting from autoimmune or degenerative destruction of pancreatic beta-cells",
-          "Type 2 non-insulin dependent diabetes due to peripheral receptor insensitivity",
-          "Gestational diabetes responding only to progesterone therapy",
-          "Secondary diabetes from somatostatin hypersecretion"
+          "Type 2 non-insulin dependent diabetes mellitus caused by progressive peripheral insulin receptor downregulation",
+          "Gestational diabetes mellitus resulting from excessive placental lactogen and progesterone receptor saturation",
+          "Secondary diabetes mellitus induced by persistent hypersecretion of somatostatin from delta-cell hyperplasia"
         ],
         "a": 0,
         "e": "Over 90% of diabetic dogs suffer from Type 1 diabetes mellitus characterized by permanent, progressive loss of pancreatic beta-cells and an absolute requirement for exogenous insulin therapy.",
@@ -6114,10 +6114,10 @@ var quizBank = {
       {
         "q": "The classic clinical triad of symptoms observed in domestic dogs and cats with unmanaged diabetes mellitus is:",
         "o": [
-          "Anuria, hypodipsia, and anorexia",
+          "Anuria, hypodipsia, and anorexia accompanied by muscle spasms",
           "Polyuria, polydipsia, and polyphagia accompanied by weight loss",
-          "Oliguria, ascites, and obesity",
-          "Dyspnea, bradycardia, and jaundice"
+          "Oliguria, ascites, and cachexia accompanied by chronic edema",
+          "Dyspnea, bradycardia, and jaundice accompanied by hypothermia"
         ],
         "a": 1,
         "e": "Glucosuria causes osmotic diuresis leading to polyuria (PU), compensatory polydipsia (PD), and cellular starvation triggering voracious appetite (polyphagia) despite progressive loss of body weight.",
@@ -6128,9 +6128,9 @@ var quizBank = {
       {
         "q": "Diabetic cataracts develop rapidly in dogs with uncontrolled diabetes mellitus due to the conversion of lens glucose into:",
         "o": [
-          "Galactose by galactokinase",
-          "Glucuronic acid by UDP-glucose dehydrogenase",
-          "Fructose-1,6-bisphosphate by PFK-1",
+          "Galactitol by galactokinase, producing oxidative cross-linking of crystalline lens fibrils",
+          "Glucuronic acid by UDP-glucose dehydrogenase, leading to glycosaminoglycan hyperaccumulation",
+          "Fructose-1,6-bisphosphate by phosphofructokinase-1, inducing acute intracellular acidosis",
           "Sorbitol by aldose reductase, causing osmotic lens swelling and fiber rupture"
         ],
         "a": 3,
@@ -6184,9 +6184,9 @@ var quizBank = {
       {
         "q": "The primary biochemical defect initiating bovine ketosis is:",
         "o": [
-          "Excessive dietary calcium intake",
-          "Overproduction of glycogen in liver tissue",
-          "Complete blockage of hormone-sensitive lipase in adipose tissue",
+          "Excessive ruminal production of propionate, leading to over-saturation of the Krebs cycle",
+          "Inability of hormone-sensitive lipase to mobilize non-esterified fatty acids from adipose",
+          "Impaired transport of ketone bodies across ruminal papillae due to tight junction atrophy",
           "A deficit of oxaloacetate relative to acetyl-CoA, diverting acetyl units into ketogenesis"
         ],
         "a": 3,
@@ -6213,9 +6213,9 @@ var quizBank = {
         "q": "The standard oral gluconeogenic precursor administered for treatment and prevention of bovine ketosis is:",
         "o": [
           "Propylene glycol (1,2-propanediol)",
-          "Ethanol",
-          "Acetoacetate",
-          "Glycerol monostearate"
+          "Calcium propionate suspension drench",
+          "Sodium butyrate ruminal infusion sol",
+          "Glycerol monostearate bolus compound"
         ],
         "a": 0,
         "e": "Oral propylene glycol is absorbed from the rumen and converted in the liver to pyruvate and oxaloacetate, replenishing TCA intermediates and suppressing ketogenesis.",
@@ -6226,10 +6226,10 @@ var quizBank = {
       {
         "q": "Pregnancy toxaemia in ewes and does (twin lamb disease) develops in late gestation primarily because of:",
         "o": [
-          "Autoimmune destruction of the placenta",
-          "Excess dietary carbohydrate consumption in lush pasture",
+          "Sudden hypocalcemic tetany caused by acute parathyroid gland exhaustion in high-producing dairy breeds during late gestation",
+          "Excessive accumulation of ruminal lactic acid due to sudden gorging on high-starch cereal grains without adequate roughage",
           "Massive fetal glucose and amino acid demands in ewes carrying multiple fetuses combined with limited ruminal capacity",
-          "Acute ruminal bloat"
+          "Complete cessation of hepatic fatty acid oxidation secondary to severe congenital carnitine palmitoyltransferase deficiency"
         ],
         "a": 2,
         "e": "Twin and triplet fetuses demand huge amounts of maternal glucose (fetuses consume up to 40% of maternal glucose) during the final 4 weeks, causing severe hypoglycemia and ketosis.",
@@ -6241,9 +6241,9 @@ var quizBank = {
         "q": "Neonatal baby pigs are exceptionally prone to severe fatal hypoglycemia during their first 24 to 48 hours of life because they:",
         "o": [
           "Are born with negligible body fat stores (<1-2%), limited liver glycogen, and immature gluconeogenic enzymes",
-          "Lack insulin receptors in all peripheral tissues",
-          "Excrete huge quantities of glucose in urine",
-          "Lack the sodium-glucose transporter SGLT-1"
+          "Possess hyperactive pancreatic beta-cells that secrete massive quantities of insulin in response to initial colostrum intake",
+          "Excrete massive quantities of circulating glucose into the urine via congenital defects in sodium-glucose cotransporters",
+          "Completely lack active GLUT-4 glucose transporters on skeletal muscle and adipose tissue membranes during the neonatal period"
         ],
         "a": 0,
         "e": "Newborn piglets have virtually no adipose insulation or energy reserves; if separated from the sow, glycogen is exhausted within hours and gluconeogenesis is too immature to maintain blood glucose.",
@@ -6268,10 +6268,10 @@ var quizBank = {
       {
         "q": "In dogs with hyperinsulinism from insulinoma, clinical signs typically include:",
         "o": [
-          "Extreme hyperglycemia and diabetic ketoacidosis",
+          "Extreme persistent hyperglycemia, severe osmotic diuresis, and recurrent diabetic ketoacidosis",
           "Weakness, muscle tremors, ataxia, and generalized seizures relieved by intravenous glucose",
-          "Marked jaundice and dark brown urine",
-          "Severe polycythemia and hypertension"
+          "Marked conjugated hyperbilirubinemia, severe pruritus, and clay-colored acholic fecal masses",
+          "Progressive bilateral symmetrical alopecia, cutaneous hyperpigmentation, and thin skin atrophy"
         ],
         "a": 1,
         "e": "Neuroglycopenia (deprivation of glucose to the central nervous system) produces episodic tremors, mental dullness, collapse, and tonic-clonic seizures promptly reversed by glucose administration.",
@@ -6296,10 +6296,10 @@ var quizBank = {
       {
         "q": "Equine hyperlipemia is a life-threatening metabolic disorder characterized by gross lactescent (milky) plasma and severe hepatic lipidosis, seen predominantly in:",
         "o": [
-          "Thoroughbred racehorses in active training",
+          "Thoroughbred racehorses receiving high-concentrate diets and intense anaerobic training",
           "Ponies, miniature horses, and donkeys undergoing negative energy balance or stress",
-          "Newborn foals on mare's colostrum",
-          "Draft horses on high-grain diets"
+          "Newborn neonatal foals consuming excessive quantities of high-fat maternal colostrum",
+          "Heavily muscled draft horses maintained on lush legume pastures with minimal exercise"
         ],
         "a": 1,
         "e": "Ponies, donkeys, and miniature horses have poorly regulated adipose lipolysis; negative energy balance triggers massive mobilization of NEFA and VLDL, causing severe hypertriglyceridemia and fatty liver.",
@@ -6310,10 +6310,10 @@ var quizBank = {
       {
         "q": "Which qualitative chemical reagent is universally used in veterinary urinalysis to detect reducing sugars like glucose in urine?",
         "o": [
-          "Ehrlich's aldehyde reagent",
-          "Hay's sulfur powder",
+          "Ehrlich's p-dimethylaminobenzaldehyde",
+          "Hay's colloidal sulfur test powder",
           "Benedict's qualitative reagent",
-          "Fouchet's reagent"
+          "Fouchet's ferric chloride solution"
         ],
         "a": 2,
         "e": "Benedict's qualitative reagent contains cupric sulfate in alkaline citrate; reducing sugars reduce Cu2+ to a yellow-to-brick-red precipitate of cuprous oxide (Cu2O).",
@@ -6324,10 +6324,10 @@ var quizBank = {
       {
         "q": "Feline diabetes mellitus exhibits significant clinical similarity to human Type 2 diabetes because it is heavily associated with:",
         "o": [
-          "Immune-mediated destruction by anti-insulin antibodies in kittenhood",
+          "Immune-mediated destruction of pancreatic beta-cells initiated by autoantibodies in early kittenhood",
           "Obesity, peripheral insulin resistance, and islet amyloid polypeptide (amylin) deposition",
-          "Congenital absence of the pancreas",
-          "High dietary vitamin A intake"
+          "Complete congenital pancreatic hypoplasia resulting in simultaneous endocrine and exocrine failure",
+          "Severe hypervitaminosis A triggering widespread calcification of pancreatic microvasculature"
         ],
         "a": 1,
         "e": "Feline diabetes features insulin resistance driven by obesity and physical inactivity, accompanied by amyloid deposition (amylin) that causes progressive beta-cell vacuolation and death.",
@@ -6338,10 +6338,10 @@ var quizBank = {
       {
         "q": "Transient stress hyperglycemia in cats presented to veterinary clinics can elevate blood glucose up to 250-300 mg/dL due to the release of:",
         "o": [
-          "Insulin and somatostatin",
+          "Insulin and somatostatin promoting rapid glucose clearance",
           "Epinephrine and cortisol triggering rapid glycogenolysis",
-          "Parathyroid hormone",
-          "Antidiuretic hormone"
+          "Parathyroid hormone stimulating active renal conservation",
+          "Antidiuretic hormone triggering acute aquaporin exocytosis"
         ],
         "a": 1,
         "e": "Catecholamine and glucocorticoid surges during handling stress stimulate massive hepatic glycogenolysis and gluconeogenesis in cats; measuring serum fructosamine rules out true diabetes.",
@@ -6352,10 +6352,10 @@ var quizBank = {
       {
         "q": "Diabetic ketoacidosis (DKA) is a severe medical emergency characterized by the triad of:",
         "o": [
-          "Hypoglycemia, metabolic alkalosis, and hypokalemia",
-          "Normal blood glucose, respiratory acidosis, and hyperalbuminemia",
+          "Severe hypoglycemia, hypokalemic metabolic alkalosis, and heavy glycosuria",
+          "Euglycemia, compensated respiratory acidosis, and severe hyperalbuminemia",
           "Severe hyperglycemia, high anion-gap metabolic acidosis, and ketonemia/ketonuria",
-          "Hypocalcemia, hyperphosphatemia, and anuria"
+          "Acute hypocalcemic tetany, severe hyperphosphatemia, and persistent anuria"
         ],
         "a": 2,
         "e": "DKA arises from absolute insulin deficiency plus counter-regulatory hormone excess, causing hyperglycemia, glucosuria, unbridled ketogenesis, and profound high-anion-gap acidosis.",
@@ -6380,10 +6380,10 @@ var quizBank = {
       {
         "q": "The glucose tolerance curve in an animal suffering from clinical diabetes mellitus demonstrates:",
         "o": [
-          "A rapid fall in blood glucose to hypoglycemic levels within 30 minutes",
+          "A rapid, precipitous drop in blood glucose reaching hypoglycemic nadir within 30 minutes",
           "A higher fasting glucose, higher peak level, and delayed return to baseline (>2-3 hours)",
-          "No change in blood glucose following intravenous dextrose",
-          "A flat horizontal line identical to healthy controls"
+          "A normal fasting baseline followed by complete failure of glucose absorption or elevation",
+          "An immediate transient spike that normalizes completely to baseline within 15 to 30 minutes"
         ],
         "a": 1,
         "e": "Impaired insulin secretion or peripheral action causes a diabetic glucose tolerance curve to start high, peak well above normal (>300 mg/dL), and fail to return to baseline within 120 minutes.",
@@ -6394,10 +6394,10 @@ var quizBank = {
       {
         "q": "Glucated hemoglobin (HbA1c) measurement reflects average circulating blood glucose concentration over:",
         "o": [
-          "1 to 2 days",
+          "The immediate post-prandial absorptive interval (approximately 1 to 2 hours)",
           "The circulating lifespan of the erythrocyte (60 to 120 days depending on species)",
-          "2 to 3 weeks",
-          "The entire calendar year"
+          "The circulating half-life of serum albumin (approximately 2 to 3 weeks in cats)",
+          "The entire circulating lifespan of high-density lipoprotein particles in systemic plasma"
         ],
         "a": 1,
         "e": "HbA1c forms non-enzymatically inside RBCs throughout their circulatory lifespan (~110-120 days in dogs, ~70 days in cats), reflecting long-term glycemic control.",
@@ -6409,9 +6409,9 @@ var quizBank = {
         "q": "In lactating cows with nervous ketosis, neurological signs such as abnormal gait, compulsive licking of walls, and aggression are caused by:",
         "o": [
           "Severe hypoglycemia coupled with toxic circulating concentrations of acetoacetate and isopropanol",
-          "Direct viral encephalitis",
-          "Hypercalcemic tetany",
-          "Hypomagnesemic grass tetany"
+          "Direct neurotoxic invasion of the central nervous system by bovine herpesvirus type 1",
+          "Acute hypocalcemic paralysis associated with sudden colostral drainage during early lactation",
+          "Severe hypomagnesemic neuromuscular irritability known clinically as grass tetany or lactation staggers"
         ],
         "a": 0,
         "e": "Nervous ketosis affects ~10% of ketotic cows, caused by severe neuroglycopenia combined with the toxic cerebral effects of acetoacetate, acetone, and microbial reduction to isopropanol.",
@@ -6436,10 +6436,10 @@ var quizBank = {
       {
         "q": "Which enzyme is the most reliable, liver-specific leakage enzyme used clinically to evaluate acute hepatocellular damage in horses and cattle?",
         "o": [
-          "ALT",
+          "Alanine Aminotransferase (ALT) and Alkaline Phosphatase (ALP) leakage enzymes",
           "Sorbitol Dehydrogenase (SDH) and Glutamate Dehydrogenase (GLDH)",
-          "Amylase",
-          "Creatine Kinase (CK)"
+          "Alpha-Amylase and Pancreatic Lipase (DGGR-Lipase assay)",
+          "Creatine Kinase (CK) and Aspartate Aminotransferase (AST)"
         ],
         "a": 1,
         "e": "SDH (cytosolic) and GLDH (mitochondrial) are liver-specific leakage enzymes with high activity in large animal hepatocytes, serving as the gold standard for equine and bovine liver necrosis.",
@@ -6450,10 +6450,10 @@ var quizBank = {
       {
         "q": "Aspartate Aminotransferase (AST) is present in high concentrations in both liver and:",
         "o": [
-          "Adipose tissue",
-          "Salivary glands",
+          "Adipose tissue and subcutaneous fat stores",
+          "Submandibular salivary gland parenchyma",
           "Skeletal and cardiac muscle",
-          "Urinary bladder epithelium"
+          "Urinary bladder transitional epithelium"
         ],
         "a": 2,
         "e": "AST is non-organ-specific, abundant in hepatocytes and skeletal/cardiac myocytes; serum AST elevations must be interpreted alongside Creatine Kinase (CK) to rule out muscle necrosis.",
@@ -6479,9 +6479,9 @@ var quizBank = {
         "q": "Marked elevations of serum Gamma-Glutamyl Transferase (GGT) are clinically diagnostic of:",
         "o": [
           "Cholestasis, biliary tract disease, or high colostrum intake in neonates",
-          "Myocardial infarction and muscle rupture",
-          "Acute renal medullary infarction",
-          "Exocrine pancreatic insufficiency"
+          "Severe myocardial infarction and acute skeletal muscle fiber degeneration",
+          "Acute renal tubular necrosis and papillary infarction in azotemic patients",
+          "Primary exocrine pancreatic insufficiency and chronic acinar cell atrophy"
         ],
         "a": 0,
         "e": "GGT is anchored to the biliary canalicular membrane and is released in cholestatic liver diseases; it is also exceptionally high in maternal colostrum, verifying passive immunity transfer.",
@@ -6492,9 +6492,9 @@ var quizBank = {
       {
         "q": "Creatine Kinase (CK) is the most sensitive and specific serum enzyme marker for evaluating damage to:",
         "o": [
-          "Liver parenchyma",
-          "Bone osteoclasts",
-          "Renal tubular epithelium",
+          "Hepatic parenchymal cells",
+          "Bone osteoblasts and osteoclasts",
+          "Renal proximal tubular epithelium",
           "Skeletal and cardiac muscle"
         ],
         "a": 3,
@@ -6506,9 +6506,9 @@ var quizBank = {
       {
         "q": "In dogs with acute pancreatitis, the two classic diagnostic serum enzymes that show substantial activity increases are:",
         "o": [
-          "ALT and AST",
-          "LDH and CK",
-          "ALP and GGT",
+          "Alanine aminotransferase and AST",
+          "Lactate dehydrogenase and CK",
+          "Alkaline phosphatase and GGT",
           "Amylase and Lipase"
         ],
         "a": 3,
@@ -6520,10 +6520,10 @@ var quizBank = {
       {
         "q": "Pre-renal azotemia in dehydrated animals is biochemically differentiated from primary renal azotemia by:",
         "o": [
-          "Low urine specific gravity and severe glucosuria",
-          "Fixed isosthenuria (USG 1.008 to 1.012)",
+          "Severely hyposthenuric urine (USG <1.006) accompanied by persistent high-grade glucosuria, granular casts, and prominent aminoaciduria",
+          "Fixed isosthenuric urine (USG 1.008 to 1.012) accompanied by non-responsive progressive elevations in serum creatinine despite fluid rehydration",
           "Adequately concentrated urine (high USG >1.030 in dogs, >1.035 in cats) and a high BUN:Creatinine ratio that normalizes with fluid therapy",
-          "High serum bilirubin"
+          "Marked post-hepatic hyperbilirubinemia accompanied by dramatic elevations in serum alanine aminotransferase and low blood urea nitrogen"
         ],
         "a": 2,
         "e": "In pre-renal azotemia, intact nephrons respond to hypovolemia by maximally conserving water and urea, yielding concentrated urine (USG >1.030 in dogs, >1.035 in cats) and rapid resolution upon rehydration.",
@@ -6534,10 +6534,10 @@ var quizBank = {
       {
         "q": "Primary renal azotemia (intrinsic acute or chronic kidney failure) becomes detectable in routine biochemistry only after what percentage of functional nephrons have been destroyed?",
         "o": [
-          "25%",
-          "50%",
+          "Approximately 25%",
+          "Approximately 50%",
           "At least 75%",
-          "95%"
+          "Approximately 95%"
         ],
         "a": 2,
         "e": "Kidneys have tremendous functional reserve: loss of urine concentrating ability occurs at ~66% nephron loss, while azotemia (elevation of BUN and creatinine) appears only when >75% of nephrons fail.",
@@ -6548,10 +6548,10 @@ var quizBank = {
       {
         "q": "Isosthenuria (urine specific gravity fixed between 1.008 and 1.012) signifies that the renal tubules:",
         "o": [
-          "Are maximally concentrating glomerular filtrate",
-          "Are completely obstructed by struvite calculi",
+          "Are actively reabsorbing virtually all solute and water, maximally concentrating the filtrate",
+          "Are totally obstructed by mineralized proteinaceous casts, completely preventing tubular outflow",
           "Can neither concentrate nor dilute glomerular filtrate relative to protein-free plasma",
-          "Have hyperactive antidiuretic hormone receptors"
+          "Display hyper-responsive V2 vasopressin receptors, inducing maximum transcellular water retrieval"
         ],
         "a": 2,
         "e": "Isosthenuria indicates that urine osmolality equals plasma osmolality (~300 mOsm/kg, USG 1.008-1.012); persistent isosthenuria with concurrent azotemia confirms intrinsic renal failure.",
@@ -6562,9 +6562,9 @@ var quizBank = {
       {
         "q": "Post-renal azotemia in veterinary patients is typically caused by:",
         "o": [
-          "Hypovolemic dehydration",
-          "Glomerulonephritis",
-          "Ethylene glycol toxicosis",
+          "Severe hypovolemic dehydration leading to diminished renal perfusion and decreased glomerular filtration rate",
+          "Immune complex deposition within glomerular basement membranes resulting in severe membranous glomerulonephritis",
+          "Ingestion of toxic amounts of ethylene glycol resulting in acute intra-tubular calcium oxalate crystal deposition",
           "Urinary tract obstruction (e.g., urolithiasis in tomcats/steers) or ruptured urinary bladder (uroabdomen)"
         ],
         "a": 3,
@@ -6590,10 +6590,10 @@ var quizBank = {
       {
         "q": "Serum creatinine is produced at a remarkably constant daily rate in healthy animals from the non-enzymatic breakdown of:",
         "o": [
-          "Serum albumin in the liver",
-          "Dietary vegetable purines",
+          "Circulating albumin degradation by hepatic endosomes",
+          "Exogenous purines and pyrimidines from dietary intake",
           "Phosphocreatine and creatine in skeletal muscle mass",
-          "Bilirubin in the spleen"
+          "Senescent erythrocyte heme catabolism in the spleen"
         ],
         "a": 2,
         "e": "Creatinine is formed non-enzymatically from muscle phosphocreatine proportional to muscle mass; it is freely filtered by glomeruli with minimal tubular handling, serving as a reliable GFR marker.",
@@ -6604,10 +6604,10 @@ var quizBank = {
       {
         "q": "In canine hepatic failure or portosystemic shunts (PSS), the definitive diagnostic liver function test demonstrating impaired hepatic clearance is the:",
         "o": [
-          "Total serum calcium test",
-          "Blood glucose estimation alone",
+          "Evaluation of total serum calcium, inorganic phosphate, and parathyroid hormone levels",
+          "Serial fasting blood glucose estimation combined with urinalysis for ketoacids",
           "Bromsulfophthalein (BSP) or Pre- and Post-prandial Serum Bile Acids (SBA) test",
-          "Serum amylase test"
+          "Measurement of serum amylase and pancreatic lipase immunoreactivity (cPLI) levels"
         ],
         "a": 2,
         "e": "Bile acids undergo enterohepatic circulation; compromised portal perfusion (PSS) or reduced functional hepatocyte mass causes postprandial bile acids to rise dramatically in systemic blood.",
@@ -6632,10 +6632,10 @@ var quizBank = {
       {
         "q": "Hemolytic (pre-hepatic) jaundice in domestic animals is characterized biochemically by:",
         "o": [
-          "Predominant elevation of conjugated direct bilirubin with clay-colored stools",
+          "Marked elevation of conjugated (direct) bilirubin accompanied by pale, clay-colored acholic fecal masses",
           "Predominant elevation of unconjugated (indirect) bilirubin with normal to high urobilinogen in urine",
-          "Absence of bilirubin in serum",
-          "High serum alkaline phosphatase only"
+          "Complete absence of total bilirubin in serum accompanied by high-grade isosthenuric azotemia",
+          "Massive induction of liver-specific alkaline phosphatase with normal circulating bilirubin"
         ],
         "a": 1,
         "e": "Massive intravascular or extravascular hemolysis (e.g., babesiosis, autoimmune hemolytic anemia) floods the liver with biliverdin/bilirubin, elevating unconjugated bilirubin in blood.",
@@ -6646,10 +6646,10 @@ var quizBank = {
       {
         "q": "Obstructive (post-hepatic / cholestatic) jaundice is characterized biochemically by:",
         "o": [
-          "Elevated unconjugated bilirubin only",
+          "Marked elevation of unconjugated (indirect) bilirubin with negative urine bilirubin and dark, pigment-rich feces",
           "Elevated conjugated (direct) bilirubin in serum, bilirubinuria, and absence of stercobilin in feces (acholic stools)",
-          "Low serum GGT and ALP",
-          "High BUN with normal creatinine"
+          "Marked depression of serum GGT and ALP with profound elevations in circulating unconjugated protoporphyrin fractions",
+          "Disproportionate elevation in blood urea nitrogen with normal serum creatinine and absence of urinary casts"
         ],
         "a": 1,
         "e": "Biliary duct obstruction prevents excretion of conjugated bilirubin into intestine, causing reflux into hepatic sinusoidal blood, bilirubinuria, and pale chalky (acholic) feces.",
@@ -6702,9 +6702,9 @@ var quizBank = {
       {
         "q": "A marked decrease in the Albumin:Globulin (A:G) ratio (<0.45 to 0.60) in a young cat presenting with peritoneal effusion and fever is strongly suggestive of:",
         "o": [
-          "Acute pancreatitis",
-          "Diabetes mellitus",
-          "Hyperthyroidism",
+          "Severe acute necrotizing pancreatitis",
+          "Uncontrolled diabetic ketoacidosis",
+          "Severe functional hyperthyroidism",
           "Feline Infectious Peritonitis (FIP)"
         ],
         "a": 3,
@@ -6717,9 +6717,9 @@ var quizBank = {
         "q": "Symmetric Dimethylarginine (SDMA) has emerged as a sensitive veterinary renal biomarker because it detects kidney dysfunction when what fraction of nephron function is lost?",
         "o": [
           "25% to 40%",
-          "10%",
-          "75%",
-          "90%"
+          "05% to 10%",
+          "70% to 75%",
+          "85% to 90%"
         ],
         "a": 0,
         "e": "SDMA is an methylated arginine derivative excreted almost entirely by renal filtration; it detects renal compromise much earlier (~25-40% GFR decline) than serum creatinine (~75% loss).",
@@ -6730,10 +6730,10 @@ var quizBank = {
       {
         "q": "Hay's sulfur powder test performed on urine is a classic qualitative test designed to detect:",
         "o": [
-          "Bile pigments (bilirubin)",
-          "Urobilinogen",
+          "Bile pigments (due to direct chemical oxidation to biliverdin)",
+          "Urobilinogen (due to reaction with aldehydes)",
           "Bile salts (due to lowering of surface tension)",
-          "Hemoglobin"
+          "Occult hemoglobin (via peroxidase-like action)"
         ],
         "a": 2,
         "e": "Bile salts lower the surface tension of urine; fine sulfur powder sprinkled onto the urine surface sinks immediately to the bottom if bile salts are present.",
@@ -6772,10 +6772,10 @@ var quizBank = {
       {
         "q": "A High Anion Gap Metabolic Acidosis in veterinary medicine is characteristically caused by:",
         "o": [
-          "Diarrhea with bicarbonate loss",
+          "Severe acute secretory diarrhea with massive intestinal bicarbonate and potassium wasting",
           "Lactic acidosis, diabetic ketoacidosis, ethylene glycol poisoning, or uremic renal failure",
-          "Vomiting of gastric hydrochloric acid",
-          "Excess intravenous 0.9% NaCl administration"
+          "Persistent profuse vomiting of gastric hydrochloric acid producing hypochloremic alkalosis",
+          "Rapid administration of large volumes of normal saline inducing dilutional hyperchloremia"
         ],
         "a": 1,
         "e": "High AG acidosis occurs when unmeasured organic acid anions accumulate: lactate (hypovolemic shock/grain overload), beta-hydroxybutyrate/acetoacetate (ketosis), glycolate/oxalate (ethylene glycol), or uremic sulfates.",
@@ -6787,9 +6787,9 @@ var quizBank = {
         "q": "Severe acute diarrhea in calves (calf scours) causes which classic acid-base and electrolyte disturbance?",
         "o": [
           "Normal anion gap (hyperchloremic) metabolic acidosis with hypokalemia",
-          "Metabolic alkalosis with hyperkalemia",
-          "Respiratory alkalosis with hypernatremia",
-          "High anion gap metabolic alkalosis"
+          "Severe metabolic alkalosis with hypokalemia and paradoxical aciduria",
+          "Acute respiratory alkalosis accompanied by marked systemic hypernatremia",
+          "High anion gap metabolic alkalosis resulting from massive chloride loss"
         ],
         "a": 0,
         "e": "Secretory diarrhea causes massive fecal loss of alkaline intestinal fluid rich in HCO3- and K+, resulting in hyperchloremic metabolic acidosis and total body potassium depletion.",
@@ -6800,10 +6800,10 @@ var quizBank = {
       {
         "q": "In dairy cows, Left or Right Displaced Abomasum (LDA/RDA) or abomasal volvulus causes which characteristic acid-base disturbance?",
         "o": [
-          "Severe lactic acidosis",
+          "Severe hyperlactatemic metabolic acidosis with normal urinary acidification",
           "Hypochloremic, hypokalemic metabolic alkalosis with paradoxical aciduria",
-          "Hyperchloremic metabolic acidosis",
-          "Pure respiratory acidosis"
+          "Hyperchloremic metabolic acidosis characterized by marked sodium retention",
+          "Uncompensated respiratory acidosis caused by thoracic diaphragm compression"
         ],
         "a": 1,
         "e": "Abomasal atony/displacement sequesters HCl in the abomasum; loss of chloride and hydrogen ions produces metabolic alkalosis and hypochloremia, while renal K+/H+ exchange causes paradoxical aciduria.",
@@ -6814,9 +6814,9 @@ var quizBank = {
       {
         "q": "Paradoxical aciduria in cattle with metabolic alkalosis occurs because the dehydrated kidney:",
         "o": [
-          "Excretes huge quantities of bicarbonate",
-          "Lacks carbonic anhydrase in renal tubules",
-          "Produces excess sulfuric acid",
+          "Excretes vast quantities of filtered bicarbonate into the urine via down-regulated pendrin chloride-bicarbonate exchangers",
+          "Completely lacks functional carbonic anhydrase II inside proximal tubular epithelial cells, preventing proton secretion",
+          "Produces excessive quantities of endogenous sulfuric and phosphoric acids from rapid accelerated systemic catabolism",
           "Conserves sodium by excreting hydrogen ions (H+) in the collecting tubules due to severe potassium and chloride depletion"
         ],
         "a": 3,
@@ -6828,10 +6828,10 @@ var quizBank = {
       {
         "q": "Respiratory acidosis is defined primarily by an abnormal increase in arterial:",
         "o": [
-          "pH above 7.55",
-          "Bicarbonate concentration above 35 mEq/L",
+          "Systemic blood pH above 7.55 resulting from acute hyperventilation",
+          "Plasma bicarbonate concentration exceeding 35 mEq/L from renal retention",
           "Partial pressure of carbon dioxide (pCO2) due to hypoventilation",
-          "Oxygen saturation"
+          "Fraction of dissolved arterial oxygen (pO2) exceeding atmospheric limits"
         ],
         "a": 2,
         "e": "Respiratory acidosis occurs when alveolar hypoventilation impairs CO2 elimination, elevating arterial pCO2 (>45-50 mmHg) and driving the carbonic acid equilibrium toward H+ formation.",
@@ -6842,9 +6842,9 @@ var quizBank = {
       {
         "q": "In dairy cattle and feedlot steers, acute ruminal lactic acidosis (grain overload) is initiated microbiologically by the rapid overgrowth of:",
         "o": [
-          "Fibrobacter succinogenes",
-          "Ruminococcus flavefaciens",
-          "Megasphaera elsdenii",
+          "Fibrobacter succinogenes and Treponema bryantii",
+          "Ruminococcus flavefaciens and Butyrivibrio fibrisolvens",
+          "Megasphaera elsdenii and Selenomonas ruminantium",
           "Streptococcus bovis and Lactobacillus species"
         ],
         "a": 3,
@@ -6856,9 +6856,9 @@ var quizBank = {
       {
         "q": "During acute ruminal acidosis, D-lactic acid accumulates systemically in bovine blood because:",
         "o": [
-          "Cows absorb only D-lactate from the rumen",
-          "D-lactate cannot cross into kidneys",
-          "D-lactate is converted into volatile fatty acids",
+          "Ruminal epithelial transporters preferentially absorb D-lactate while completely rejecting the L-isomer into feces",
+          "D-lactate is completely filtered but actively reabsorbed by proximal tubules with zero renal clearance",
+          "D-lactate is immediately converted by rumen flora into volatile fatty acids that directly paralyze hepatic enzymes",
           "Mammalian lactate dehydrogenase (L-LDH) cannot metabolize D-lactate, causing severe prolonged metabolic acidosis"
         ],
         "a": 3,
@@ -6870,10 +6870,10 @@ var quizBank = {
       {
         "q": "When ruminal pH falls below 5.0 during severe grain engorgement, which physiological change occurs across the ruminal wall?",
         "o": [
-          "Water is rapidly absorbed from the rumen into systemic circulation, causing hypervolemia",
-          "Ruminal motility accelerates dramatically",
+          "Water is rapidly absorbed from the ruminal lumen into the systemic circulation, producing acute hypervolemia and pulmonary edema",
+          "Ruminal motility accelerates dramatically due to vagal over-stimulation, causing rapid propulsion of grain into the abomasum",
           "Massive osmotic shift draws large volumes of water from systemic blood into the hyperosmotic rumen, producing hypovolemic shock",
-          "Ammonia absorption increases ten-fold"
+          "Ammonia absorption increases ten-fold across the inflamed mucosa, triggering severe hyperammonemic encephalopathy and coma"
         ],
         "a": 2,
         "e": "High lactate concentrations increase rumen osmolarity from ~280 to >400-500 mOsm/L, drawing extracellular fluid osmotically into the rumen, resulting in dehydration, hemoconcentration, and hypovolemic shock.",
@@ -6885,9 +6885,9 @@ var quizBank = {
         "q": "Superoxide dismutase (SOD) protects cells against oxidative damage by catalyzing the conversion of:",
         "o": [
           "Two superoxide radicals (O2.-) and 2 H+ into hydrogen peroxide (H2O2) and molecular oxygen (O2)",
-          "Hydrogen peroxide to water and oxygen",
-          "Lipid hydroperoxides into alcohols",
-          "Hydroxyl radicals into water"
+          "Hydrogen peroxide (H2O2) directly into water (H2O) and molecular oxygen (O2) in peroxisomes",
+          "Toxic lipid hydroperoxides (LOOH) into benign lipid alcohols (LOH) utilizing reduced GSH",
+          "Highly reactive hydroxyl radicals (.OH) into water through spontaneous single-electron transfer"
         ],
         "a": 0,
         "e": "SOD is the first line of antioxidant defense, dismutating 2 O2.- + 2 H+ -> H2O2 + O2; cytosolic SOD requires Copper and Zinc (Cu-Zn SOD), while mitochondrial SOD requires Manganese (Mn-SOD).",
@@ -6954,9 +6954,9 @@ var quizBank = {
       {
         "q": "Lactated Ringer's Solution (Hartmann's solution) is classified as an:",
         "o": [
-          "Hypotonic crystalloid",
-          "Acidifying replacement solution",
-          "Hypertonic colloid",
+          "Hypotonic, unbalanced, maintenance crystalloid solution",
+          "Hypertonic, acidifying, plasma-volume expanding solution",
+          "Hypertonic, high-colloid, oncotic-restoring fluid mixture",
           "Isotonic, balanced, alkalinizing replacement crystalloid"
         ],
         "a": 3,
@@ -6968,10 +6968,10 @@ var quizBank = {
       {
         "q": "Lactated Ringer's Solution should NOT be administered concurrently in the same intravenous infusion line with blood products containing citrate anticoagulant because:",
         "o": [
-          "The lactate precipitates with plasma globulins",
-          "LRS causes instantaneous red blood cell hemolysis",
+          "The sodium lactate component reacts directly with donor globulins to produce insoluble proteinaceous precipitates",
+          "The osmolarity of LRS induces instantaneous, catastrophic osmotic lysis of donor erythrocytes within the tubing",
           "The calcium ions in LRS can overwhelm the citrate anticoagulant, triggering blood clot formation",
-          "The solution becomes highly acidic"
+          "The chemical interaction creates an intensely acidic fluid environment that denatures all circulating albumin"
         ],
         "a": 2,
         "e": "LRS contains 3 mEq/L of ionized calcium, which can neutralize the sodium citrate in banked blood, initiating clotting cascades inside the intravenous infusion tubing.",
@@ -6982,10 +6982,10 @@ var quizBank = {
       {
         "q": "Hypertonic saline (7.2% NaCl) is clinically administered as a rapid small-volume resuscitation fluid in hypovolemic shock because it:",
         "o": [
-          "Slowly hydrates the intracellular space",
-          "Acts as an alkalinizing buffer",
+          "Diffuses rapidly and freely across all cell membranes to progressively hydrate and restore intracellular volume without altering vascular blood pressure",
+          "Acts as an alkalinizing buffer by generating large amounts of bicarbonate through immediate hepatic metabolism of sodium ions",
           "Draws water rapidly from the intracellular and interstitial compartments into the intravascular space via osmotic gradients, expanding blood volume",
-          "Lowers systemic blood pressure"
+          "Induces profound systemic peripheral vasodilation, lowering systemic vascular resistance and decreasing myocardial oxygen demand"
         ],
         "a": 2,
         "e": "At ~2400 mOsm/L, 7.2% NaCl administered at 4-5 mL/kg pulls fluid instantaneously from swollen edematous cells into the circulation, restoring venous return and cardiac output within minutes.",
@@ -7010,10 +7010,10 @@ var quizBank = {
       {
         "q": "Intravenous 5% Dextrose in water (D5W) is physiologically classified once infused into the body as:",
         "o": [
-          "An isotonic extracellular expander",
-          "A hypertonic plasma expander",
+          "An isotonic extracellular expander that remains completely trapped within the intravascular vascular bed",
+          "A hypertonic plasma volume expander that rapidly draws fluid from interstitial spaces via oncotic pressure",
           "Free water (hypotonic fluid) because glucose is rapidly metabolized by tissues, leaving pure water",
-          "An alkalinizing buffer"
+          "A potent alkalinizing buffer solution that neutralizes systemic lactic acid by stimulating glycolysis"
         ],
         "a": 2,
         "e": "Although D5W is iso-osmolar in the bottle (~252 mOsm/L), once infused, the dextrose is rapidly transported into cells and metabolized, leaving hypotonic free water that distributes through total body water.",
@@ -7024,10 +7024,10 @@ var quizBank = {
       {
         "q": "In canine ethylene glycol (antifreeze) toxicity, the devastating renal damage and severe high anion gap acidosis are caused by toxic metabolites including:",
         "o": [
-          "L-lactic acid and propionate",
-          "Acetone and beta-hydroxybutyrate",
+          "Excess L-lactic acid and propionate from ruminal fermentation overflow",
+          "Acetoacetate and beta-hydroxybutyrate generated from accelerated lipolysis",
           "Glycolic acid and Oxalic acid (which precipitates as calcium oxalate monohydrate crystals in renal tubules)",
-          "Hydrochloric acid and sulfuric acid"
+          "Endogenous sulfuric and phosphoric acids generated from severe metabolic tissue breakdown and renal retention"
         ],
         "a": 2,
         "e": "Alcohol dehydrogenase oxidizes ethylene glycol to glycoaldehyde, glycolic acid (severe acidosis), and oxalic acid, which complexes with Ca2+ to form insoluble oxalate crystals that destroy tubular epithelium.",
@@ -7038,9 +7038,9 @@ var quizBank = {
       {
         "q": "Catalase, a heme-containing tetrameric enzyme found abundantly in peroxisomes, decomposes hydrogen peroxide into:",
         "o": [
-          "Superoxide and hydroxyl radicals",
-          "Peroxynitrite",
-          "Ozone and hydrogen gas",
+          "Superoxide radicals and hydroxyl anions",
+          "Peroxynitrite and nitrogen dioxide",
+          "Ozone gas and molecular hydrogen radicals",
           "Water (H2O) and molecular oxygen (O2)"
         ],
         "a": 3,
@@ -7052,10 +7052,10 @@ var quizBank = {
       {
         "q": "Biotransformation (detoxification) of lipophilic xenobiotics in the liver generally converts them into:",
         "o": [
-          "More lipophilic non-polar molecules that accumulate in body fat",
+          "Highly lipophilic non-polar molecules that accumulate permanently in adipose tissue",
           "More polar, water-soluble metabolites easily excreted in bile and urine",
-          "Volatile gases eliminated exclusively through the skin",
-          "Structural membrane phospholipids"
+          "Volatile gaseous metabolites eliminated exclusively across the respiratory membranes",
+          "Structural membrane phospholipids incorporated directly into hepatocyte membranes"
         ],
         "a": 1,
         "e": "The overarching biological purpose of xenobiotic metabolism is to introduce or conjugate polar groups, making hydrophobic foreign compounds hydrophilic for renal or biliary excretion.",
@@ -7080,9 +7080,9 @@ var quizBank = {
       {
         "q": "Cytochrome P450 monooxygenase enzymes are located primarily within which subcellular structure of hepatocytes?",
         "o": [
-          "Mitochondrial matrix",
-          "Lysosomes",
-          "Nucleolus",
+          "Mitochondrial inner cristae and matrix space",
+          "Primary and secondary lysosomal bodies",
+          "Nucleolar fibrillar ribonucleoprotein",
           "Smooth Endoplasmic Reticulum (microsomes)"
         ],
         "a": 3,
@@ -7108,9 +7108,9 @@ var quizBank = {
       {
         "q": "The complete catalytic cycle of a Cytochrome P450 monooxygenase reaction requires:",
         "o": [
-          "Cytochrome c and glucose",
-          "Substrate, ATP, and Vitamin C",
-          "FAD, NADH, and hydrogen peroxide",
+          "Substrate, oxidized cytochrome c, and high-energy cellular ATP hydrolysis reactions",
+          "Substrate, ascorbic acid (Vitamin C), and mitochondrial complex II",
+          "Substrate, FAD, NADH, and peroxisomal hydrogen peroxide generation",
           "Substrate, molecular oxygen (O2), NADPH, and NADPH-cytochrome P450 reductase"
         ],
         "a": 3,
@@ -7122,10 +7122,10 @@ var quizBank = {
       {
         "q": "Which Cytochrome P450 subfamily in domestic animals is the most abundant in the liver and metabolizes over 50% of therapeutic drugs?",
         "o": [
-          "CYP1A",
-          "CYP2D",
+          "CYP1A (e.g., CYP1A1 / CYP1A2)",
+          "CYP2D (e.g., CYP2D6 / CYP2D15)",
           "CYP3A (e.g., CYP3A4 / CYP3A12)",
-          "CYP4A"
+          "CYP4A (e.g., CYP4A11 / CYP4A12)"
         ],
         "a": 2,
         "e": "The CYP3A subfamily possesses a large flexible substrate-binding pocket, metabolizing the widest variety of veterinary anesthetics, sedatives, antimicrobials, and anthelmintics.",
@@ -7136,9 +7136,9 @@ var quizBank = {
       {
         "q": "Phenobarbital administration in dogs induces Cytochrome P450 enzyme synthesis, resulting clinically in:",
         "o": [
-          "Complete cessation of drug clearance",
-          "Massive hemolysis",
-          "Immediate acute renal shutdown",
+          "Complete non-competitive inhibition of microsomal enzymes and fatal accumulation of co-administered drugs",
+          "Massive intravascular hemolysis and sudden catastrophic development of hemoglobinuric nephrosis",
+          "Immediate acute anuric renal failure secondary to massive deposition of drug conjugates in renal tubules",
           "Accelerated metabolism (shorter half-life) of co-administered drugs and progressive drug tolerance"
         ],
         "a": 3,
@@ -7150,9 +7150,9 @@ var quizBank = {
       {
         "q": "Domestic cats (felines) have an extreme, life-threatening sensitivity to acetaminophen (paracetamol) poisoning primarily because cats possess a genetic deficiency of:",
         "o": [
-          "Alcohol dehydrogenase",
-          "Catalase",
-          "Cytochrome P450 reductase",
+          "Cytosolic Alcohol Dehydrogenase (ADH, specifically the ADH1C isozyme)",
+          "Peroxisomal Catalase and Superoxide Dismutase enzymes",
+          "Microsomal Cytochrome P450 Reductase electron carriers",
           "Hepatic UDP-Glucuronosyltransferase (UGT, specifically UGT1A6)"
         ],
         "a": 3,
@@ -7165,9 +7165,9 @@ var quizBank = {
         "q": "In cats poisoned by acetaminophen (paracetamol), the reactive toxic metabolite NAPQI oxidizes hemoglobin ferrous iron (Fe2+) to ferric iron (Fe3+), producing:",
         "o": [
           "Methemoglobinemia, severe cyanosis (chocolate-brown blood), and Heinz body hemolytic anemia",
-          "Carboxyhemoglobin and cherry-red blood",
-          "Complete polycythemia",
-          "Acute alkalemia"
+          "Carboxyhemoglobinemia, bright cherry-red mucous membranes, and high oxygen-carrying capacity",
+          "Severe absolute polycythemia accompanied by marked hyperviscosity and microvascular thrombosis",
+          "Severe uncompensated respiratory alkalemia resulting from massive central hyperventilation"
         ],
         "a": 0,
         "e": "NAPQI depletes erythrocyte glutathione and oxidizes hemoglobin to methemoglobin (which cannot bind oxygen), turning blood dark chocolate-brown and precipitating oxidized globin as Heinz bodies.",
@@ -7193,9 +7193,9 @@ var quizBank = {
         "q": "Domestic dogs (canines) are genetically deficient in which Phase II conjugation pathway, predisposing them to sulfonamide drug toxicity?",
         "o": [
           "N-Acetylation (N-acetyltransferase)",
-          "Glucuronidation",
-          "Glutathione conjugation",
-          "Sulfation"
+          "Glucuronidation (UDP-glucuronosyltransferase)",
+          "Glutathione conjugation (glutathione transferase)",
+          "Sulfation (sulfotransferase / PAPS transfer)"
         ],
         "a": 0,
         "e": "Dogs lack functional N-acetyltransferase (NAT) genes; unable to acetylate aromatic amines, they metabolize sulfonamides via alternate oxidative pathways into toxic hydroxylamines (causing keratoconjunctivitis sicca and polyarthritis).",
@@ -7220,10 +7220,10 @@ var quizBank = {
       {
         "q": "The activated sulfate donor compound required by sulfotransferases in Phase II sulfoconjugation reactions is:",
         "o": [
-          "Sodium sulfate",
-          "S-Adenosylmethionine",
+          "Adenosine-5'-phosphosulfate (APS active donor)",
+          "S-Adenosylmethionine (SAM activated methyl)",
           "3'-Phosphoadenosine-5'-phosphosulfate (PAPS)",
-          "Glutathione"
+          "Reduced glutathione (GSH tripeptide donor)"
         ],
         "a": 2,
         "e": "PAPS (known as 'active sulfate') is formed from ATP and inorganic sulfate by PAPS synthetase, serving as the universal sulfate donor for xenobiotics and glycosaminoglycans.",
@@ -7235,9 +7235,9 @@ var quizBank = {
         "q": "Phase II glutathione conjugation of electrophilic drugs catalyzed by Glutathione S-Transferase (GST) yields excreted urinary end products known as:",
         "o": [
           "Mercapturic acids (N-acetylcysteine conjugates)",
-          "Hippuric acids",
-          "Uric acid crystals",
-          "Bile salts"
+          "Hippuric acids formed via glycine acyl-conjugation",
+          "Glucuronide conjugates (ether-linked)",
+          "Ornithuric acids (ornithine adducted)"
         ],
         "a": 0,
         "e": "Glutathione conjugates undergo sequential enzymatic trimming (removal of glutamate and glycine) followed by N-acetylation of the remaining cysteine conjugate to form water-soluble mercapturic acids.",
@@ -7277,9 +7277,9 @@ var quizBank = {
         "q": "The universal methyl donor for Phase II methylation of catecholamines, histamine, and xenobiotics is:",
         "o": [
           "S-Adenosylmethionine (SAM)",
-          "Methylene-THF",
-          "Choline",
-          "Betaine"
+          "Tetrahydrofolate (N5-methyl-THF)",
+          "Choline phosphate intermediate",
+          "Betaine-homocysteine methylate"
         ],
         "a": 0,
         "e": "Methyltransferases use SAM (S-adenosylmethionine) as the donor of reactive methyl groups, generating S-adenosylhomocysteine (SAH).",
@@ -7290,10 +7290,10 @@ var quizBank = {
       {
         "q": "Aflatoxin B1, a potent fungal hepatocarcinogen produced by Aspergillus flavus in moldy feedstuffs, is bioactivated by Cytochrome P450 enzymes into:",
         "o": [
-          "Aflatoxin M1 exclusively",
+          "Aflatoxin M1 excreted completely unchanged without forming reactive adductions",
           "Aflatoxin B1-8,9-epoxide, which covalently binds to DNA guanine residues",
-          "Inactive benzoic acid",
-          "Water-soluble glucuronide"
+          "Aflatoxin Q1 which directly inhibits mitochondrial ATP synthase complexes",
+          "Aflatoxicol phosphate which acts as a direct competitive inhibitor of RNA Pol"
         ],
         "a": 1,
         "e": "Phase I CYP oxidation can bioactivate procarcinogens: CYP2A and CYP3A oxidize aflatoxin B1 into a highly mutagenic 8,9-epoxide that intercalates and forms covalent adducts with DNA.",
@@ -7304,10 +7304,10 @@ var quizBank = {
       {
         "q": "Cimetidine and ketoconazole act in canine and feline clinical pharmacology as potent:",
         "o": [
-          "Cytochrome P450 inducers",
-          "Stimulators of glucuronidation",
+          "Cytochrome P450 enzyme inducers, accelerating hepatic drug metabolism and reducing therapeutic efficacy of drugs",
+          "Phase II glucuronidation promoters, dramatically accelerating renal and biliary excretion of xenobiotics",
           "Cytochrome P450 competitive inhibitors, slowing clearance and increasing toxicity of co-administered drugs",
-          "Glutathione depleters"
+          "Intracellular glutathione depleters, causing sudden widespread perivenular hepatic necrosis and lysis"
         ],
         "a": 2,
         "e": "Cimetidine and imidazole antifungals (ketoconazole) bind tightly to CYP heme iron, reversibly inhibiting drug biotransformation and risking toxic accumulation of co-administered drugs.",
@@ -7346,9 +7346,9 @@ var quizBank = {
       {
         "q": "Methylene blue is specifically indicated as an emergency veterinary antidote for the treatment of:",
         "o": [
-          "Ethylene glycol poisoning",
-          "Organophosphate toxicity",
-          "Lead toxicity",
+          "Ethylene glycol poisoning causing acute calcium oxalate renal damage",
+          "Organophosphate poisoning producing irreversible acetylcholinesterase block",
+          "Acute lead toxicosis producing severe basophilic stippling of erythrocytes",
           "Nitrate / Nitrite toxicity causing severe methemoglobinemia in ruminants"
         ],
         "a": 3,
