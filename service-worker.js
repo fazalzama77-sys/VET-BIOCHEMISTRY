@@ -12,7 +12,7 @@
    IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v16";
+var CACHE_VERSION = "vbioc-v17";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -59,6 +59,18 @@ var PRECACHE = [
   "js/app.js"
 ];
 
+// Network request that gives up after `ms`, so "Wi-Fi without internet" falls back
+// to the offline copy quickly instead of leaving a blank screen.
+function fetchWithTimeout(req, ms) {
+  return new Promise(function (resolve, reject) {
+    var t = setTimeout(function () { reject(new Error("timeout")); }, ms);
+    fetch(req).then(
+      function (res) { clearTimeout(t); resolve(res); },
+      function (err) { clearTimeout(t); reject(err); }
+    );
+  });
+}
+
 // Normalize request matching for root vs index.html
 function matchPrecache(req) {
   return caches.match(req).then(function (hit) {
@@ -78,16 +90,16 @@ self.addEventListener("install", function (e) {
   e.waitUntil(
     caches.open(SHELL_CACHE)
       .then(function (cache) {
+        // All-or-nothing: if any file fails to download, this update is abandoned and the
+        // previous, complete offline copy stays in charge (it is retried on the next visit).
+        // Previously a failed file was skipped and the old copy deleted, leaving a broken
+        // offline copy after any update on a weak connection.
         return Promise.all(
           PRECACHE.map(function (url) {
             return fetch(new Request(url, { cache: "reload" }))
               .then(function (response) {
-                if (response && response.ok) {
-                  return cache.put(url, response);
-                }
-              })
-              .catch(function () {
-                // If an individual asset fails, continue caching others
+                if (!response || !response.ok) throw new Error("precache failed: " + url);
+                return cache.put(url, response);
               });
           })
         );
@@ -128,7 +140,7 @@ self.addEventListener("fetch", function (e) {
   // 1. Navigation requests (Opening the site / refreshing in browser / PWA launch)
   if (req.mode === "navigate") {
     e.respondWith(
-      fetch(req)
+      fetchWithTimeout(req, 5000)
         .then(function (networkRes) {
           if (networkRes && networkRes.ok) {
             var copy = networkRes.clone();

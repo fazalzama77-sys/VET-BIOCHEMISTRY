@@ -13,7 +13,6 @@
   --purple-w:rgba(106,72,181,.07); --amber-w:rgba(178,94,0,.08);
   --coral-w:rgba(216,67,21,.07); --sage-w:rgba(46,125,50,.07);
   --shadow:0 1px 2px rgba(14,28,41,.05), 0 10px 30px rgba(14,28,41,.07);
-  --z:0.72;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -187,19 +186,98 @@ svg{display:block;width:100%;height:auto}
 }
 .foot .m{font-size:7.4px;color:var(--faint);font-weight:600}
 
-@media print{
-  body{background:#fff;padding:0}
-  .bar{display:none}
-  .wrap{max-width:none;gap:0}
-  .sheet{box-shadow:none;border:0;border-radius:0;break-after:page;page-break-after:always;zoom:var(--z);width:calc(210mm / var(--z));min-height:calc(297mm / var(--z));padding:9mm 9mm 7mm}
-  .sheet:last-child{break-after:auto;page-break-after:auto}
-}
-@page{size:A4;margin:0}
 @media screen and (max-width:230mm){
   .wrap,.sheet{width:100%;min-width:0}
   .sheet{padding:14px 12px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===================== READABLE EDITION (large print) ===================== */
+.wrap{max-width:210mm}
+.sheet{padding:14mm 13mm 11mm;gap:6mm;min-height:0}
+.grid,.grid.thirds{grid-template-columns:1fr !important;gap:5mm}
+.span2{grid-column:auto}
+.head{padding-bottom:7px;border-bottom-width:2.5px}
+.head .unit{font-size:11px;padding:5px 8px}
+.head h2{font-size:20px;line-height:1.25}
+.head .sub{font-size:13px}
+.head .pg{font-size:11px}
+.mod{padding:10px 14px 12px;gap:8px;border-left-width:4px}
+.mod>h3{font-size:13.5px;letter-spacing:.08em;gap:8px;line-height:1.3}
+.mod>h3 .n{font-size:11px;padding:3px 5px}
+p.l{font-size:14.5px;line-height:1.6}
+ul.l{padding-left:20px;gap:5px}
+ul.l li,.mod ol li{font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.mod ol{padding-left:22px !important;gap:4px !important}
+code,.m{font-size:13px}
+.dl{grid-template-columns:9.5em 1fr;gap:7px 14px;font-size:14.5px;line-height:1.55}
+.dl dt{white-space:normal}
+table{font-size:13.5px;line-height:1.45}
+th,td{padding:5px 7px}
+th{font-size:12px}
+td.k{white-space:normal;min-width:6.5em}
+td .m{font-size:12.5px}
+.chips{gap:6px}
+.chip{font-size:13px;padding:4px 10px;border-radius:12px;line-height:1.35}
+.mnem,.hook,.trap{font-size:14px;line-height:1.55;padding:8px 12px}
+.hook,.trap{border-left-width:4px}
+.vals{grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:6px}
+.val{padding:6px}
+.val .v{font-size:17px}
+.val .c{font-size:12px;margin-top:3px}
+.flow{font-size:13.5px;gap:6px}
+.flow .s{padding:4px 8px;line-height:1.4}
+.flow .cond{font-size:12.5px;line-height:1.3}
+.cap{font-size:12px}
+.qa div{font-size:13.5px;line-height:1.45}
+.qa div>span{padding:5px 9px}
+.foot{font-size:11px;padding-top:6px}
+.foot .m{font-size:11px}
+.bar h1{font-size:18px}
+.bar p{font-size:14px}
+.bar .go{font-size:13px;padding:9px 14px}
+
+/* diagrams rebuilt in HTML so their labels grow with the text */
+.tree{display:flex;flex-direction:column;gap:8px}
+.tree-root{align-self:center;font-weight:800;font-size:13.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);border:1.5px solid var(--blue);background:var(--blue-w);padding:5px 16px;border-radius:4px}
+.tree-root.coral{color:var(--coral);border-color:var(--coral);background:var(--coral-w)}
+.tree-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tree-row.three{grid-template-columns:1fr 1fr 1fr}
+.tree-branch{display:flex;flex-direction:column;gap:6px;border:1px solid var(--rule);border-radius:4px;padding:8px}
+.tree-h{font-weight:700;font-size:13.5px;text-align:center;padding:4px 6px;border-radius:3px}
+.tree-branch.pass .tree-h{color:var(--sage);background:var(--sage-w)}
+.tree-branch.act .tree-h{color:var(--coral);background:var(--coral-w)}
+.tree-kids{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tree-leaf{background:var(--surface);border:1px solid var(--rule-soft);border-radius:3px;padding:7px 9px;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.tree-leaf b{display:block;font-size:14px;margin-bottom:3px;color:var(--ink)}
+.tree-leaf span{display:block}
+.lb-note{margin:0;font-size:13px;color:var(--muted)}
+.lb{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lb figure{margin:0;border:1px solid var(--rule-soft);background:var(--surface);border-radius:3px;padding:8px}
+.lb h4{margin:0 0 4px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.lb figcaption{font-size:13px;line-height:1.45;color:var(--ink-2);margin-top:5px}
+@media screen and (max-width:560px){
+  .tree-row,.tree-row.three,.lb{grid-template-columns:1fr}
+}
+
+@media print{
+  body{background:#fff;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar{display:none}
+  .wrap{max-width:none;gap:0;display:block}
+  .sheet{display:block;width:auto;min-height:0;height:auto;padding:0;border:0;border-radius:0;box-shadow:none}
+  .sheet+.sheet{break-before:page;page-break-before:always}
+  .sheet>*+*{margin-top:5mm}
+  .grid{display:block}
+  .grid>*+*{margin-top:5mm}
+  .scroll{overflow:visible}
+  .mod{display:block;break-inside:auto;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .mod>*+*{margin-top:8px}
+  .mod>h3,.head,.tree-h,.lb h4{break-after:avoid;page-break-after:avoid}
+  tr,li,p.l,.hook,.mnem,.trap,.flow,.chip,.val,.vals,svg,.tree,.lb,.dl dt,.dl dd,.qa div,.tree-leaf{break-inside:avoid;page-break-inside:avoid}
+  tr:has(th){break-after:avoid;page-break-after:avoid}
+  .foot{margin-top:6mm}
+}
+@page{size:A4;margin:13mm 12mm 13mm}
 </style>
 
 <div class="wrap">
@@ -218,7 +296,7 @@ svg{display:block;width:100%;height:auto}
       <h2>Blood Sugar Regulation · Diabetes · Tests for Carbohydrate Disturbance</h2>
       <span class="sub">Syllabus lines 1–2</span>
     </div>
-    <span class="pg">SHEET 1 / 5</span>
+    <span class="pg">PART 1 / 5</span>
   </div>
 
   <div class="grid">
@@ -251,10 +329,10 @@ svg{display:block;width:100%;height:auto}
     <div class="mod c">
       <h3><span class="n">02</span> Diabetes mellitus &amp; hyperinsulinism</h3>
       <p class="l"><b>Diabetes mellitus</b> — chronic hyperglycaemia from absolute or relative insulin deficiency. <b>Type 1 (IDDM)</b>: β-cell destruction, absolute deficiency, ketosis-prone — the usual canine form. <b>Type 2 (NIDDM)</b>: insulin resistance with islet amyloid deposition — the usual feline form, linked to obesity and inactivity. <b>Secondary/type 3</b>: dioestrus and progesterone/GH in the bitch, hyperadrenocorticism, glucocorticoid or megestrol therapy, pancreatitis, acromegaly in the cat.</p>
-      <div class="flow" style="font-size:8px">
+      <div class="flow">
         <span class="s">↓Insulin</span><span class="ar">→</span><span class="s">↓glucose uptake<br>+ ↑gluconeogenesis</span><span class="ar">→</span><span class="s"><b>Hyperglycaemia</b></span><span class="ar">→</span><span class="s">exceeds renal threshold</span><span class="ar">→</span><span class="s"><b>Glycosuria</b></span><span class="ar">→</span><span class="s">osmotic diuresis</span><span class="ar">→</span><span class="s"><b>PU / PD</b>, dehydration</span>
       </div>
-      <div class="flow" style="margin-top:2px;font-size:8px">
+      <div class="flow" style="margin-top:6px;">
         <span class="s">↓Insulin</span><span class="ar">→</span><span class="s">unrestrained lipolysis</span><span class="ar">→</span><span class="s">↑FFA to liver, OAA drained</span><span class="ar">→</span><span class="s"><b>Ketogenesis</b></span><span class="ar">→</span><span class="s">ketonaemia, ketonuria</span><span class="ar">→</span><span class="s"><b>Metabolic acidosis (↑anion gap)</b></span>
       </div>
       <ul class="l">
@@ -294,7 +372,7 @@ svg{display:block;width:100%;height:auto}
       <h2>Ruminant &amp; Neonatal Energy Disorders · Plasma Proteins</h2>
       <span class="sub">Bovine ketosis · pregnancy toxaemia · baby-pig hypoglycaemia · dysproteinaemias · acute-phase proteins</span>
     </div>
-    <span class="pg">SHEET 2 / 5</span>
+    <span class="pg">PART 2 / 5</span>
   </div>
 
   <div class="grid">
@@ -371,7 +449,7 @@ svg{display:block;width:100%;height:auto}
       <h2>Lipid Profile · Clinical Enzymology · Liver Function Tests</h2>
       <span class="sub">Syllabus lines 5–7</span>
     </div>
-    <span class="pg">SHEET 3 / 5</span>
+    <span class="pg">PART 3 / 5</span>
   </div>
 
   <div class="grid">
@@ -412,8 +490,8 @@ svg{display:block;width:100%;height:auto}
 
     <div class="mod a span2">
       <h3><span class="n">09</span> Liver function tests — classification &amp; differential diagnosis of jaundice</h3>
-      <div class="grid thirds" style="gap:2.6mm">
-        <div style="display:flex;flex-direction:column;gap:3px">
+      <div class="grid thirds" style="gap:4mm">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l"><b>Classification of LFTs</b> — the framework the examiner wants before any detail:</p>
           <div class="dl">
             <dt>① Excretory</dt><dd><b>Bilirubin</b> (total, direct/conjugated, indirect), urine bilirubin and urobilinogen, <b>BSP (bromosulphthalein) and ICG clearance</b>, serum <b>bile acids</b> (pre- and 2 h post-prandial — the single most sensitive functional test, and the test of choice for a <b>portosystemic shunt</b>).</dd>
@@ -424,9 +502,9 @@ svg{display:block;width:100%;height:auto}
           </div>
           <div class="trap"><b>Trap:</b> the liver has an enormous reserve — <b>more than 70–80 % must be lost before the functional tests become abnormal</b>. Enzymes tell you about damage <em>early</em>; albumin, urea and bilirubin tell you about failure <em>late</em>.</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l"><b>Bilirubin metabolism in one line:</b></p>
-          <div class="flow" style="font-size:7.8px">
+          <div class="flow">
             <span class="s">Senescent RBC → haem</span><span class="ar">→</span><span class="s">biliverdin</span><span class="ar">→</span><span class="s"><b>Unconjugated bilirubin</b><br>albumin-bound, water-<em>insoluble</em></span><span class="ar">→</span><span class="s">Liver: UDP-glucuronyl transferase</span><span class="ar">→</span><span class="s"><b>Conjugated</b><br>water-soluble</span><span class="ar">→</span><span class="s">Bile → gut → urobilinogen → stercobilin</span>
           </div>
           <div class="scroll">
@@ -444,7 +522,7 @@ svg{display:block;width:100%;height:auto}
           </table>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <div class="hook"><b>This differential table is the single most repeated long-answer question in Unit 3.</b> Reproduce it as a table, then add one line of species context: <b>the horse develops fasting (anorexia) hyperbilirubinaemia</b> that is unconjugated and physiological; <b>cattle rarely become icteric</b> except in haemolytic disease (babesiosis, anaplasmosis, leptospirosis, copper toxicity, <em>Brassica</em>); <b>any icterus in a cat demands exclusion of hepatic lipidosis, cholangiohepatitis, FIP and haemoplasmosis</b>.</div>
           <p class="l"><b>Common causes to quote:</b> <em>pre-hepatic</em> — babesiosis, theileriosis, anaplasmosis, trypanosomiasis, leptospirosis, immune-mediated haemolytic anaemia, onion/copper/paracetamol toxicity, incompatible transfusion. <em>Hepatic</em> — infectious canine hepatitis, leptospirosis, aflatoxicosis and other mycotoxins, <b>lantana and <em>Crotalaria</em>/pyrrolizidine alkaloid poisoning</b>, copper toxicity in sheep, chronic fibrosis, neoplasia, drugs. <em>Post-hepatic</em> — cholelithiasis, <b>Fasciola in ruminants</b>, ascariasis in the pig, pancreatitis, neoplasia of the duct or pancreas.</p>
           <p class="l"><b>Ammonia and encephalopathy:</b> a failing or bypassed liver cannot run the urea cycle, so <b>blood ammonia rises while BUN falls</b>. Together with <b>ammonium biurate crystals</b> in the urine and abnormal <b>bile acids</b>, this is the diagnostic triad of a <b>portosystemic shunt</b> in a young dog.</p>
@@ -464,7 +542,7 @@ svg{display:block;width:100%;height:auto}
       <h2>Renal Function Tests · Urine Analysis · Acid–Base Disorders</h2>
       <span class="sub">Syllabus lines 8–9</span>
     </div>
-    <span class="pg">SHEET 4 / 5</span>
+    <span class="pg">PART 4 / 5</span>
   </div>
 
   <div class="grid">
@@ -504,8 +582,8 @@ svg{display:block;width:100%;height:auto}
 
     <div class="mod c span2">
       <h3><span class="n">12</span> Disturbances of acid–base balance and their diagnosis</h3>
-      <div class="grid" style="gap:2.6mm">
-        <div style="display:flex;flex-direction:column;gap:3px">
+      <div class="grid" style="gap:4mm">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l">Everything follows from <b>Henderson–Hasselbalch</b>: <span class="m">pH = 6.1 + log (HCO₃⁻ / 0.03 × pCO₂)</span>, normally <span class="m">6.1 + log 20 = 7.4</span>. <b>HCO₃⁻ is the metabolic (renal) component; pCO₂ is the respiratory (pulmonary) component.</b> Name the primary disorder by asking which one moved in the same direction as the pH change.</p>
           <div class="scroll">
           <table>
@@ -518,7 +596,7 @@ svg{display:block;width:100%;height:auto}
           </div>
           <div class="mnem"><u>Anion gap</u> <span class="m">= (Na⁺ + K⁺) − (Cl⁻ + HCO₃⁻)</span>, normally ≈ 12–25 mEq/L. A <b>high anion gap</b> means unmeasured acid has been added — <b>ketoacids, lactate, uraemic acids, ethylene-glycol metabolites</b>. A <b>normal (hyperchloraemic) anion gap</b> means bicarbonate has simply been lost — <b>diarrhoea, renal tubular acidosis</b>. This one calculation separates the two families of metabolic acidosis.</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l"><b>How to read a blood-gas report in four steps:</b> ① look at <b>pH</b> — acidaemia or alkalaemia; ② look at <b>HCO₃⁻ and pCO₂</b> and see which one explains the pH — that is the primary disorder; ③ check whether the other has moved in the <em>same direction</em> — that is compensation (compensation never overshoots to normal); ④ if both move in opposite directions, or the compensation is inappropriate, call it a <b>mixed disorder</b>.</p>
           <div class="vals">
             <div class="val"><span class="v">7.35–7.45</span><span class="c">arterial pH</span></div>
@@ -545,7 +623,7 @@ svg{display:block;width:100%;height:auto}
       <h2>Digestive Disorders · Oxidative Stress &amp; Shock · Fluid Therapy · Detoxification</h2>
       <span class="sub">Syllabus lines 10–12, plus the final recall bank</span>
     </div>
-    <span class="pg">SHEET 5 / 5</span>
+    <span class="pg">PART 5 / 5</span>
   </div>
 
   <div class="grid">
@@ -564,7 +642,7 @@ svg{display:block;width:100%;height:auto}
     <div class="mod c">
       <h3><span class="n">14</span> Oxidative stress &amp; shock</h3>
       <p class="l"><b>Oxidative stress</b> = an imbalance between the production of <b>reactive oxygen species (ROS)</b> and the antioxidant defence, in favour of the ROS, causing damage to lipid, protein and DNA.</p>
-      <div class="flow" style="font-size:8px">
+      <div class="flow">
         <span class="s">O₂</span><span class="ar">→</span><span class="s"><b>Superoxide O₂•⁻</b></span><span class="cond">SOD (Cu, Zn, Mn)</span><span class="ar">→</span><span class="s">H₂O₂</span><span class="cond">catalase (Fe) · glutathione peroxidase (<b>Se</b>)</span><span class="ar">→</span><span class="s">H₂O</span>
       </div>
       <ul class="l">
@@ -578,8 +656,8 @@ svg{display:block;width:100%;height:auto}
 
     <div class="mod t span2">
       <h3><span class="n">15</span> Biochemical basis of fluid therapy · Detoxification and xenobiotic metabolism</h3>
-      <div class="grid thirds" style="gap:2.6mm">
-        <div style="display:flex;flex-direction:column;gap:3px">
+      <div class="grid thirds" style="gap:4mm">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l"><b>Fluid compartments.</b> Total body water ≈ <b>60 % of body weight</b>, split as <b>ICF ≈ 40 %</b> and <b>ECF ≈ 20 %</b> (interstitial 15 %, plasma 5 %). <b>Na⁺ is the principal ECF cation and the determinant of ECF volume; K⁺ is the principal ICF cation.</b> Water moves by osmosis; protein holds it in the vessel by oncotic pressure (Starling forces + the Donnan effect).</p>
           <table>
             <tr><th>Fluid</th><th>Type</th><th>Use</th></tr>
@@ -592,7 +670,7 @@ svg{display:block;width:100%;height:auto}
           </table>
           <div class="mnem"><u>Prescribing in three parts:</u> <b>① correct the existing deficit</b> = BW(kg) × % dehydration × 10 = mL · <b>② replace ongoing losses</b> (vomiting, diarrhoea, polyuria) · <b>③ supply maintenance</b> ≈ 50–60 mL/kg/day. Then decide the <em>route</em>, the <em>rate</em>, and the <em>potassium</em> — never exceed 0.5 mEq K⁺/kg/hour.</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <p class="l"><b>Detoxification (biotransformation)</b> converts lipid-soluble xenobiotics — drugs, plant toxins, pesticides, mycotoxins, food additives, industrial chemicals — into <b>more water-soluble, less toxic, more readily excretable</b> compounds. The <b>liver</b> is the chief site (smooth ER); also kidney, lung, intestinal mucosa and skin.</p>
           <div class="dl">
             <dt>Phase I —<br>functionalisation</dt><dd><b>Oxidation, reduction, hydrolysis</b>, hydration and dehalogenation. Introduces or unmasks a polar group (−OH, −NH₂, −SH, −COOH). Dominated by the <b>cytochrome P450 mixed-function oxidase system</b>. Products may be <em>more</em> toxic than the parent — <b>bioactivation</b>.</dd>
@@ -600,7 +678,7 @@ svg{display:block;width:100%;height:auto}
           </div>
           <p class="l"><b>Cytochrome P450</b> — a superfamily of <b>haem-thiolate monooxygenases</b> named for the 450 nm absorbance of their CO complex. Reaction: <span class="m">RH + O₂ + NADPH + H⁺ → ROH + H₂O + NADP⁺</span> — <b>one atom of oxygen enters the substrate, the other becomes water</b>; the partner enzyme is <b>NADPH–cytochrome P450 reductase</b>. Besides xenobiotics, P450s make <b>steroid hormones, bile acids, vitamin D and eicosanoids</b>. They are strongly <b>inducible</b> (phenobarbitone, rifampicin, PCBs, some pesticides) and <b>inhibitable</b> (chloramphenicol, cimetidine, ketoconazole) — the mechanism of countless drug interactions and of altered withdrawal periods in food animals.</p>
         </div>
-        <div style="display:flex;flex-direction:column;gap:3px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <div class="hook"><b>Species deficiencies — the most rewarding facts in this section:</b> ① <b>The cat has a deficient glucuronyl transferase</b>, so it cannot glucuronidate efficiently — hence its notorious sensitivity to <b>paracetamol (methaemoglobinaemia, Heinz bodies, facial oedema), aspirin, phenols and benzoic acid</b>. ② <b>The dog is a poor acetylator</b> (deficient N-acetyltransferase) — sulphonamide handling differs. ③ <b>The pig sulphates poorly.</b> ④ Neonates of all species have immature phase-II systems. Antidote logic follows directly: <b>N-acetylcysteine replenishes glutathione</b> in paracetamol poisoning.</div>
           <div class="trap"><b>Trap — bioactivation.</b> "Detoxification" does not always detoxify. Phase I can create a more dangerous metabolite: <b>paracetamol → NAPQI</b> (hepatotoxic and, in cats, met-Hb forming), <b>parathion → paraoxon</b> (a far stronger cholinesterase inhibitor), <b>aflatoxin B₁ → its 8,9-epoxide</b> (binds DNA, hepatocarcinogenic), <b>ethylene glycol → glycolic and oxalic acid</b> (metabolic acidosis and calcium-oxalate nephrosis, treated by blocking alcohol dehydrogenase with fomepizole or ethanol). Always name one such example when asked about biotransformation.</div>
         </div>
@@ -609,7 +687,7 @@ svg{display:block;width:100%;height:auto}
 
     <div class="mod a span2">
       <h3><span class="n">16</span> Final recall bank — read these last, straight before the paper</h3>
-      <div class="grid" style="gap:2.6mm">
+      <div class="grid" style="gap:4mm">
         <div class="qa">
           <div><span>Only hypoglycaemic hormone</span><span>Insulin</span></div>
           <div><span>Insulin-dependent glucose transporter</span><span>GLUT-4</span></div>
@@ -678,7 +756,7 @@ svg{display:block;width:100%;height:auto}
           <div><span>Enzyme system of phase-I oxidation</span><span>Cytochrome P450 (mixed-function oxidase)</span></div>
         </div>
       </div>
-      <div class="mnem" style="margin-top:2px"><u>Thirty-second closing sweep:</u> <b>insulin alone lowers glucose; five hormones raise it</b> · <b>fructosamine beats stress hyperglycaemia</b> · <b>Rothera's misses BHB</b> · <b>ketosis = lactation, toxaemia = twins, baby pig = no reserve</b> · <b>haptoglobin cattle, SAA horse/cat, CRP dog/pig, albumin negative</b> · <b>ALT/AST leak, ALP/GGT cholestasis, CK muscle, bile acids function</b> · <b>haemolytic = indirect + no urine bilirubin; obstructive = direct + no urobilinogen</b> · <b>creatinine beats urea; inulin is the gold standard; 75 % nephrons before azotaemia</b> · <b>HCO₃⁻ metabolic, pCO₂ respiratory, anion gap splits the acidoses</b> · <b>SOD → catalase/GSH-Px(Se) → water</b> · <b>phase I P450 can bioactivate; phase II always detoxifies; the cat cannot glucuronidate</b>.</div>
+      <div class="mnem" style="margin-top:6px"><u>Thirty-second closing sweep:</u> <b>insulin alone lowers glucose; five hormones raise it</b> · <b>fructosamine beats stress hyperglycaemia</b> · <b>Rothera's misses BHB</b> · <b>ketosis = lactation, toxaemia = twins, baby pig = no reserve</b> · <b>haptoglobin cattle, SAA horse/cat, CRP dog/pig, albumin negative</b> · <b>ALT/AST leak, ALP/GGT cholestasis, CK muscle, bile acids function</b> · <b>haemolytic = indirect + no urine bilirubin; obstructive = direct + no urobilinogen</b> · <b>creatinine beats urea; inulin is the gold standard; 75 % nephrons before azotaemia</b> · <b>HCO₃⁻ metabolic, pCO₂ respiratory, anion gap splits the acidoses</b> · <b>SOD → catalase/GSH-Px(Se) → water</b> · <b>phase I P450 can bioactivate; phase II always detoxifies; the cat cannot glucuronidate</b>.</div>
     </div>
 
   </div>
