@@ -1248,13 +1248,13 @@ var quizBank = {
       {
         "q": "In the B-DNA double helix, one complete helical turn spans a distance (pitch) of:",
         "o": [
-          "3.4 nm (10.5 base pairs)",
+          "3.4 nm (10 base pairs)",
           "2.0 nm (6 base pairs)",
           "1.2 nm (4 base pairs)",
           "5.4 nm (16 base pairs)"
         ],
         "a": 0,
-        "e": "B-DNA has a helical pitch of 3.4 nm (34 Angstroms), containing approximately 10 to 10.5 base pairs per turn with an axial distance of 0.34 nm between adjacent base pairs.",
+        "e": "In the canonical Watson-Crick B-DNA model, the helical pitch is 3.4 nm (34 Angstroms), containing 10 base pairs per turn with an axial rise of 0.34 nm between adjacent base pairs.",
         "topicId": "u1-t17",
         "subSection": "u1-s5",
         "diff": 2
@@ -3213,13 +3213,13 @@ var quizBank = {
       {
         "q": "Suicide inhibition (mechanism-based irreversible inhibition) occurs when an inhibitor is converted by the enzyme into a reactive intermediate that permanently inactivates it, as exemplified by:",
         "o": [
-          "Aspirin on cyclooxygenase",
+          "Aspirin on cyclooxygenase enzymes",
           "Allopurinol on xanthine oxidase",
           "Organophosphates on acetylcholinesterase",
-          "All of the above"
+          "Methotrexate on dihydrofolate reductase"
         ],
-        "a": 3,
-        "e": "All listed compounds are classic mechanism-based irreversible/suicide inhibitors that form covalent modifications in the target enzyme's active center.",
+        "a": 1,
+        "e": "Allopurinol is oxidized by xanthine oxidase to oxypurinol (alloxanthine), which coordinates tightly to the molybdenum active center as a true mechanism-based suicide inactivator. In contrast, aspirin (acetyl transfer) and organophosphates (phosphorylation) are direct covalent modifying agents.",
         "topicId": "u2-t06",
         "subSection": "u2-s1",
         "diff": 2
@@ -3345,7 +3345,7 @@ var quizBank = {
           "Pyruvate to L-lactate in cytosol"
         ],
         "a": 0,
-        "e": "Complex IV transfers four electrons from four reduced cytochrome c molecules to molecular oxygen (O2), reducing it completely to two H2O molecules while pumping 2 protons.",
+        "e": "Complex IV transfers four electrons from four reduced cytochrome c molecules to molecular oxygen (O2), reducing it completely to two H2O molecules while pumping 4 protons across the inner mitochondrial membrane (2 H+ per electron pair).",
         "topicId": "u2-t08",
         "subSection": "u2-s2",
         "diff": 2
@@ -3813,7 +3813,7 @@ var quizBank = {
         "diff": 2
       },
       {
-        "q": "Although the liver is the exclusive producer of ketone bodies, hepatic tissue cannot utilize ketones as fuel because it lacks:",
+        "q": "Although the liver is the principal producer of ketone bodies, hepatic tissue cannot utilize ketones as fuel because it lacks:",
         "o": [
           "Thiophorase (Succinyl-CoA:3-ketoacid CoA transferase)",
           "Acetoacetate decarboxylase generating acetone gas",
@@ -4045,7 +4045,7 @@ var quizBank = {
           "Creatinine derived from somatic phosphagen"
         ],
         "a": 0,
-        "e": "Birds lack a functional urea cycle (lacking mitochondrial CPS-I and arginase) and convert excess amino nitrogen into insoluble uric acid to conserve water.",
+        "e": "Birds lack a functional urea cycle (lacking hepatic mitochondrial CPS-I) and convert excess amino nitrogen into insoluble uric acid to conserve water (though they possess active renal arginase for arginine catabolism).",
         "topicId": "u2-t19",
         "subSection": "u2-s5",
         "diff": 1
@@ -5017,7 +5017,7 @@ var quizBank = {
       {
         "q": "Ketone bodies are synthesized primarily in the cytosol of adipose tissue cells.",
         "a": false,
-        "e": "False. Ketogenesis occurs exclusively inside the MITOCHONDRIAL MATRIX of HEPATOCYTES (liver cells).",
+        "e": "False. Ketogenesis occurs primarily inside the MITOCHONDRIAL MATRIX of HEPATOCYTES (and ruminal epithelium in ruminants), not in adipose tissue cytosol.",
         "topicId": "u2-t15",
         "subSection": "u2-s4",
         "diff": 1
@@ -5105,7 +5105,7 @@ var quizBank = {
       {
         "q": "Birds and reptiles excrete nitrogen as uric acid because they possess hyperactive mitochondrial arginase in their liver.",
         "a": false,
-        "e": "False. Birds are uricotelic specifically because they LACK mitochondrial CPS-I and arginase, rendering them unable to synthesize urea.",
+        "e": "False. Birds are uricotelic specifically because they LACK hepatic mitochondrial CPS-I, rendering them unable to synthesize urea (though they possess active renal arginase for dietary arginine degradation).",
         "topicId": "u2-t19",
         "subSection": "u2-s5",
         "diff": 2
@@ -6786,13 +6786,13 @@ var quizBank = {
       {
         "q": "Severe acute diarrhea in calves (calf scours) causes which classic acid-base and electrolyte disturbance?",
         "o": [
-          "Normal anion gap (hyperchloremic) metabolic acidosis with hypokalemia",
+          "Normal anion gap (hyperchloremic) metabolic acidosis with hyperkalemia",
           "Severe metabolic alkalosis with hypokalemia and paradoxical aciduria",
           "Acute respiratory alkalosis accompanied by marked systemic hypernatremia",
           "High anion gap metabolic alkalosis resulting from massive chloride loss"
         ],
         "a": 0,
-        "e": "Secretory diarrhea causes massive fecal loss of alkaline intestinal fluid rich in HCO3- and K+, resulting in hyperchloremic metabolic acidosis and total body potassium depletion.",
+        "e": "Secretory diarrhea causes massive enteric loss of HCO3-, producing hyperchloremic metabolic acidosis. While total-body potassium is depleted via fecal loss, severe acidemia drives transcellular H+/K+ exchange, resulting in clinical serum hyperkalemia.",
         "topicId": "u3-t11",
         "subSection": "u3-s3",
         "diff": 2
@@ -7552,9 +7552,9 @@ var quizBank = {
         "diff": 1
       },
       {
-        "q": "Diarrhea in neonatal calves causes a high anion gap metabolic acidosis with hyperkalemia.",
-        "a": false,
-        "e": "False. Simple calf diarrhea causes a NORMAL ANION GAP (hyperchloremic) metabolic acidosis due to direct loss of bicarbonate in intestinal feces.",
+        "q": "Uncomplicated secretory diarrhea in calves causes a classic normal anion gap (hyperchloremic) metabolic acidosis due to direct fecal bicarbonate loss.",
+        "a": true,
+        "e": "True. Direct loss of sodium bicarbonate in enteric secretions produces hyperchloremic (normal anion gap) metabolic acidosis. (Note: in severe complicated cases, secondary D-lactic acidosis and prerenal azotemia may subsequently widen the anion gap and cause hyperkalemia).",
         "topicId": "u3-t11",
         "subSection": "u3-s3",
         "diff": 2
