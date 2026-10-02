@@ -104,7 +104,7 @@ echo   Repository: %REPO_URL%
 for /f "tokens=*" %%c in ('git log -1 --oneline') do echo   Latest Commit: %%c
 echo   Your website will update automatically in 1-2 minutes.
 echo   (Tip: In your browser, press Ctrl+F5 to reload the new
-echo    vbioc-v18 offline cache immediately)
+echo    offline cache immediately)
 echo ============================================================
 
 :finish
