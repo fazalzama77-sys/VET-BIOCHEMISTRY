@@ -1,6 +1,10 @@
 /* Official Veterinary Biochemistry syllabus index. Keep lesson text in the matching data files. */
 var syllabus = {
-  meta: { subject: "Veterinary Biochemistry", course: "B.V.Sc & A.H. — Second Year", credits: "2 + 1 = 3", institute: "ICAR — Indian Veterinary Research Institute, Izatnagar, Bareilly", papers: [{ id: "annual", name: "Annual Examination", units: [1, 2, 3], theoryMarks: 100, practicalMarks: 60, weightage: 100 }] },
+  meta: { subject: "Veterinary Biochemistry", course: "B.V.Sc & A.H. — Second Year", credits: "2 + 1 = 3", institute: "ICAR — Indian Veterinary Research Institute, Izatnagar, Bareilly", papers: [
+      { id: "paper-1", name: "Theory Paper-I: General & Analytical Biochemistry", units: [1, 3], theoryMarks: 100, practicalMarks: 60, weightage: 20 },
+      { id: "paper-2", name: "Theory Paper-II: Intermediary Metabolism", units: [2], theoryMarks: 100, practicalMarks: 60, weightage: 20 },
+      { id: "annual", name: "Annual Board Examination (Combined Units 1–3)", units: [1, 2, 3], theoryMarks: 100, practicalMarks: 60, weightage: 40 }
+    ] },
   theory: [
     { no: 1, id: "unit-1", title: "General Veterinary Biochemistry", short: "General Biochemistry", blurb: "Membranes, acids and buffers, biomolecules and nucleic acids.", icon: "atom", paper: "annual", topics: [
       {id:"u1-t01",title:"Scope and Importance of Biochemistry"},{id:"u1-t02",title:"Biological Membranes and Transport"},{id:"u1-t03",title:"Donnan Membrane Equilibrium"},{id:"u1-t04",title:"Dissociation of Acids, pH and Buffers"},{id:"u1-t05",title:"Henderson-Hasselbalch Equation"},
