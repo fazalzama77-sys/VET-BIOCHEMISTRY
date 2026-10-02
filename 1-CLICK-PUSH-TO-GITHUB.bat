@@ -71,24 +71,41 @@ if %ERRORLEVEL% EQU 0 (
 
 :: Step 3: Upload to GitHub
 echo [3/3] Uploading to GitHub...
+set ATTEMPT=1
+
+:try_push
 git pull --rebase --autostash origin main >nul 2>&1
 git push -u origin main
+if %ERRORLEVEL% EQU 0 goto :push_success
 
-if %ERRORLEVEL% EQU 0 (
-    color 0A
-    echo.
-    echo ============================================================
-    echo   [SUCCESS] ALL CHANGES UPLOADED TO GITHUB!
-    echo   Repository: %REPO_URL%
-    echo   Your website will update automatically in 1-2 minutes.
-    echo ============================================================
-) else (
-    color 0C
-    echo.
-    echo ============================================================
-    echo   [NOTICE] Upload encountered an issue. Check internet or Git.
-    echo ============================================================
+set /a ATTEMPT+=1
+if %ATTEMPT% LEQ 3 (
+    echo [!] Network or DNS busy. Retrying in 3 seconds (Attempt %ATTEMPT% of 3)...
+    timeout /t 3 /nobreak >nul
+    goto :try_push
 )
+
+color 0C
+echo.
+echo ============================================================
+echo   [NOTICE] Upload encountered an issue after 3 attempts.
+echo   - Check your internet connection (DNS resolution).
+echo   - Check if GitHub is reachable.
+echo   - Your local changes are safely committed in Git!
+echo ============================================================
+goto :finish
+
+:push_success
+color 0A
+echo.
+echo ============================================================
+echo   [SUCCESS] ALL CHANGES UPLOADED TO GITHUB!
+echo   Repository: %REPO_URL%
+for /f "tokens=*" %%c in ('git log -1 --oneline') do echo   Latest Commit: %%c
+echo   Your website will update automatically in 1-2 minutes.
+echo   (Tip: In your browser, press Ctrl+F5 to reload the new
+echo    vbioc-v18 offline cache immediately)
+echo ============================================================
 
 :finish
 echo.
