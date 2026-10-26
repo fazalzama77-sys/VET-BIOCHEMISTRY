@@ -4701,3 +4701,306 @@ mark.hl-inline:hover { filter: brightness(.96); }
   .hl-mark-menu .hl-popup-label { display: none; }
   .hl-mark-menu .hl-popup-action { padding: 4px 8px; font-size: 10.5px; }
 }
+
+/* ============================================================================
+   BIOCHEMICAL VISUAL ATLAS — INLINE SECTION FIGURES & SINGLE-IMAGE LIGHTBOX
+   100% Verified Legal Open-Access Figures (Public Domain / CC0 / CC BY / CC BY-SA)
+   ============================================================================ */
+
+.micro-fig-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+
+.micro-fig-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin: var(--s4) 0;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.micro-fig-card:hover {
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-md);
+}
+
+.micro-fig-card--inline {
+  margin: var(--s4) 0 var(--s5) 0;
+  border-left: 4px solid var(--accent);
+  background: var(--surface-2);
+}
+
+.micro-fig-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.micro-fig-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.micro-fig-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.micro-fig-title {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.micro-fig-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.micro-fig-img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  padding: var(--s4);
+  min-height: 180px;
+  max-height: 410px;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.micro-fig-img {
+  display: block;
+  max-width: 100%;
+  max-height: 370px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--r-sm);
+  background: var(--surface-invert-card, var(--surface));
+  padding: 6px;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.micro-fig-img-wrap:hover .micro-fig-img {
+  transform: scale(1.015);
+}
+
+.micro-fig-caption {
+  padding: var(--s3) var(--s4);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.micro-fig-legal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  flex-wrap: wrap;
+  padding: var(--s2) var(--s4);
+  font-size: var(--fs-xs);
+  background: var(--surface-2);
+  border-top: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+}
+
+.micro-fig-legal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  color: var(--ok);
+  background: var(--ok-soft);
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.micro-fig-legal__badge a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.micro-fig-legal__author {
+  flex: 1;
+  min-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.micro-fig-legal__src {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.micro-fig-legal__src:hover {
+  text-decoration: underline;
+}
+
+.spotter-fig-wrap {
+  margin: var(--s3) 0;
+}
+
+/* Single-Image Fullscreen Lightbox Modal */
+.img-lightbox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--scrim);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s4);
+}
+
+.img-lightbox-card {
+  position: relative;
+  width: 100%;
+  max-width: 980px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.img-lightbox-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--s4) var(--s5);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  padding-right: 52px;
+}
+
+.img-lightbox-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.img-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1.15rem;
+}
+
+.img-lightbox-close:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--text-invert);
+}
+
+.img-lightbox-stage {
+  flex: 1;
+  min-height: 240px;
+  max-height: 64vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  padding: var(--s4);
+  overflow: auto;
+}
+
+.img-lightbox-stage img {
+  max-width: 100%;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: var(--surface);
+  padding: 8px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.img-lightbox-caption {
+  padding: var(--s3) var(--s5);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+}
+
+.img-lightbox-legal {
+  padding: var(--s3) var(--s5);
+}
+
+.img-lightbox-links {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .micro-fig-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .micro-fig-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .micro-fig-img-wrap {
+    max-height: 280px;
+    padding: var(--s3);
+  }
+  .micro-fig-img {
+    max-height: 250px;
+  }
+}

@@ -12,7 +12,7 @@
    IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v19";
+var CACHE_VERSION = "vbioc-v20";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -43,6 +43,7 @@ var PRECACHE = [
   "data/data-theory-unit2.JS",
   "data/data-theory-unit3.JS",
   "data/data-practical.JS",
+  "data/data-images.js",
   "data/data-why.JS",
   "data/data-qa.JS",
   "data/data-quiz.JS",
