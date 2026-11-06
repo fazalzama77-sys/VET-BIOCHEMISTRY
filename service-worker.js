@@ -12,7 +12,7 @@
    IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v21";
+var CACHE_VERSION = "vbioc-v22";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -74,7 +74,7 @@ function fetchWithTimeout(req, ms) {
 
 // Normalize request matching for root vs index.html
 function matchPrecache(req) {
-  return caches.match(req).then(function (hit) {
+  return caches.match(req, { ignoreSearch: true }).then(function (hit) {
     if (hit) return hit;
     var url = new URL(req.url);
     if (url.pathname.endsWith("/") || url.pathname.endsWith("/index.html")) {
@@ -187,7 +187,7 @@ self.addEventListener("fetch", function (e) {
   // 3. Static shell resources (CSS, JS, data files, manifest)
   // Cache-first for lightning instant offline loading, revalidate in background
   e.respondWith(
-    caches.match(req).then(function (cachedRes) {
+    caches.match(req, { ignoreSearch: true }).then(function (cachedRes) {
       var fetchPromise = fetch(req).then(function (netRes) {
         if (netRes && netRes.ok) {
           var copy = netRes.clone();
