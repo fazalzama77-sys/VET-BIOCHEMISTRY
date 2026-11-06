@@ -12,7 +12,7 @@
    IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v23";
+var CACHE_VERSION = "vbioc-v24";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -57,6 +57,7 @@ var PRECACHE = [
   "js/search.js",
   "js/deep-guide.js",
   "js/events.js",
+  "js/sync.js",
   "js/app.js"
 ];
 

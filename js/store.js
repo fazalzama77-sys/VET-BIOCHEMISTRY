@@ -36,7 +36,8 @@ var store = (function () {
     topicGuideSeen: PREFIX + "topic-guide-seen",
     eventSeen:  PREFIX + "event-announcements-seen",
     installDismissed: PREFIX + "install-dismissed",
-    sidebarCollapsed: PREFIX + "sidebar-collapsed"
+    sidebarCollapsed: PREFIX + "sidebar-collapsed",
+    syncConfig: PREFIX + "sync-config"
   };
 
   /* ---------- low level ---------- */
@@ -53,6 +54,9 @@ var store = (function () {
   function write(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      if (store && typeof store._onChange === "function") {
+        try { store._onChange(key, value); } catch (err) {}
+      }
       return true;
     } catch (e) {
       // Quota exceeded or private mode — fail quietly, never break the page.
@@ -451,6 +455,302 @@ var store = (function () {
     backupKeys().forEach(function (k) { localStorage.removeItem(k); });
   }
 
+  /* ---------- Cloud Sync Config & Remote Merge ---------- */
+  function getSyncConfig() {
+    return read(KEYS.syncConfig, {
+      enabled: false,
+      dbUrl: "",
+      pin: "",
+      deviceName: (/Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile Phone" : "Tablet / PC"),
+      lastSyncedAt: 0,
+      autoSync: true
+    });
+  }
+
+  function setSyncConfig(cfg) {
+    write(KEYS.syncConfig, cfg);
+  }
+
+  function getAllData() {
+    return {
+      version: 1,
+      timestamp: Date.now(),
+      read: getRead(),
+      bookmarks: getBookmarks(),
+      notes: getNotes(),
+      highlights: getHighlights(),
+      hlColor: getHighlightColor(),
+      quiz: getQuiz(),
+      quizReports: getReports(),
+      srs: getSrs(),
+      activity: getActivity(),
+      qaDone: getQaDone(),
+      lastTopic: getLastTopic()
+    };
+  }
+
+  function mergeRemoteData(remote) {
+    if (!remote || typeof remote !== "object") return false;
+    var changed = false;
+
+    // 1. Read status (union of read topics)
+    if (remote.read && typeof remote.read === "object") {
+      var localRead = getRead();
+      var mergedRead = Object.assign({}, localRead);
+      var readDirty = false;
+      Object.keys(remote.read).forEach(function (tid) {
+        var rVal = remote.read[tid];
+        if (!mergedRead[tid] || (typeof rVal === "number" && rVal > (mergedRead[tid] || 0))) {
+          mergedRead[tid] = rVal;
+          readDirty = true;
+        }
+      });
+      if (readDirty) {
+        write(KEYS.read, mergedRead);
+        changed = true;
+      }
+    }
+
+    // 2. Bookmarks (union of array)
+    if (Array.isArray(remote.bookmarks)) {
+      var localBm = getBookmarks();
+      var bmSet = {};
+      localBm.forEach(function (id) { bmSet[id] = true; });
+      var bmDirty = false;
+      remote.bookmarks.forEach(function (id) {
+        if (!bmSet[id]) {
+          bmSet[id] = true;
+          bmDirty = true;
+        }
+      });
+      if (bmDirty) {
+        write(KEYS.bookmarks, Object.keys(bmSet));
+        changed = true;
+      }
+    }
+
+    // 3. Notes (merge by topicId, keep longer/richer note)
+    if (remote.notes && typeof remote.notes === "object") {
+      var localNotes = getNotes();
+      var mergedNotes = Object.assign({}, localNotes);
+      var notesDirty = false;
+      Object.keys(remote.notes).forEach(function (tid) {
+        var rText = remote.notes[tid];
+        if (rText && typeof rText === "string" && rText.trim()) {
+          var lText = mergedNotes[tid] || "";
+          if (!lText || (rText !== lText && rText.length > lText.length)) {
+            mergedNotes[tid] = rText;
+            notesDirty = true;
+          }
+        }
+      });
+      if (notesDirty) {
+        write(KEYS.notes, mergedNotes);
+        changed = true;
+      }
+    }
+
+    // 4. Highlights (union by topicId, deduplicating text)
+    if (remote.highlights && typeof remote.highlights === "object") {
+      var localHl = getHighlights();
+      var mergedHl = Object.assign({}, localHl);
+      var hlDirty = false;
+      Object.keys(remote.highlights).forEach(function (tid) {
+        var listLocal = mergedHl[tid] || [];
+        var listRemote = remote.highlights[tid] || [];
+        var seen = {};
+        var combined = [];
+        listLocal.forEach(function (item) {
+          var t = typeof item === "string" ? item : (item ? item.text : "");
+          var c = typeof item === "object" && item ? item.color : "yellow";
+          if (t && !seen[t]) {
+            seen[t] = true;
+            combined.push({ text: t, color: c });
+          }
+        });
+        listRemote.forEach(function (item) {
+          var t = typeof item === "string" ? item : (item ? item.text : "");
+          var c = typeof item === "object" && item ? item.color : "yellow";
+          if (t && !seen[t]) {
+            seen[t] = true;
+            combined.push({ text: t, color: c });
+            hlDirty = true;
+          }
+        });
+        mergedHl[tid] = combined;
+      });
+      if (hlDirty) {
+        write(KEYS.highlights, mergedHl);
+        changed = true;
+      }
+    }
+
+    // 5. Quiz attempts & Reports
+    if (remote.quiz && Array.isArray(remote.quiz.attempts)) {
+      var currentQuiz = getQuiz();
+      var localAttempts = currentQuiz.attempts || [];
+      var seenAttempts = {};
+      localAttempts.forEach(function (att) {
+        var key = att.id || (att.scope + "_" + att.at);
+        seenAttempts[key] = true;
+      });
+
+      var newAttempts = [];
+      remote.quiz.attempts.forEach(function (att) {
+        var key = att.id || (att.scope + "_" + att.at);
+        if (!seenAttempts[key]) {
+          seenAttempts[key] = true;
+          newAttempts.push(att);
+        }
+      });
+
+      if (newAttempts.length > 0) {
+        var allAttempts = localAttempts.concat(newAttempts);
+        allAttempts.sort(function (a, b) { return (a.at || 0) - (b.at || 0); });
+        if (allAttempts.length > 200) allAttempts = allAttempts.slice(-200);
+
+        var recomputedQuiz = {
+          attempts: allAttempts,
+          byUnit: {},
+          byFormat: {},
+          byTopic: {},
+          bySub: {},
+          byDiff: {}
+        };
+        allAttempts.forEach(function (att) {
+          bumpRecord(recomputedQuiz.byUnit, att.scope, att.total, att.correct, att.at);
+          var u = att.units || {};
+          Object.keys(u).forEach(function (uid) {
+            var k = "unit:" + uid;
+            if (k !== att.scope) bumpRecord(recomputedQuiz.byUnit, k, u[uid].total, u[uid].right, att.at);
+          });
+          var fmts = att.formats || {};
+          Object.keys(fmts).forEach(function (f) {
+            if (!fmts[f] || !fmts[f].total) return;
+            var r = recomputedQuiz.byFormat[f] || { total: 0, right: 0 };
+            r.total += fmts[f].total;
+            r.right += fmts[f].right;
+            recomputedQuiz.byFormat[f] = r;
+          });
+          var topics = att.topics || {};
+          Object.keys(topics).forEach(function (t) {
+            var r = recomputedQuiz.byTopic[t] || { total: 0, right: 0 };
+            r.total += topics[t].total;
+            r.right += topics[t].right;
+            r.lastAt = att.at;
+            recomputedQuiz.byTopic[t] = r;
+          });
+          var subs = att.subs || {};
+          Object.keys(subs).forEach(function (s) {
+            if (!subs[s] || !subs[s].total) return;
+            var r = recomputedQuiz.bySub[s] || { total: 0, right: 0 };
+            r.total += subs[s].total;
+            r.right += subs[s].right;
+            r.lastAt = att.at;
+            recomputedQuiz.bySub[s] = r;
+          });
+          var diffs = att.diffs || {};
+          Object.keys(diffs).forEach(function (d) {
+            if (!diffs[d] || !diffs[d].total) return;
+            var r = recomputedQuiz.byDiff[d] || { total: 0, right: 0 };
+            r.total += diffs[d].total;
+            r.right += diffs[d].right;
+            recomputedQuiz.byDiff[d] = r;
+          });
+        });
+        write(KEYS.quiz, recomputedQuiz);
+        changed = true;
+      }
+    }
+
+    if (Array.isArray(remote.quizReports)) {
+      var localReps = getReports();
+      var repSeen = {};
+      localReps.forEach(function (r) { repSeen[r.id] = true; });
+      var repDirty = false;
+      remote.quizReports.forEach(function (r) {
+        if (!repSeen[r.id]) {
+          localReps.push(r);
+          repSeen[r.id] = true;
+          repDirty = true;
+        }
+      });
+      if (repDirty) {
+        localReps.sort(function (a, b) { return (b.at || 0) - (a.at || 0); });
+        write(KEYS.quizReports, localReps.slice(0, MAX_REPORTS));
+        changed = true;
+      }
+    }
+
+    // 6. SRS
+    if (remote.srs && typeof remote.srs === "object") {
+      var localSrs = getSrs();
+      var mergedSrs = Object.assign({}, localSrs);
+      var srsDirty = false;
+      Object.keys(remote.srs).forEach(function (qk) {
+        var rItem = remote.srs[qk];
+        var lItem = mergedSrs[qk];
+        if (!lItem || (rItem && rItem.box > lItem.box)) {
+          mergedSrs[qk] = rItem;
+          srsDirty = true;
+        }
+      });
+      if (srsDirty) {
+        write(KEYS.srs, mergedSrs);
+        changed = true;
+      }
+    }
+
+    // 7. Activity
+    if (remote.activity && typeof remote.activity === "object") {
+      var localAct = getActivity();
+      var mergedAct = Object.assign({}, localAct);
+      var actDirty = false;
+      Object.keys(remote.activity).forEach(function (dt) {
+        var rCnt = remote.activity[dt] || 0;
+        var lCnt = mergedAct[dt] || 0;
+        if (rCnt > lCnt) {
+          mergedAct[dt] = rCnt;
+          actDirty = true;
+        }
+      });
+      if (actDirty) {
+        write(KEYS.activity, mergedAct);
+        changed = true;
+      }
+    }
+
+    // 8. Q&A Done
+    if (Array.isArray(remote.qaDone)) {
+      var localQa = getQaDone();
+      var qaSet = {};
+      localQa.forEach(function (id) { qaSet[id] = true; });
+      var qaDirty = false;
+      remote.qaDone.forEach(function (id) {
+        if (!qaSet[id]) {
+          qaSet[id] = true;
+          qaDirty = true;
+        }
+      });
+      if (qaDirty) {
+        write(KEYS.qaDone, Object.keys(qaSet));
+        changed = true;
+      }
+    }
+
+    if (remote.lastTopic && !getLastTopic()) {
+      write(KEYS.lastTopic, remote.lastTopic);
+    }
+
+    if (changed) {
+      try {
+        window.dispatchEvent(new CustomEvent("vbioc-store-updated", { detail: { remote: true } }));
+      } catch (e) {}
+    }
+
+    return changed;
+  }
+
   /* ---------- public API ---------- */
   return {
     KEYS: KEYS,
@@ -475,6 +775,8 @@ var store = (function () {
     toggleSidebarCollapsed: toggleSidebarCollapsed, applySidebarState: applySidebarState,
     getSrsNotify: getSrsNotify, setSrsNotify: setSrsNotify,
     getSrsNotifyTime: getSrsNotifyTime, setSrsNotifyTime: setSrsNotifyTime,
+    getSyncConfig: getSyncConfig, setSyncConfig: setSyncConfig,
+    getAllData: getAllData, mergeRemoteData: mergeRemoteData,
     backupKeys: backupKeys, exportBackup: exportBackup, importBackup: importBackup,
     resetAll: resetAll,
     today: today
