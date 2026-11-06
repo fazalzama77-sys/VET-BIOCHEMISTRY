@@ -472,8 +472,8 @@ var store = (function () {
     if (!cfg.dbUrl || cfg.dbUrl.indexOf("your-project") !== -1) {
       cfg.dbUrl = EMBEDDED_FIREBASE_URL;
     }
-    if (!cfg.pin) {
-      cfg.pin = generateRandomPin();
+    if (!cfg.pin || cfg.pin === "749-218" || cfg.pin === "350-202" || cfg.pin === "772026") { cfg.enabled = false; try { localStorage.setItem(KEYS.syncConfig, JSON.stringify(cfg)); } catch (e) {}
+      cfg.pin = generateRandomPin(); try { localStorage.setItem(KEYS.syncConfig, JSON.stringify(cfg)); } catch (e) {}
     }
     return cfg;
   }
