@@ -4267,11 +4267,12 @@ var app = (function () {
               '<div class="sync-input-col">' +
                 '<label class="sync-label" for="sync-pin-input">🔑 6-Digit Sync PIN / Secret Key:</label>' +
                 '<div class="sync-pin-group">' +
-                  '<input type="text" id="sync-pin-input" class="sync-input sync-input--pin" placeholder="Enter 6-digit PIN" value="' + esc(cfg.pin || "") + '" autocomplete="off" spellcheck="false">' +
-                  '<button type="button" class="btn btn--sm btn--soft" id="sync-paste-pin-btn" title="Paste PIN">📋 Paste</button>' +
+                  '<input type="text" id="sync-pin-input" class="sync-input sync-input--pin" placeholder="Enter 6-digit PIN" value="' + esc(cfg.pin || "") + '" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
+                  '<button type="button" class="btn btn--sm btn--primary" id="sync-paste-pin-btn" title="Type, Edit, or Paste PIN">✏️ Edit / Type PIN</button>' +
+                  '<button type="button" class="btn btn--sm btn--soft" id="sync-copy-pin-btn" title="Copy PIN">📄 Copy</button>' +
                   '<button type="button" class="btn btn--sm btn--soft" id="sync-gen-pin-btn" title="Generate random 6-digit PIN">🎲 New PIN</button>' +
                 '</div>' +
-                '<span class="small faint">Your unique pairing key (already created for you above!).</span>' +
+                '<span class="small faint">Your unique pairing key (already created for you above!). Enter this same PIN on both devices.</span>' +
               '</div>' +
 
               '<div class="sync-input-col">' +
@@ -4387,31 +4388,98 @@ var app = (function () {
       });
     }
 
+    function saveDraftSyncInputs() {
+      var cfg = store.getSyncConfig();
+      var pEl = el("#sync-pin-input");
+      var uEl = el("#sync-db-url");
+      var dEl = el("#sync-device-name");
+      if (pEl && pEl.value.trim()) cfg.pin = pEl.value.trim();
+      if (uEl) cfg.dbUrl = uEl.value.trim();
+      if (dEl && dEl.value.trim()) cfg.deviceName = dEl.value.trim();
+      store.setSyncConfig(cfg);
+    }
+
     var syncGenPin = el("#sync-gen-pin-btn");
     if (syncGenPin) {
       syncGenPin.addEventListener("click", function () {
         var pinInput = el("#sync-pin-input");
         if (pinInput && window.syncApp) {
           pinInput.value = syncApp.generatePin();
+          saveDraftSyncInputs();
           toast("Generated new PIN: " + pinInput.value);
         }
       });
     }
 
-    function openUniversalPaste(targetInput, title) {
+    var syncCopyPinBtn = el("#sync-copy-pin-btn");
+    if (syncCopyPinBtn) {
+      syncCopyPinBtn.addEventListener("click", function () {
+        var pinInput = el("#sync-pin-input");
+        if (pinInput && pinInput.value.trim()) {
+          copyTextToClipboard(pinInput.value.trim());
+          toast("Sync PIN copied: " + pinInput.value.trim() + " 📋");
+        }
+      });
+    }
+
+    function openUniversalPaste(targetInput, title, mode) {
       var modal = el("#sync-paste-modal");
       var titleEl = el("#sync-paste-modal-title");
+      var descEl = el("#sync-paste-modal-desc");
       var textEl = el("#sync-paste-modal-input");
+      var keypadEl = el("#sync-paste-keypad");
       var confirmBtn = el("#sync-paste-modal-confirm");
       if (!modal || !textEl) return;
 
-      if (titleEl) titleEl.textContent = title || "Paste Details";
+      if (titleEl) titleEl.textContent = (mode === "pin" ? "Enter or Paste 6-Digit Sync PIN" : "Paste Firebase Database URL");
+      if (descEl) {
+        descEl.innerHTML = mode === "pin"
+          ? "Press <b>Ctrl+V</b>, long-press inside the box to <b>Paste</b>, or tap digits on the keypad below:"
+          : "Press <b>Ctrl+V</b> or long-press inside the box to <b>Paste</b> your Firebase URL:";
+      }
+      textEl.placeholder = mode === "pin" ? "e.g. 749-218" : "https://your-project-default-rtdb.firebaseio.com";
       textEl.value = (targetInput && targetInput.value) ? targetInput.value : "";
+      if (keypadEl) keypadEl.style.display = (mode === "pin" ? "block" : "none");
+
       modal.style.display = "flex";
       setTimeout(function () {
         textEl.focus();
         textEl.select();
-      }, 80);
+      }, 60);
+
+      els("#sync-paste-keypad .sync-kp-btn").forEach(function (btn) {
+        btn.onclick = function () {
+          var k = btn.getAttribute("data-kp");
+          var cur = textEl.value || "";
+          if (k === "BACK") {
+            textEl.value = cur.slice(0, -1);
+          } else {
+            var digitsOnly = cur.replace(/[^0-9]/g, "");
+            if (k !== "-" && digitsOnly.length === 3 && cur.indexOf("-") === -1) {
+              cur += "-";
+            }
+            if (cur.length < 12) textEl.value = cur + k;
+          }
+          textEl.focus();
+        };
+      });
+
+      var kpClear = el("#sync-kp-clear");
+      if (kpClear) {
+        kpClear.onclick = function () {
+          textEl.value = "";
+          textEl.focus();
+        };
+      }
+
+      var kpRandom = el("#sync-kp-random");
+      if (kpRandom) {
+        kpRandom.onclick = function () {
+          if (window.syncApp) {
+            textEl.value = syncApp.generatePin();
+          }
+        };
+      }
 
       confirmBtn.onclick = function () {
         var val = textEl.value.trim();
@@ -4419,13 +4487,14 @@ var app = (function () {
           targetInput.value = val;
           targetInput.dispatchEvent(new Event("input", { bubbles: true }));
           targetInput.dispatchEvent(new Event("change", { bubbles: true }));
+          saveDraftSyncInputs();
           toast(title + " updated! 📋");
         }
         modal.style.display = "none";
       };
     }
 
-    function handlePasteButton(targetInput, title) {
+    function handlePasteButton(targetInput, title, mode) {
       if (!targetInput) return;
       if (navigator.clipboard && navigator.clipboard.readText) {
         navigator.clipboard.readText().then(function (clipText) {
@@ -4433,31 +4502,40 @@ var app = (function () {
             targetInput.value = clipText.trim();
             targetInput.dispatchEvent(new Event("input", { bubbles: true }));
             targetInput.dispatchEvent(new Event("change", { bubbles: true }));
+            saveDraftSyncInputs();
             toast(title + " pasted from clipboard! 📋");
           } else {
-            openUniversalPaste(targetInput, title);
+            openUniversalPaste(targetInput, title, mode);
           }
         }).catch(function () {
-          openUniversalPaste(targetInput, title);
+          openUniversalPaste(targetInput, title, mode);
         });
       } else {
-        openUniversalPaste(targetInput, title);
+        openUniversalPaste(targetInput, title, mode);
       }
     }
 
     var syncPastePinBtn = el("#sync-paste-pin-btn");
     if (syncPastePinBtn) {
       syncPastePinBtn.addEventListener("click", function () {
-        handlePasteButton(el("#sync-pin-input"), "Sync PIN");
+        openUniversalPaste(el("#sync-pin-input"), "Sync PIN", "pin");
       });
     }
 
     var syncPasteBtn = el("#sync-paste-btn");
     if (syncPasteBtn) {
       syncPasteBtn.addEventListener("click", function () {
-        handlePasteButton(el("#sync-db-url"), "Firebase URL");
+        handlePasteButton(el("#sync-db-url"), "Firebase URL", "url");
       });
     }
+
+    ["sync-pin-input", "sync-device-name", "sync-db-url"].forEach(function (id) {
+      var inp = el("#" + id);
+      if (inp) {
+        inp.addEventListener("input", saveDraftSyncInputs);
+        inp.addEventListener("change", saveDraftSyncInputs);
+      }
+    });
 
     var syncTestBtn = el("#sync-test-btn");
     if (syncTestBtn) {
@@ -4940,7 +5018,13 @@ var app = (function () {
         dashboardApp.render(el("#view"));
       }
       if (state.section === "me") {
-        renderMe();
+        var active = document.activeElement;
+        var isEditingSync = active && (active.classList.contains("sync-input") || (active.closest && (active.closest("#cloud-sync-card") || active.closest("#sync-paste-modal"))));
+        var pasteModal = el("#sync-paste-modal");
+        var pasteModalOpen = pasteModal && pasteModal.style.display !== "none";
+        if (!isEditingSync && !pasteModalOpen) {
+          renderMe();
+        }
       }
     });
   }
@@ -4952,12 +5036,38 @@ var app = (function () {
     var pinEl = el("#sync-qr-pin");
     var imgEl = el("#sync-qr-image");
 
-    if (pinEl) pinEl.textContent = cfg.pin || "No PIN Set";
+    if (pinEl) {
+      if (pinEl.tagName === "INPUT") pinEl.value = cfg.pin || "";
+      else pinEl.textContent = cfg.pin || "No PIN Set";
+    }
     if (imgEl && window.syncApp) {
       var pairUrl = syncApp.getPairingUrl();
       imgEl.src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(pairUrl);
     }
     modal.style.display = "flex";
+  }
+
+  function saveModalPinAndClose() {
+    var pinEl = el("#sync-qr-pin");
+    var val = pinEl && pinEl.value ? pinEl.value.trim() : "";
+    if (val) {
+      var mainPin = el("#sync-pin-input");
+      if (mainPin) mainPin.value = val;
+      var cfg = store.getSyncConfig();
+      cfg.pin = val;
+      cfg.enabled = true;
+      store.setSyncConfig(cfg);
+      if (window.syncApp) {
+        syncApp.pull(function () {
+          syncApp.push(function () {
+            syncApp.connectLive();
+            if (state.section === "me") renderMe();
+          });
+        });
+      }
+      toast("PIN saved & Cloud Sync connected! ✨");
+    }
+    closeSyncModal();
   }
 
   function closeSyncModal() {
@@ -5029,6 +5139,7 @@ var app = (function () {
     openImageModal: openImageModal,
     closeImageModal: closeImageModal,
     openSyncModal: openSyncModal,
+    saveModalPinAndClose: saveModalPinAndClose,
     closeSyncModal: closeSyncModal,
     closePasteModal: closePasteModal,
     copySyncLink: copySyncLink

@@ -97,8 +97,9 @@ var syncApp = (function () {
       return res.json();
     })
     .then(function () {
-      cfg.lastSyncedAt = Date.now();
-      store.setSyncConfig(cfg);
+      var freshCfg = store.getSyncConfig();
+      freshCfg.lastSyncedAt = Date.now();
+      store.setSyncConfig(freshCfg);
       setSyncState("idle");
       updateSyncStatusUi();
       if (onComplete) onComplete(true, "Synced to cloud successfully ✔");
@@ -134,8 +135,9 @@ var syncApp = (function () {
       setSyncState("idle");
       if (data && data.state) {
         var changed = store.mergeRemoteData(data.state);
-        cfg.lastSyncedAt = Date.now();
-        store.setSyncConfig(cfg);
+        var freshCfg = store.getSyncConfig();
+        freshCfg.lastSyncedAt = Date.now();
+        store.setSyncConfig(freshCfg);
         updateSyncStatusUi();
         if (changed && window.app && app.toast) {
           app.toast("Synced from " + (data.deviceName || "other device") + " ✨");
@@ -172,8 +174,9 @@ var syncApp = (function () {
           if (packet && packet.data && packet.data.state) {
             if (packet.data.deviceId !== cfg.deviceId) {
               var changed = store.mergeRemoteData(packet.data.state);
-              cfg.lastSyncedAt = Date.now();
-              store.setSyncConfig(cfg);
+              var freshCfg = store.getSyncConfig();
+              freshCfg.lastSyncedAt = Date.now();
+              store.setSyncConfig(freshCfg);
               updateSyncStatusUi();
               if (changed && window.app && app.toast) {
                 app.toast("Live update received from " + (packet.data.deviceName || "other device") + " ⚡");
