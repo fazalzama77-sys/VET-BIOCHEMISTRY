@@ -4228,6 +4228,11 @@ var app = (function () {
       /* Cross-Device Cloud Sync Card */
       (function () {
         var cfg = store.getSyncConfig();
+        if (!cfg.pin && window.syncApp) {
+          cfg.pin = syncApp.generatePin();
+          store.setSyncConfig(cfg);
+        }
+
         var statusBadgeClass = "sync-badge--off";
         var statusBadgeText = "Sync Inactive";
         if (cfg.enabled && cfg.dbUrl && cfg.pin) {
@@ -4262,15 +4267,15 @@ var app = (function () {
               '<div class="sync-input-col">' +
                 '<label class="sync-label" for="sync-pin-input">🔑 6-Digit Sync PIN / Secret Key:</label>' +
                 '<div class="sync-pin-group">' +
-                  '<input type="text" id="sync-pin-input" class="sync-input sync-input--pin" placeholder="e.g. 749-218" value="' + esc(cfg.pin || "") + '" autocomplete="off">' +
+                  '<input type="text" id="sync-pin-input" class="sync-input sync-input--pin" placeholder="Enter 6-digit PIN" value="' + esc(cfg.pin || "") + '" autocomplete="off" spellcheck="false">' +
                   '<button type="button" class="btn btn--sm btn--soft" id="sync-gen-pin-btn" title="Generate random 6-digit PIN">🎲 New PIN</button>' +
                 '</div>' +
-                '<span class="small faint">Enter this same PIN on both devices to pair them.</span>' +
+                '<span class="small faint">Your unique pairing key (already created for you above!).</span>' +
               '</div>' +
 
               '<div class="sync-input-col">' +
                 '<label class="sync-label" for="sync-device-name">📱 This Device Name:</label>' +
-                '<input type="text" id="sync-device-name" class="sync-input" placeholder="e.g. Tablet or Mobile" value="' + esc(cfg.deviceName || "") + '">' +
+                '<input type="text" id="sync-device-name" class="sync-input" placeholder="e.g. My Tablet or Phone" value="' + esc(cfg.deviceName || "") + '" spellcheck="false">' +
                 '<span class="small faint">Label shown on the other device when live updates sync.</span>' +
               '</div>' +
             '</div>' +
@@ -4278,7 +4283,8 @@ var app = (function () {
             '<div class="sync-db-row mt-3">' +
               '<label class="sync-label" for="sync-db-url">🌐 Firebase Realtime Database URL:</label>' +
               '<div class="sync-db-input-group">' +
-                '<input type="text" id="sync-db-url" class="sync-input" placeholder="https://your-project-default-rtdb.firebaseio.com" value="' + esc(cfg.dbUrl || "") + '">' +
+                '<input type="url" id="sync-db-url" class="sync-input" placeholder="Paste your Firebase URL here..." value="' + esc(cfg.dbUrl || "") + '" autocomplete="off" spellcheck="false">' +
+                '<button type="button" class="btn btn--sm btn--soft" id="sync-paste-btn" title="Paste URL from clipboard">📋 Paste URL</button>' +
                 '<button type="button" class="btn btn--sm btn--soft" id="sync-test-btn">⚡ Test Link</button>' +
               '</div>' +
               '<div class="sync-guide-toggle-row mt-1">' +
@@ -4390,6 +4396,48 @@ var app = (function () {
         }
       });
     }
+
+    var syncPasteBtn = el("#sync-paste-btn");
+    if (syncPasteBtn) {
+      syncPasteBtn.addEventListener("click", function () {
+        function promptPaste() {
+          var manual = prompt("Paste your Firebase Realtime Database URL here:");
+          if (manual && manual.trim()) {
+            var urlInput = el("#sync-db-url");
+            if (urlInput) {
+              urlInput.value = manual.trim();
+              toast("URL pasted! 📋");
+            }
+          }
+        }
+
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          navigator.clipboard.readText().then(function (text) {
+            if (text && text.trim() && text.indexOf("http") === 0) {
+              var urlInput = el("#sync-db-url");
+              if (urlInput) {
+                urlInput.value = text.trim();
+                toast("URL pasted from clipboard! 📋");
+              }
+            } else {
+              promptPaste();
+            }
+          }).catch(function () {
+            promptPaste();
+          });
+        } else {
+          promptPaste();
+        }
+      });
+    }
+
+    els(".sync-input").forEach(function (inp) {
+      inp.addEventListener("focus", function () {
+        if (inp.id === "sync-pin-input" && inp.value) {
+          setTimeout(function () { inp.select(); }, 50);
+        }
+      });
+    });
 
     var syncTestBtn = el("#sync-test-btn");
     if (syncTestBtn) {
