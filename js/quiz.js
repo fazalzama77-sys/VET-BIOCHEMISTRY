@@ -1140,6 +1140,10 @@ var quizApp = (function () {
             '<button type="button" class="quiz-hud-pill' + (flagged ? ' is-flagged' : '') + '" id="flagbtn" title="Flag for review (F)">' +
               (flagged ? '🚩 Flagged' : '⚑ Flag') +
             '</button>' +
+
+            '<button type="button" class="btn btn--sm quiz-hud-submit-btn" id="hudsubmitbtn" title="Submit test now and see your score">' +
+              'Submit 🏁' +
+            '</button>' +
           '</div>' +
         '</div>' +
 
@@ -1184,16 +1188,17 @@ var quizApp = (function () {
 
           '<div class="quiz-dock-center">' +
             '<span class="quiz-dock-counter">' + answered + ' of ' + run.qs.length + ' Answered</span>' +
+            (!lastOne
+              ? '<button type="button" class="btn btn--sm quiz-dock-submit-btn" id="docksubmitbtn" title="Submit test now and see results">🏁 Submit Test</button>'
+              : '') +
           '</div>' +
 
           nextButtonHtml +
         '</div>' +
 
-        (run.exam
-          ? '<div class="quiz-exam-submit-row mt-4">' +
-              '<button class="btn btn--block btn--soft" id="submitbtn">Submit Paper Now</button>' +
-            '</div>'
-          : '') +
+        '<div class="quiz-exam-submit-row mt-4">' +
+          '<button class="btn btn--block quiz-full-submit-btn" id="submitbtn">🏁 Submit Test &amp; View Final Analysis</button>' +
+        '</div>' +
 
         '<div class="quiz-shortcuts-hint mt-4">' +
           'Keyboard: <b>1–4 / A–D</b> select option · <b>T / F</b> true/false · <b>Enter</b> next · <b>F</b> flag · <b>← →</b> arrows' +
@@ -1221,6 +1226,10 @@ var quizApp = (function () {
             (i + 1) + (run.flags[i] ? '🚩' : '') +
           '</button>';
         }).join("") +
+      '</div>' +
+      '<div class="quiz-map-footer mt-3 pt-2" style="border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">' +
+        '<span class="small muted">' + answeredCount() + ' of ' + run.qs.length + ' answered</span>' +
+        '<button type="button" class="btn btn--sm quiz-hud-submit-btn" id="mapsubmitbtn">Submit Test 🏁</button>' +
       '</div>' +
     '</div>';
   }
@@ -1357,11 +1366,10 @@ var quizApp = (function () {
     var flagBtn = document.getElementById("flagbtn");
     if (flagBtn) flagBtn.addEventListener("click", toggleFlag);
 
-    var fin = document.getElementById("finishbtn");
-    if (fin) fin.addEventListener("click", function () { confirmFinish(); });
-
-    var sub = document.getElementById("submitbtn");
-    if (sub) sub.addEventListener("click", function () { confirmFinish(); });
+    ["finishbtn", "submitbtn", "hudsubmitbtn", "docksubmitbtn", "mapsubmitbtn"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) b.addEventListener("click", function () { confirmFinish(); });
+    });
 
     var quit = document.getElementById("quitbtn");
     if (quit) quit.addEventListener("click", function () {
@@ -1411,15 +1419,17 @@ var quizApp = (function () {
   }
 
   function confirmFinish() {
-    var left = run.qs.length - answeredCount();
+    var total = run.qs.length;
+    var ans = answeredCount();
+    var left = total - ans;
     var flagged = run.flags.filter(Boolean).length;
-    var msg = "";
-    if (left > 0) msg += left + " question" + (left === 1 ? " is" : "s are") + " still unanswered. ";
-    if (flagged > 0) msg += flagged + " question" + (flagged === 1 ? " is" : "s are") + " marked with a flag. ";
-    msg += "Submit your paper now?";
+    var msg = "Ready to submit your test?\n\n";
+    msg += "• " + ans + " of " + total + " questions answered\n";
+    if (left > 0) msg += "• " + left + " question" + (left === 1 ? " is" : "s are") + " unanswered\n";
+    if (flagged > 0) msg += "• " + flagged + " question" + (flagged === 1 ? " is" : "s are") + " marked with a flag\n";
+    msg += "\nSubmit now and generate your report?";
 
-    if (left === 0 && flagged === 0) finish(false);
-    else if (confirm(msg)) finish(false);
+    if (confirm(msg)) finish(false);
   }
 
   /* ============================================================
