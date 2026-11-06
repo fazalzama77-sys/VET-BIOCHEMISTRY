@@ -456,15 +456,22 @@ var store = (function () {
   }
 
   /* ---------- Cloud Sync Config & Remote Merge ---------- */
+  var EMBEDDED_FIREBASE_URL = "https://vet-pathology-default-rtdb.firebaseio.com";
+
   function getSyncConfig() {
-    return read(KEYS.syncConfig, {
+    var def = {
       enabled: false,
-      dbUrl: "",
+      dbUrl: EMBEDDED_FIREBASE_URL,
       pin: "",
-      deviceName: (/Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile Phone" : "Tablet / PC"),
+      deviceName: (/Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Mobile Phone 📱" : "Tablet / PC 💻"),
       lastSyncedAt: 0,
       autoSync: true
-    });
+    };
+    var cfg = read(KEYS.syncConfig, def);
+    if (!cfg.dbUrl || cfg.dbUrl.indexOf("your-project") !== -1) {
+      cfg.dbUrl = EMBEDDED_FIREBASE_URL;
+    }
+    return cfg;
   }
 
   function setSyncConfig(cfg) {

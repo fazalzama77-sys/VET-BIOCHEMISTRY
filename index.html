@@ -259,6 +259,23 @@
   </div>
 </div>
 
+<!-- ==================== UNIVERSAL PASTE MODAL ==================== -->
+<div class="sync-modal-overlay" id="sync-paste-modal" style="display:none;" onclick="if(event.target===this) app.closePasteModal()">
+  <div class="sync-modal-card" style="max-width:440px; text-align:left;">
+    <button class="sync-modal-close" onclick="app.closePasteModal()" aria-label="Close">&times;</button>
+    <div style="font-size:1.8rem; margin-bottom:4px;">📋</div>
+    <h3 style="margin:0; font-size:var(--fs-md);" id="sync-paste-modal-title">Paste Details</h3>
+    <p class="muted small mt-1">Paste your text into the box below (right-click or long-press and tap Paste), then click Apply:</p>
+    <div class="mt-3">
+      <textarea id="sync-paste-modal-input" class="sync-input" rows="3" style="width:100%; font-family:var(--font-mono); resize:none;" placeholder="Paste here..."></textarea>
+    </div>
+    <div class="mt-3 row" style="justify-content:flex-end; gap:8px;">
+      <button class="btn btn--sm btn--ghost" type="button" onclick="app.closePasteModal()">Cancel</button>
+      <button class="btn btn--sm btn--primary" type="button" id="sync-paste-modal-confirm">Apply &amp; Fill</button>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== SCRIPTS ====================
      ORDER MATTERS.
      1. Data files first — they only declare variables.

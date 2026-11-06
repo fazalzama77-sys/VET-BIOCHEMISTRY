@@ -17,6 +17,7 @@
 
 var syncApp = (function () {
 
+  var EMBEDDED_FIREBASE_URL = "https://vet-pathology-default-rtdb.firebaseio.com";
   var syncState = "idle"; // "idle" | "pushing" | "pulling" | "error"
   var liveSource = null;
   var pushDebounceTimer = null;
@@ -27,7 +28,7 @@ var syncApp = (function () {
   }
 
   function sanitizeDbUrl(url) {
-    if (!url) return "";
+    if (!url || url.indexOf("your-project") !== -1) return EMBEDDED_FIREBASE_URL;
     url = url.trim().replace(/\/$/, "");
     if (!/^https?:\/\//i.test(url)) {
       url = "https://" + url;
@@ -49,7 +50,7 @@ var syncApp = (function () {
   function getEndpoint(dbUrl, pin) {
     var cleanUrl = sanitizeDbUrl(dbUrl);
     var room = hashPin(pin);
-    return cleanUrl + "/sync/" + room + ".json";
+    return cleanUrl + "/biochemistry/" + room + ".json";
   }
 
   function generatePin() {
@@ -200,20 +201,22 @@ var syncApp = (function () {
 
   /* ---------- TEST CONNECTION ---------- */
   function testConnection(dbUrl, pin, cb) {
-    if (!dbUrl) { cb(false, "Please enter your Firebase Database URL"); return; }
+    dbUrl = dbUrl || EMBEDDED_FIREBASE_URL;
     if (!pin) { cb(false, "Please enter a 6-digit Sync PIN"); return; }
 
     var ep = getEndpoint(dbUrl, pin);
     fetch(ep)
     .then(function (r) {
       if (r.ok) {
-        cb(true, "Connection successful! Cloud database is online and reachable.");
+        cb(true, "✅ Connection successful! Cloud database is online and reachable.");
+      } else if (r.status === 401) {
+        cb(false, "⚠️ Permission denied (HTTP 401). In Firebase Console → Build → Realtime Database → Rules tab, change '.read' and '.write' to true, then click Publish.");
       } else {
         cb(false, "Database responded with HTTP " + r.status + ". Ensure Realtime Database rules allow read/write.");
       }
     })
     .catch(function (err) {
-      cb(false, "Connection failed: " + err.message + ". Check URL and internet connection.");
+      cb(false, "Connection failed: " + err.message + ". Check internet connection.");
     });
   }
 
