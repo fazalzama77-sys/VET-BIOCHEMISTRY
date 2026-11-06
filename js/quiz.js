@@ -1,27 +1,107 @@
 /* ============================================================
-   quiz.js  —  The Veterinary Biochemistry Quiz Engine
-   ------------------------------------------------------------
+   quiz.js  —  The Veterinary Biochemistry Interactive Quiz Engine
+   ============================================================
    Features:
      - 680 curriculum-standard questions across Theory Units 1 to 3
      - 2 : 1 : 1 ratio of MCQ : TF : FIB (Units 1-2: 250 each, Unit 3: 180)
      - 15 thematic sub-sections with dedicated module testing
-     - Sequence Mode (curriculum order) vs. Shuffle Mode (randomised)
-     - Difficulty filter (Foundational / Core UG / Rank-1 Classic)
-     - Exam Mode: timed, no reveals, flag-for-review, submit paper
-     - Per-question timing, flagging and a full answer sheet
-     - Deep post-test analysis: unit, sub-section, format, difficulty,
-       pacing, and a comparison against your previous attempts
-     - Saved reports: reopen any of your last 20 tests, retry only
-       the questions you got wrong
-     - Spaced Repetition (Leitner) integration
+     - Playful, colorful, gamified UI with sound FX, combo streaks, confetti
+     - Streamlined HUD: sleek Question Map popover instead of a cluttered 90-button grid
+     - Docked bottom controls: Previous, Flag, Skip/Next, Finish (never trapped on FIB!)
+     - Practice Mode (instant reveals, audio chimes, explanations) & Exam Mode (timed)
+     - Comprehensive post-test celebration & filterable answer sheets
+     - Full Spaced Repetition (Leitner) & saved attempt persistence
    ============================================================ */
 
 var quizApp = (function () {
 
   var host;                 // container element
   var run = null;           // active run state
-
   var PASS_MARK = 50;       // VCI pass percentage
+
+  /* ---------- Subtle Web Audio Synthesizer (Offline & Zero-Asset) ---------- */
+  var soundFx = (function () {
+    var enabled = localStorage.getItem("vet_quiz_sound") !== "false";
+    var ctx = null;
+
+    function getCtx() {
+      if (!ctx && (window.AudioContext || window.webkitAudioContext)) {
+        try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+      }
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume().catch(function () {});
+      }
+      return ctx;
+    }
+
+    return {
+      isEnabled: function () { return enabled; },
+      toggle: function () {
+        enabled = !enabled;
+        localStorage.setItem("vet_quiz_sound", enabled ? "true" : "false");
+        return enabled;
+      },
+      playCorrect: function () {
+        if (!enabled) return;
+        try {
+          var c = getCtx();
+          if (!c) return;
+          var now = c.currentTime;
+          var osc = c.createOscillator();
+          var gain = c.createGain();
+          osc.connect(gain);
+          gain.connect(c.destination);
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(523.25, now);        // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+          osc.start(now);
+          osc.stop(now + 0.32);
+        } catch (e) {}
+      },
+      playWrong: function () {
+        if (!enabled) return;
+        try {
+          var c = getCtx();
+          if (!c) return;
+          var now = c.currentTime;
+          var osc = c.createOscillator();
+          var gain = c.createGain();
+          osc.connect(gain);
+          gain.connect(c.destination);
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(261.63, now);        // C4
+          osc.frequency.setValueAtTime(220.00, now + 0.10); // A3
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } catch (e) {}
+      },
+      playFanfare: function () {
+        if (!enabled) return;
+        try {
+          var c = getCtx();
+          if (!c) return;
+          var now = c.currentTime;
+          [523.25, 659.25, 783.99, 1046.5].forEach(function (f, idx) {
+            var osc = c.createOscillator();
+            var gain = c.createGain();
+            osc.connect(gain);
+            gain.connect(c.destination);
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(f, now + idx * 0.07);
+            gain.gain.setValueAtTime(0.10, now + idx * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.24);
+            osc.start(now + idx * 0.07);
+            osc.stop(now + idx * 0.07 + 0.24);
+          });
+        } catch (e) {}
+      }
+    };
+  })();
 
   /* Sub-section metadata for Veterinary Biochemistry Units 1 to 3 */
   var subSectionsByUnit = {
@@ -48,8 +128,7 @@ var quizApp = (function () {
     ]
   };
 
-  /* Every sub-section, flattened, so a report can name one without
-     knowing which unit it came from. */
+  /* Flattened lookup map */
   var subById = (function () {
     var m = {};
     Object.keys(subSectionsByUnit).forEach(function (uid) {
@@ -69,16 +148,14 @@ var quizApp = (function () {
 
   var DIFF_NAMES = { 1: "Foundational", 2: "Core UG", 3: "Rank-1 Classic" };
   var DIFF_STARS = { 1: "⭐", 2: "⭐⭐", 3: "⭐⭐⭐" };
-  var FMT_NAMES = { mcq: "Multiple Choice", tf: "True / False", fib: "Fill in the Blank" };
-  var FMT_ICONS = { mcq: "🔘", tf: "⚖️", fib: "✍️" };
+  var FMT_NAMES  = { mcq: "Multiple Choice", tf: "True / False", fib: "Fill in the Blank" };
+  var FMT_ICONS  = { mcq: "🔘", tf: "⚖️", fib: "✍️" };
 
   function resetRun() {
     stopRun();
     run = null;
   }
 
-  /* Called by the router when the student leaves the quiz section, so an exam
-     timer or key listener can never keep running in the background. */
   function leave() {
     if (run && run.active) { accrueTime(); persistRun(); }
     stopRun();
@@ -86,7 +163,7 @@ var quizApp = (function () {
   }
 
   /* ============================================================
-     BUILDING A QUESTION SET
+     BUILDING QUESTION SETS
      ============================================================ */
   function bankFor(unitIds, formats, subSectionId, diffs) {
     var out = [];
@@ -94,14 +171,11 @@ var quizApp = (function () {
       var b = (window.quizBank || {})[uid];
       if (!b) return;
       formats.forEach(function (f) {
-        // New questions are appended to the end of each list so saved keys
-        // (unit:format:index) never shift. Visit them in syllabus-topic order
-        // so Sequence Mode still follows the curriculum.
         var order = (b[f] || []).map(function (q, i) { return i; });
         order.sort(function (x, y) { return topicNo(b[f][x]) - topicNo(b[f][y]) || x - y; });
         order.forEach(function (i) {
           var q = b[f][i];
-          if (!q || !q.q || !String(q.q).trim()) return;   // skip empty template rows
+          if (!q || !q.q || !String(q.q).trim()) return;
           if (subSectionId && subSectionId !== "all" && q.subSection !== subSectionId) return;
           var d = q.diff || 1;
           if (diffs && diffs.length && diffs.indexOf(d) === -1) return;
@@ -132,7 +206,7 @@ var quizApp = (function () {
         (bank[u][f] || []).forEach(function (q) { if (q && q.q && String(q.q).trim()) c[f]++; });
       });
     });
-    return c.mcq + " MCQ • " + c.tf + " T/F • " + c.fib + " FIB";
+    return c.mcq + " MCQ · " + c.tf + " T/F · " + c.fib + " FIB";
   }
 
   function topicNo(q) {
@@ -143,24 +217,19 @@ var quizApp = (function () {
   function scopeUnits(kind, id) {
     if (kind === "unit") return [id];
     if (kind === "paper") {
-      // Every unit — theory and practical — that belongs to this examination
-      // paper. Units carry a `paper` field, so this stays correct if the
-      // syllabus ever splits into more than one paper again.
-      var ids = syllabus.allUnits.filter(function (u) { return u.paper === id; })
-        .map(function (u) { return u.id; });
+      var ids = (syllabus.allUnits || []).filter(function (u) { return u.paper === id; }).map(function (u) { return u.id; });
       if (ids.length) return ids;
-      var p = (syllabus.meta.papers || []).filter(function (x) { return x.id === id; })[0];
-      return p ? p.units.map(function (n) { return "unit-" + n; })
-               : syllabus.theory.map(function (u) { return u.id; });
+      var p = ((syllabus.meta || {}).papers || []).filter(function (x) { return x.id === id; })[0];
+      return p ? p.units.map(function (n) { return "unit-" + n; }) : (syllabus.theory || []).map(function (u) { return u.id; });
     }
-    if (kind === "grand") return syllabus.theory.map(function (u) { return u.id; });
-    if (kind === "practical") return syllabus.practical.map(function (u) { return u.id; });
+    if (kind === "grand") return (syllabus.theory || []).map(function (u) { return u.id; });
+    if (kind === "practical") return (syllabus.practical || []).map(function (u) { return u.id; });
     return [];
   }
 
   function paperName(id) {
-    var p = (syllabus.meta.papers || []).filter(function (x) { return x.id === id; })[0];
-    return p ? p.name : "Examination Paper";
+    var p = ((syllabus.meta || {}).papers || []).filter(function (x) { return x.id === id; })[0];
+    return p ? p.name : "Annual Examination";
   }
 
   function shuffle(a) {
@@ -172,25 +241,8 @@ var quizApp = (function () {
     return copy;
   }
 
-  /* Sequence mode used to take the first N questions of the pool, so a 20-question
-     Grand Test was 20 Unit-1 multiple choice questions and never touched the other
-     units or formats — and a 10-question Unit test was 10 questions from that
-     unit's first sub-section. This spreads the N across every unit, sub-section
-     and format in the pool, proportionally, while keeping each group in
-     curriculum order. */
   function pickSpread(pool, count) {
     if (count >= pool.length) return pool.slice(0);
-
-    var order = {};                       // key -> original position, so the final
-    pool.forEach(function (q, i) { order[q.key] = i; });   // sort stays O(n log n)
-
-    // The allocation happens in two passes. Doing it in one pass over
-    // unit|sub-section|format buckets looked tidier, but every bucket then had
-    // the same fractional remainder, the tie-break always fell to whichever
-    // format was listed first, and a 10-question test came out as 5 MCQ + 5 T/F
-    // with no fill-in-the-blanks at all. Splitting by format first guarantees
-    // the 2 : 1 : 1 ratio survives; the second pass spreads each format's share
-    // across the units and sub-sections it covers.
     var out = [];
     var byFormat = bucket(pool, function (q) { return q.format; });
     var formatShares = allocate(byFormat, count);
@@ -198,236 +250,291 @@ var quizApp = (function () {
     formatShares.forEach(function (fs) {
       if (!fs.take) return;
       var byModule = bucket(fs.items, function (q) { return q.unitId + "|" + (q.subSection || "-"); });
-      allocate(byModule, fs.take).forEach(function (ms) {
-        out = out.concat(ms.items.slice(0, ms.take));
+      var moduleShares = allocate(byModule, fs.take);
+      moduleShares.forEach(function (ms) {
+        if (!ms.take) return;
+        var step = ms.items.length / ms.take;
+        for (var k = 0; k < ms.take; k++) {
+          out.push(ms.items[Math.floor(k * step)]);
+        }
       });
     });
 
-    // Keep the original curriculum order of the pool
-    return out.sort(function (a, b) { return order[a.key] - order[b.key]; });
+    var order = {};
+    pool.forEach(function (q, i) { order[q.key] = i; });
+    out.sort(function (a, b) { return order[a.key] - order[b.key]; });
+    return out.slice(0, count);
   }
 
-  /* Split a list into insertion-ordered buckets. */
   function bucket(items, keyFn) {
-    var groups = [], index = {};
-    items.forEach(function (q) {
-      var k = keyFn(q);
-      if (index[k] === undefined) { index[k] = groups.length; groups.push({ key: k, items: [] }); }
-      groups[index[k]].items.push(q);
+    var map = {}, list = [];
+    items.forEach(function (it) {
+      var k = keyFn(it);
+      if (!map[k]) { map[k] = { key: k, items: [] }; list.push(map[k]); }
+      map[k].items.push(it);
     });
-    return groups;
+    return list;
   }
 
-  /* Largest-remainder allocation: hand out `count` places across the groups in
-     proportion to their size, so the takes always add up to exactly `count`. */
   function allocate(groups, count) {
-    var pool = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
-    if (!pool) return groups.map(function (g) { return { key: g.key, items: g.items, take: 0 }; });
+    var total = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
+    if (!total || !count) return groups.map(function (g) { return { key: g.key, items: g.items, take: 0 }; });
 
-    var shares = groups.map(function (g) {
-      var exact = count * g.items.length / pool;
-      return { key: g.key, items: g.items, take: Math.min(g.items.length, Math.floor(exact)), rem: exact - Math.floor(exact) };
-    });
-    var used = shares.reduce(function (n, s) { return n + s.take; }, 0);
-
-    // Biggest fractional remainder first; ties go to the larger group so the
-    // extra place lands where there is most material to draw from.
-    shares.slice().sort(function (a, b) {
-      return (b.rem - a.rem) || (b.items.length - a.items.length);
-    }).forEach(function (s) {
-      if (used < count && s.take < s.items.length) { s.take++; used++; }
+    var allocated = 0;
+    var res = groups.map(function (g) {
+      var exact = (g.items.length / total) * count;
+      var base = Math.floor(exact);
+      allocated += base;
+      return { key: g.key, items: g.items, take: base, rem: exact - base };
     });
 
-    // Any leftover (groups that ran out) goes to whoever still has questions
-    for (var pass = 0; used < count && pass < 60; pass++) {
-      var moved = false;
-      shares.forEach(function (s) {
-        if (used < count && s.take < s.items.length) { s.take++; used++; moved = true; }
-      });
-      if (!moved) break;
-    }
-    return shares;
+    var remainder = count - allocated;
+    res.slice().sort(function (a, b) { return b.rem - a.rem; }).forEach(function (r) {
+      if (remainder > 0 && r.take < r.items.length) { r.take++; remainder--; }
+    });
+    return res;
   }
 
   function countAvailable(unitIds, subSectionId) {
-    return bankFor(unitIds, ["mcq", "tf", "fib"], subSectionId).length;
+    return bankFor(unitIds, ["mcq", "tf", "fib"], subSectionId || "all").length;
   }
 
-  /* Questions whose Leitner box is due AND that still exist in the bank.
-     Without the second half, a due count could promise questions that the
-     Smart Review screen then cannot find. */
   function dueQuestions() {
-    var dueKeys = store.dueSrs();
+    var dueKeys = store.dueSrs ? store.dueSrs() : [];
     if (!dueKeys.length) return [];
-    var lookup = {};
-    dueKeys.forEach(function (k) { lookup[k] = true; });
-    return bankFor(syllabus.allUnits.map(function (u) { return u.id; }), ["mcq", "tf", "fib"])
-      .filter(function (q) { return lookup[q.key]; });
+    var all = bankFor(scopeUnits("grand"), ["mcq", "tf", "fib"]);
+    var byKey = {};
+    all.forEach(function (q) { byKey[q.key] = q; });
+    return dueKeys.map(function (k) { return byKey[k]; }).filter(Boolean);
   }
 
   /* ============================================================
-     ROUTER ENTRY POINT
+     MAIN ROUTER
      ============================================================ */
   function render(container, params) {
     host = container;
-    var kind = params.a;
+    var p0 = null, p1 = null;
+    if (typeof params === "string") {
+      var segs = params.split("/").filter(Boolean);
+      p0 = segs[0]; p1 = segs[1];
+    } else if (params && typeof params === "object") {
+      p0 = params.a;
+      p1 = params.b;
+    } else {
+      var hashParts = (location.hash || "").replace(/^#\/?/, "").split("/").filter(Boolean);
+      if (hashParts[0] === "quiz") {
+        p0 = hashParts[1];
+        p1 = hashParts[2];
+      }
+    }
 
-    // A saved report or a retry must be able to interrupt a finished run,
-    // so these are checked before the "still running" shortcut.
-    if (kind === "report") { renderSavedReport(params.b); return; }
-    if (kind === "retry")  { retryWrong(params.b); return; }
-    if (kind === "again")  { retakeReport(params.b); return; }
+    if (!p0) {
+      renderHub();
+    } else if (p0 === "unit" && p1) {
+      renderSetup("unit", p1);
+    } else if (p0 === "paper" && p1) {
+      renderSetup("paper", p1);
+    } else if (p0 === "grand") {
+      renderSetup("grand", "grand");
+    } else if (p0 === "practical") {
+      renderSetup("practical", "practical");
+    } else if (p0 === "review") {
+      renderReview();
+    } else if (p0 === "retry" && p1) {
+      retryWrong(p1);
+    } else if (p0 === "again" && p1) {
+      retakeReport(p1);
+    } else if (p0 === "report" && p1) {
+      renderSavedReport(p1);
+    } else {
+      renderHub();
+    }
+  }
 
-    if (run && run.active) { paintRun(); return; }
-    if (kind === "resume") { if (resumeSavedRun()) return; location.hash = "#/quiz"; return; }
+  function resumeBanner() {
+    var r = savedRun();
+    if (!r || !r.active) return "";
+    var ans = Object.keys(r.answers || {}).length;
+    return '<div class="quiz-resume-bar animate-fade-in">' +
+      '<div class="quiz-resume-bar__info">' +
+        '<div class="quiz-resume-bar__icon">⚡</div>' +
+        '<div>' +
+          '<div class="quiz-resume-bar__title">Unfinished Test in Progress: ' + app.esc(r.label || "Quiz") + '</div>' +
+          '<div class="quiz-resume-bar__sub">' + (r.i + 1) + ' of ' + r.qs.length + ' answered · ' +
+            (r.exam ? '⏱️ Timed exam' : 'Instant practice') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="quiz-resume-bar__actions">' +
+        '<button class="btn btn--primary btn--sm" id="resumebtn">Resume Test ➔</button>' +
+        '<button class="btn btn--ghost btn--sm" id="discardrunbtn">Discard</button>' +
+      '</div>' +
+    '</div>';
+  }
 
-    if (!kind) { renderHub(); return; }
-    if (kind === "unit")      { renderSetup("unit", params.b); return; }
-    if (kind === "paper")     { renderSetup("paper", params.b); return; }
-    if (kind === "grand")     { renderSetup("grand", null); return; }
-    if (kind === "practical") { renderSetup("practical", null); return; }
-    if (kind === "review")    { renderReview(); return; }
-    renderHub();
+  function wireResumeEvents() {
+    var resBtn = document.getElementById("resumebtn");
+    if (resBtn) resBtn.addEventListener("click", resumeSavedRun);
+    var discBtn = document.getElementById("discardrunbtn");
+    if (discBtn) discBtn.addEventListener("click", function () {
+      if (confirm("Discard this unfinished test? Your partial progress will be deleted.")) {
+        if (store.clearQuizRun) store.clearQuizRun();
+        renderHub();
+      }
+    });
   }
 
   /* ============================================================
-     HUB
+     1. QUIZ HUB (PLAYFUL, COLORFUL & INVITING)
      ============================================================ */
-  /* Banner offering to continue a test that was left unfinished
-     (page refreshed, app closed, phone call in the middle of a paper). */
-  function resumeBanner() {
-    var saved = savedRun();
-    if (!saved) return "";
-    return '<a class="card resume-card" href="#/quiz/resume">' +
-        '<div class="row items-center gap-3">' +
-          '<span class="resume-card__icon">&#9654;</span>' +
-          '<span>' +
-            '<b>Continue your unfinished test</b>' +
-            '<span class="small muted block">' + app.esc(saved.label || "Quiz") + ' — question ' +
-              (Math.min(saved.i || 0, saved.keys.length - 1) + 1) + ' of ' + saved.keys.length +
-              (saved.exam ? ' (Exam Mode)' : '') + '</span>' +
-          '</span>' +
-          '<span class="btn btn--primary btn--sm push">Resume</span>' +
-        '</div>' +
-      '</a>';
-  }
-
   function renderHub() {
     resetRun();
 
-    var theoryIds = syllabus.theory.map(function (u) { return u.id; });
-    var pracIds = syllabus.practical.map(function (u) { return u.id; });
-    var totalAll = countAvailable(theoryIds.concat(pracIds));
-    var due = dueQuestions().length;
-    var q = store.getQuiz();
+    var theoryIds = (syllabus.theory || []).map(function (u) { return u.id; });
+    var pracIds   = (syllabus.practical || []).map(function (u) { return u.id; });
+    var totalAll  = countAvailable(theoryIds.concat(pracIds));
+    var due       = dueQuestions().length;
+    var q         = store.getQuiz() || { attempts: [], byUnit: {} };
 
-    var unitRows = syllabus.theory.map(function (u) {
+    var unitCards = (syllabus.theory || []).map(function (u, idx) {
       var n = countAvailable([u.id]);
       var rec = q.byUnit["unit:" + u.id];
-      var subList = subSectionsByUnit[u.id] || [];
-      return '<a class="tlist__row' + (n ? '' : ' is-empty') + '" href="' +
-        (n ? '#/quiz/unit/' + u.id : '#/quiz') + '">' +
-        '<span class="tlist__no">U' + u.no + '</span>' +
-        '<span class="tlist__body"><span class="tlist__title">' + app.esc(u.short) + '</span>' +
-        '<span class="tlist__sub">' +
-          (n ? '<b>' + n + ' questions</b> (' + subList.length + ' modular sub-sections • 2:1:1 ratio)' : 'No questions added yet') +
-        '</span></span>' +
-        '<span class="tlist__right">' +
-          (rec ? '<span class="chip chip--ok">Best ' + rec.best + '%</span>' : '') +
-          (n ? app.icon("chevron", "faint") : '') +
-        '</span></a>';
+      var subs = subSectionsByUnit[u.id] || [];
+      var themes = [
+        { bg: "linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12))", border: "rgba(59, 130, 246, 0.35)", badge: "🧬 Stage 1 · Foundations" },
+        { bg: "linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12))", border: "rgba(16, 185, 129, 0.35)", badge: "⚡ Stage 2 · Bioenergetics" },
+        { bg: "linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(239, 68, 68, 0.12))", border: "rgba(245, 158, 11, 0.35)", badge: "🩺 Stage 3 · Clinical Lab" }
+      ];
+      var t = themes[idx % themes.length];
+
+      return '<div class="quiz-unit-card" style="background:' + t.bg + '; border-color:' + t.border + ';">' +
+        '<div class="quiz-unit-card__head">' +
+          '<span class="quiz-badge-soft">' + t.badge + '</span>' +
+          (rec ? '<span class="quiz-score-pill">⭐ Best ' + rec.best + '%</span>' : '<span class="quiz-pill-muted">Untested</span>') +
+        '</div>' +
+        '<h3 class="quiz-unit-card__title">Unit ' + u.no + ' — ' + app.esc(u.short) + '</h3>' +
+        '<p class="quiz-unit-card__desc">' + (subs.map(function (s) { return s.icon + ' ' + s.title; }).slice(0, 3).join(" · ")) + ' & more</p>' +
+        '<div class="quiz-unit-card__footer">' +
+          '<span class="quiz-unit-count font-mono"><b>' + n + '</b> Questions · <b>' + subs.length + '</b> Modules</span>' +
+          '<a class="btn btn--primary btn--sm" href="#/quiz/unit/' + u.id + '">Play Unit Quiz ➔</a>' +
+        '</div>' +
+      '</div>';
     }).join("");
 
-    var pracRows = syllabus.practical.map(function (u) {
+    var pracRow = (syllabus.practical || []).map(function (u) {
       var n = countAvailable([u.id]);
-      return '<a class="tlist__row' + (n ? '' : ' is-empty') + '" href="' +
-        (n ? '#/quiz/unit/' + u.id : '#/quiz') + '">' +
-        '<span class="tlist__no">P' + u.no + '</span>' +
-        '<span class="tlist__body"><span class="tlist__title">' + app.esc(u.short) + '</span>' +
-        '<span class="tlist__sub">' + (n ? n + ' questions' : 'No questions added yet') + '</span></span>' +
-        '<span class="tlist__right">' + (n ? app.icon("chevron", "faint") : '') + '</span></a>';
+      return '<a class="quiz-prac-pill' + (n ? '' : ' is-disabled') + '" href="' + (n ? '#/quiz/unit/' + u.id : '#/quiz') + '">' +
+        '<span class="quiz-prac-icon">🧪</span>' +
+        '<div class="quiz-prac-text">' +
+          '<div class="quiz-prac-title">P' + u.no + ' · ' + app.esc(u.short) + '</div>' +
+          '<div class="quiz-prac-sub">' + (n ? n + ' questions available' : 'In development') + '</div>' +
+        '</div>' +
+        '<span class="quiz-prac-arrow">➔</span>' +
+      '</a>';
     }).join("");
-
-    var annualIds = scopeUnits("paper", "annual");
-    var annualHasPractical = annualIds.some(function (id) {
-      return id.indexOf("prac-") === 0 && countAvailable([id]) > 0;
-    });
 
     host.innerHTML =
-      '<div class="pagehead quiz-hub-head">' +
-        '<div class="row row--wrap items-center gap-2 mb-2">' +
-          '<span class="chip chip--accent font-mono">🌟 ' + totalAll + ' Questions Bank</span>' +
-          '<span class="chip chip--ok">' + formatMix() + '</span>' +
-          '<span class="chip">' + subCount() + ' Sub-sections</span>' +
+      '<div class="quiz-hub-wrapper animate-fade-in">' +
+
+        /* Vibrant Header */
+        '<div class="quiz-hero-banner">' +
+          '<div class="quiz-hero-content">' +
+            '<div class="quiz-hero-tags">' +
+              '<span class="quiz-hero-tag">🌟 ' + totalAll + ' Questions Bank</span>' +
+              '<span class="quiz-hero-tag quiz-hero-tag--teal">' + formatMix() + '</span>' +
+              '<span class="quiz-hero-tag quiz-hero-tag--purple">' + subCount() + ' Thematic Modules</span>' +
+            '</div>' +
+            '<h1 class="quiz-hero-title">Veterinary Biochemistry Arena 🚀</h1>' +
+            '<p class="quiz-hero-desc">' +
+              'Test your diagnostic intuition with instant answer reveals, combo multipliers, and automated Spaced Repetition reinforcement.' +
+            '</p>' +
+          '</div>' +
         '</div>' +
-        '<h1>' + app.icon("quiz") + ' Veterinary Biochemistry Examination Suite</h1>' +
-        '<p class="lede">Test individual sub-sections, full units, paper-wise or grand exams. ' +
-        'Choose between <b>Sequence Mode</b> (curriculum order) or <b>Shuffle Mode</b> (randomized), with instant feedback and Spaced Repetition queue.</p>' +
-      '</div>' +
 
-      resumeBanner() +
+        resumeBanner() +
 
-      (totalAll === 0
-        ? '<div class="empty"><div class="empty__icon">' + app.icon("quiz") + '</div><h3>The question bank is empty</h3>' +
-          '<p>Add questions in <b>data/data-quiz.JS</b>.</p></div>'
-        : '') +
+        /* Quick Play Modes */
+        '<div class="quiz-section-header mt-8">' +
+          '<div>' +
+            '<h2 class="quiz-section-title">⚡ Quick Play Modes</h2>' +
+            '<p class="quiz-section-sub">Choose a game style tailored to your current study session.</p>' +
+          '</div>' +
+        '</div>' +
 
-      '<h2 class="mt-8 flex items-center gap-2"><span>🎯</span> Comprehensive Mock Tests</h2>' +
-      '<div class="grid grid--3 mt-4">' +
-        modeCard(paperName("annual"), "Units 1, 2, 3" + (annualHasPractical ? " (Theory + Practical)" : " — Theory"),
-                 countAvailable(annualIds), "#/quiz/paper/annual", false, "theory") +
-        modeCard("Grand test", "All 3 theory units comprehensive", countAvailable(theoryIds), "#/quiz/grand", false, "trophy") +
-        modeCard("Practical Lab", "All 3 practical units", countAvailable(pracIds), "#/quiz/practical", false, "practical") +
-        modeCard("Smart Review", due + " question" + (due === 1 ? "" : "s") + " due today", due, "#/quiz/review", true, "repeat") +
-      '</div>' +
+        '<div class="quiz-modes-grid mt-4">' +
+          quickModeCard("Daily Sprint", "10 rapid mixed questions from all units to warm up your brain.", 10, "#/quiz/grand", "⚡", "is-orange") +
+          quickModeCard("Smart SRS Review", due + " flashcard" + (due === 1 ? "" : "s") + " due today based on your memory forgetting curve.", due, "#/quiz/review", "🧠", "is-purple", due === 0) +
+          quickModeCard(paperName("annual"), "Full mock simulation with real university timing and scoring.", countAvailable(scopeUnits("paper", "annual")), "#/quiz/paper/annual", "⏱️", "is-blue") +
+          quickModeCard("Grand Theory Arena", "Comprehensive 3-unit challenge covering all 55 theory topics.", countAvailable(theoryIds), "#/quiz/grand", "🏆", "is-green") +
+        '</div>' +
 
-      recentReportsStrip() +
+        /* Theory Unit Quest Stages */
+        '<div class="quiz-section-header mt-10">' +
+          '<div>' +
+            '<h2 class="quiz-section-title">📚 Unit Mastery Stages</h2>' +
+            '<p class="quiz-section-sub">Pick any unit to target specific modules in Sequence or Shuffle mode.</p>' +
+          '</div>' +
+        '</div>' +
 
-      '<h2 class="mt-12 flex items-center gap-2"><span>📚</span> Theory Units with Modular Sub-sections</h2>' +
-      '<p class="small muted">Click any unit below to practice specific sub-sections or the full unit in Sequence or Shuffle mode.</p>' +
-      '<div class="tlist mt-4">' + unitRows + '</div>' +
+        '<div class="quiz-unit-grid mt-4">' + unitCards + '</div>' +
 
-      '<h2 class="mt-12 flex items-center gap-2"><span>🔬</span> Practical Diagnostic Units</h2>' +
-      '<div class="tlist mt-4">' + pracRows + '</div>';
+        /* Practical Procedures */
+        '<div class="quiz-section-header mt-10">' +
+          '<div>' +
+            '<h2 class="quiz-section-title">🔬 Practical Diagnostic Lab</h2>' +
+            '<p class="quiz-section-sub">Test laboratory biochemistry procedures, qualitative tests, and clinical chemistry protocols.</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="quiz-prac-grid mt-4">' + pracRow + '</div>' +
+
+        /* Recent Test Trophies Strip */
+        recentReportsStrip() +
+
+      '</div>';
+
+    wireResumeEvents();
   }
 
-  /* Quick access to the answer sheets of recent tests, straight from the hub. */
+  function quickModeCard(title, desc, count, href, icon, colorClass, isDisabled) {
+    return '<a class="quiz-mode-card ' + colorClass + (isDisabled ? ' is-disabled' : '') + '" href="' + (isDisabled ? '#/quiz' : href) + '">' +
+      '<div class="quiz-mode-card__top">' +
+        '<span class="quiz-mode-card__icon">' + icon + '</span>' +
+        '<span class="quiz-mode-card__count">' + (count || 0) + ' Qs</span>' +
+      '</div>' +
+      '<h3 class="quiz-mode-card__title">' + app.esc(title) + '</h3>' +
+      '<p class="quiz-mode-card__desc">' + app.esc(desc) + '</p>' +
+      '<div class="quiz-mode-card__action">' + (isDisabled ? 'Clear for now' : 'Start Play ➔') + '</div>' +
+    '</a>';
+  }
+
   function recentReportsStrip() {
     var reports = (store.getReports ? store.getReports() : []).slice(-4).reverse();
     if (!reports.length) return "";
-    return '<h2 class="mt-12 flex items-center gap-2"><span>📊</span> Your Recent Test Reports</h2>' +
-      '<p class="small muted">Reopen the full answer sheet and analysis of any recent test.</p>' +
-      '<div class="tlist mt-4">' +
+    return '<div class="quiz-section-header mt-12">' +
+        '<div>' +
+          '<h2 class="quiz-section-title">📊 Your Recent Test Reports</h2>' +
+          '<p class="quiz-section-sub">Reopen full answer keys, review missed questions, or retake.</p>' +
+        '</div>' +
+      '</div>' +
+      '<div class="quiz-recent-grid mt-4">' +
         reports.map(function (r) {
           var p = app.pct(r.correct, r.total);
-          return '<a class="tlist__row" href="#/quiz/report/' + r.id + '">' +
-            '<span class="tlist__no">' + p + '%</span>' +
-            '<span class="tlist__body"><span class="tlist__title">' + app.esc(r.label || "Quiz") + '</span>' +
-            '<span class="tlist__sub">' + new Date(r.at).toLocaleString(undefined, {
-              month: "short", day: "numeric", hour: "numeric", minute: "2-digit"
-            }) + ' · ' + r.correct + ' of ' + r.total + ' correct' + (r.exam ? ' · ⏱️ Exam Mode' : '') + '</span></span>' +
-            '<span class="tlist__right"><span class="chip ' + toneFor(p) + '">' + verdictFor(p) + '</span>' +
-              app.icon("chevron", "faint") + '</span>' +
+          var medal = p >= 90 ? "🥇" : p >= 75 ? "🥈" : p >= 50 ? "🥉" : "📝";
+          return '<a class="quiz-recent-card" href="#/quiz/report/' + r.id + '">' +
+            '<div class="quiz-recent-score">' + medal + ' ' + p + '%</div>' +
+            '<div class="quiz-recent-info">' +
+              '<div class="quiz-recent-title">' + app.esc(r.label || "Quiz") + '</div>' +
+              '<div class="quiz-recent-meta">' + r.correct + ' of ' + r.total + ' correct · ' +
+                new Date(r.at).toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+                (r.exam ? ' · ⏱️ Exam' : '') + '</div>' +
+            '</div>' +
+            '<span class="quiz-recent-pill ' + toneFor(p) + '">' + verdictFor(p) + '</span>' +
           '</a>';
         }).join("") +
       '</div>';
   }
 
-  function modeCard(title, sub, n, href, isReview, ico) {
-    var disabled = !n;
-    var iconHtml = ico ? app.icon(ico) : (isReview ? app.icon("repeat") : app.icon("quiz"));
-    return '<a class="card card--link modecard' + (disabled ? ' is-disabled' : '') + '" href="' +
-      (disabled ? '#/quiz' : href) + '">' +
-      '<div class="row"><span class="card__title" style="display:flex;align-items:center;gap:6px;">' + iconHtml + ' ' + app.esc(title) + '</span>' +
-      '<span class="chip push' + (n ? ' chip--accent' : '') + '">' + n + '</span></div>' +
-      '<p class="card__desc">' + app.esc(sub) + '</p>' +
-      (disabled ? '<p class="small faint mt-2">' +
-        (isReview ? 'Nothing due — answer some questions first.' : 'No questions added yet.') + '</p>' : '') +
-      '</a>';
-  }
-
   /* ============================================================
-     SETUP SCREEN WITH SUB-SECTION PICKER & SEQUENCE/SHUFFLE TOGGLE
+     2. SETUP SCREEN (COLORFUL, CLEAR & COHESIVE)
      ============================================================ */
   function renderSetup(kind, id) {
     resetRun();
@@ -445,7 +552,7 @@ var quizApp = (function () {
 
     var state = {
       subSectionId: "all",
-      orderMode: "sequence", // 'sequence' or 'shuffle'
+      orderMode: "sequence",
       formats: ["mcq", "tf", "fib"],
       diffs: [1, 2, 3],
       count: 20,
@@ -462,7 +569,7 @@ var quizApp = (function () {
       allPool.forEach(function (q) { counts[q.format]++; diffCounts[q.diff] = (diffCounts[q.diff] || 0) + 1; });
       var maxN = pool.length;
 
-      var presets = [10, 20, 30, 45, 90, maxN].filter(function (n, idx, arr) {
+      var presets = [10, 20, 30, 45, maxN].filter(function (n, idx, arr) {
         return n > 0 && n <= maxN && arr.indexOf(n) === idx;
       });
       if (!presets.length) presets = [maxN];
@@ -474,279 +581,253 @@ var quizApp = (function () {
       if (subSections.length > 0) {
         var allCount = bankFor(unitIds, ["mcq", "tf", "fib"], "all").length;
         subSecHtml =
-          '<div class="setup__row subsec-selector-row">' +
-            '<div>' +
-              '<b class="flex items-center gap-2"><span>📂</span> Choose Sub-section / Module</b>' +
-              '<p class="small muted">Target a specific topic or practice all sub-sections in the unit.</p>' +
+          '<div class="quiz-setup-block">' +
+            '<div class="quiz-setup-label">' +
+              '<span class="quiz-setup-icon">📂</span>' +
+              '<div>' +
+                '<b>Target Module / Sub-section</b>' +
+                '<p class="small muted">Practice a single chapter or take the comprehensive unit test.</p>' +
+              '</div>' +
             '</div>' +
-            '<div class="subsec-grid mt-3">' +
-              '<button type="button" class="subsec-card' + (state.subSectionId === 'all' ? ' is-active' : '') + '" data-sub="all">' +
-                '<div class="subsec-card__head">' +
-                  '<span class="subsec-card__icon">🌟</span>' +
-                  '<span class="subsec-card__title">All Sub-sections (Full Unit)</span>' +
-                  '<span class="chip chip--accent subsec-card__badge">' + allCount + ' Qs</span>' +
+            '<div class="quiz-subsec-grid mt-3">' +
+              '<button type="button" class="quiz-subsec-btn' + (state.subSectionId === 'all' ? ' is-active' : '') + '" data-sub="all">' +
+                '<span class="quiz-subsec-icon">🌟</span>' +
+                '<div class="quiz-subsec-text">' +
+                  '<div class="quiz-subsec-title">All Sub-sections (Full Unit)</div>' +
+                  '<div class="quiz-subsec-desc">Covers all modules in official 2:1:1 exam ratio</div>' +
                 '</div>' +
-                '<p class="subsec-card__desc">Complete unit test covering all topics in rigorous 2:1:1 exam ratio.</p>' +
+                '<span class="quiz-badge-soft">' + allCount + ' Qs</span>' +
               '</button>' +
               subSections.map(function (sub) {
                 var c = bankFor(unitIds, ["mcq", "tf", "fib"], sub.id).length;
-                var active = state.subSectionId === sub.id ? ' is-active' : '';
-                return '<button type="button" class="subsec-card' + active + '" data-sub="' + sub.id + '">' +
-                  '<div class="subsec-card__head">' +
-                    '<span class="subsec-card__icon">' + sub.icon + '</span>' +
-                    '<span class="subsec-card__title">' + app.esc(sub.title) + '</span>' +
-                    '<span class="chip subsec-card__badge">' + c + ' Qs</span>' +
+                return '<button type="button" class="quiz-subsec-btn' + (state.subSectionId === sub.id ? ' is-active' : '') + '" data-sub="' + sub.id + '">' +
+                  '<span class="quiz-subsec-icon">' + sub.icon + '</span>' +
+                  '<div class="quiz-subsec-text">' +
+                    '<div class="quiz-subsec-title">' + app.esc(sub.title) + '</div>' +
+                    '<div class="quiz-subsec-desc">' + app.esc(sub.desc) + '</div>' +
                   '</div>' +
-                  '<p class="subsec-card__desc">' + app.esc(sub.desc) + '</p>' +
+                  '<span class="quiz-badge-soft">' + c + ' Qs</span>' +
                 '</button>';
               }).join("") +
             '</div>' +
           '</div>';
       }
 
-      var currentSubMeta = getSubSectionMeta(id, state.subSectionId);
-      var subHeadingBadge = currentSubMeta
-        ? '<span class="chip chip--accent">' + currentSubMeta.icon + ' ' + app.esc(currentSubMeta.title) + '</span>'
-        : '<span class="chip chip--accent">🌟 All ' + (subSections.length || '') + ' Sub-sections</span>';
-
       host.innerHTML =
-        '<div class="pagehead">' +
-          '<div class="row row--wrap items-center gap-2 mb-2">' +
-            '<a class="btn btn--sm btn--ghost" href="#/quiz">← Quiz Hub</a>' +
-            subHeadingBadge +
-            '<span class="chip font-mono">' + maxN + ' Available Questions</span>' +
-          '</div>' +
-          '<h1>' + app.esc(label) + '</h1>' +
-          '<p class="lede">Configure your test parameters below. Pick question count, format filters, difficulty tier and test mode.</p>' +
-        '</div>' +
+        '<div class="quiz-setup-wrap animate-fade-in">' +
 
-        resumeBanner() +
-
-        '<div class="card setup quiz-setup-card">' +
-          subSecHtml +
-
-          /* Order Mode Toggle (Sequence vs Shuffle) */
-          '<div class="setup__row">' +
-            '<div>' +
-              '<b class="flex items-center gap-2"><span>🔄</span> Question Order Mode</b>' +
-              '<p class="small muted">Attempt questions sequentially according to syllabus or shuffle them randomly.</p>' +
+          '<div class="quiz-setup-header">' +
+            '<div class="row row--wrap items-center gap-2 mb-2">' +
+              '<a class="btn btn--sm btn--ghost" href="#/quiz">← Back to Hub</a>' +
+              '<span class="quiz-badge-soft font-mono">🌟 ' + maxN + ' Available Questions</span>' +
             '</div>' +
-            '<div class="quiz-mode-toggle" id="ordermodetoggle">' +
-              '<button type="button" class="toggle-pill' + (state.orderMode === 'sequence' ? ' is-selected' : '') + '" data-mode="sequence">' +
-                '<span class="pill-icon">📋</span>' +
-                '<span class="pill-label">Sequence Mode</span>' +
-                '<span class="pill-sub">Curriculum order</span>' +
+            '<h1 class="quiz-setup-title">' + app.esc(label) + '</h1>' +
+            '<p class="quiz-setup-desc">Customize your quiz preferences below. All settings are saved automatically.</p>' +
+          '</div>' +
+
+          resumeBanner() +
+
+          '<div class="quiz-setup-card mt-6">' +
+            subSecHtml +
+
+            /* Order Mode */
+            '<div class="quiz-setup-block">' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">🔄</span>' +
+                '<div>' +
+                  '<b>Question Order Mode</b>' +
+                  '<p class="small muted">Follow the syllabus sequentially or shuffle for high-stakes test practice.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="quiz-pill-group" id="ordermodetoggle">' +
+                '<button type="button" class="quiz-toggle-pill' + (state.orderMode === 'sequence' ? ' is-active' : '') + '" data-mode="sequence">' +
+                  '<span>📋</span> Sequence Mode (Curriculum Order)' +
+                '</button>' +
+                '<button type="button" class="quiz-toggle-pill' + (state.orderMode === 'shuffle' ? ' is-active' : '') + '" data-mode="shuffle">' +
+                  '<span>🔀</span> Shuffle Mode (Randomized)' +
+                '</button>' +
+              '</div>' +
+            '</div>' +
+
+            /* Formats */
+            '<div class="quiz-setup-block">' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">✍️</span>' +
+                '<div>' +
+                  '<b>Question Types</b>' +
+                  '<p class="small muted">Pick any mix of question formats.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="quiz-pill-group" id="fmtbox">' +
+                ['mcq', 'tf', 'fib'].map(function (f) {
+                  var count = counts[f];
+                  var checked = state.formats.indexOf(f) !== -1;
+                  return '<button type="button" class="quiz-check-pill' + (checked ? ' is-active' : '') + (count === 0 ? ' is-disabled' : '') + '" data-fmt="' + f + '">' +
+                    '<span>' + FMT_ICONS[f] + '</span> ' + (f === "fib" ? "Fill in the Blank" : FMT_NAMES[f]) +
+                    ' <small class="quiz-pill-count">(' + count + ')</small>' +
+                  '</button>';
+                }).join("") +
+              '</div>' +
+            '</div>' +
+
+            /* Difficulty */
+            '<div class="quiz-setup-block">' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">⭐</span>' +
+                '<div>' +
+                  '<b>Difficulty Tiers</b>' +
+                  '<p class="small muted">Practice core concepts or challenge yourself with distinction questions.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="quiz-pill-group" id="diffbox">' +
+                [1, 2, 3].map(function (d) {
+                  var count = diffCounts[d] || 0;
+                  var checked = state.diffs.indexOf(d) !== -1;
+                  return '<button type="button" class="quiz-check-pill' + (checked ? ' is-active' : '') + (count === 0 ? ' is-disabled' : '') + '" data-diff="' + d + '">' +
+                    DIFF_STARS[d] + ' ' + DIFF_NAMES[d] + ' <small class="quiz-pill-count">(' + count + ')</small>' +
+                  '</button>';
+                }).join("") +
+              '</div>' +
+            '</div>' +
+
+            /* Question Count */
+            '<div class="quiz-setup-block">' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">🎯</span>' +
+                '<div>' +
+                  '<b>Number of Questions</b>' +
+                  '<p class="small muted">Choose your test length.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="quiz-pill-group" id="segcount">' +
+                presets.map(function (n) {
+                  var isSelected = state.count === n;
+                  return '<button type="button" class="quiz-num-pill' + (isSelected ? ' is-active' : '') + '" data-count="' + n + '">' +
+                    (n === maxN ? 'All (' + n + ')' : n + ' Qs') +
+                  '</button>';
+                }).join("") +
+              '</div>' +
+            '</div>' +
+
+            /* Exam Mode Switch */
+            '<div class="quiz-setup-block">' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">⏱️</span>' +
+                '<div>' +
+                  '<b>Exam Mode (Strict Timer & No Reveals)</b>' +
+                  '<p class="small muted">Simulates university exam conditions. Reveals answers only after paper submission.</p>' +
+                '</div>' +
+              '</div>' +
+              '<label class="switch"><input type="checkbox" id="exammode"' + (state.exam ? ' checked' : '') + '><span></span></label>' +
+            '</div>' +
+
+            /* Timer Selection */
+            '<div class="quiz-setup-block" id="timerow"' + (state.exam ? '' : ' style="display:none"') + '>' +
+              '<div class="quiz-setup-label">' +
+                '<span class="quiz-setup-icon">⏳</span>' +
+                '<div>' +
+                  '<b>Time Limit</b>' +
+                  '<p class="small muted">Countdown timer will auto-submit the exam upon expiry.</p>' +
+                '</div>' +
+              '</div>' +
+              '<div class="quiz-pill-group" id="segtime">' +
+                [10, 20, 30, 45, 60].map(function (m) {
+                  return '<button type="button" class="quiz-num-pill' + (state.minutes === m ? ' is-active' : '') + '" data-min="' + m + '">' + m + ' Mins</button>';
+                }).join("") +
+              '</div>' +
+            '</div>' +
+
+            /* Bottom Action Bar */
+            '<div class="quiz-setup-actions">' +
+              '<a class="btn btn--ghost" href="#/quiz">Cancel</a>' +
+              '<button class="btn btn--primary btn--lg quiz-start-btn" id="startbtn"' + (maxN ? '' : ' disabled') + '>' +
+                '🚀 Launch Quiz (' + Math.min(state.count, maxN) + ' Questions)' +
               '</button>' +
-              '<button type="button" class="toggle-pill' + (state.orderMode === 'shuffle' ? ' is-selected' : '') + '" data-mode="shuffle">' +
-                '<span class="pill-icon">🔀</span>' +
-                '<span class="pill-label">Shuffle Mode</span>' +
-                '<span class="pill-sub">Randomized order</span>' +
-              '</button>' +
             '</div>' +
-          '</div>' +
 
-          /* Format selection */
-          '<div class="setup__row">' +
-            '<div>' +
-              '<b>Question Formats (2 : 1 : 1 Ratio)</b>' +
-              '<p class="small muted">Select any combination of question types.</p>' +
-            '</div>' +
-            '<div class="row row--wrap gap-3" id="fmtbox">' +
-              ['mcq', 'tf', 'fib'].map(function (f) {
-                var count = counts[f];
-                var checked = state.formats.indexOf(f) !== -1;
-                return '<label class="check-pill' + (checked ? ' is-checked' : '') + (count === 0 ? ' is-disabled' : '') + '">' +
-                  '<input type="checkbox" data-fmt="' + f + '"' + (checked ? ' checked' : '') + (count === 0 ? ' disabled' : '') + '> ' +
-                  '<span class="check-pill__icon">' + FMT_ICONS[f] + '</span>' +
-                  '<span class="check-pill__label">' + (f === "fib" ? "Fill in the Blanks" : FMT_NAMES[f]) + '</span>' +
-                  '<span class="chip chip--sm ml-1">' + count + '</span>' +
-                '</label>';
-              }).join("") +
-            '</div>' +
-          '</div>' +
-
-          /* Difficulty selection */
-          '<div class="setup__row">' +
-            '<div>' +
-              '<b>Difficulty Tier</b>' +
-              '<p class="small muted">Warm up on foundations, or go straight for the rank-1 classics.</p>' +
-            '</div>' +
-            '<div class="row row--wrap gap-3" id="diffbox">' +
-              [1, 2, 3].map(function (d) {
-                var count = diffCounts[d] || 0;
-                var checked = state.diffs.indexOf(d) !== -1;
-                return '<label class="check-pill' + (checked ? ' is-checked' : '') + (count === 0 ? ' is-disabled' : '') + '">' +
-                  '<input type="checkbox" data-diff="' + d + '"' + (checked ? ' checked' : '') + (count === 0 ? ' disabled' : '') + '> ' +
-                  '<span class="check-pill__icon">' + DIFF_STARS[d] + '</span>' +
-                  '<span class="check-pill__label">' + DIFF_NAMES[d] + '</span>' +
-                  '<span class="chip chip--sm ml-1">' + count + '</span>' +
-                '</label>';
-              }).join("") +
-            '</div>' +
-          '</div>' +
-
-          /* Question count */
-          '<div class="setup__row">' +
-            '<div>' +
-              '<b>Number of Questions</b>' +
-              '<p class="small muted">Choose your practice length.</p>' +
-            '</div>' +
-            '<div class="seg" id="segcount">' +
-              presets.map(function (n) {
-                var isSelected = state.count === n;
-                return '<button type="button" class="seg__btn' + (isSelected ? ' is-on' : '') + '" data-count="' + n + '">' +
-                  (n === maxN ? 'All (' + n + ')' : n) +
-                '</button>';
-              }).join("") +
-            '</div>' +
-          '</div>' +
-
-          /* Exam Mode Toggle */
-          '<div class="setup__row">' +
-            '<div>' +
-              '<b>⏱️ Exam Mode (Timed)</b>' +
-              '<p class="small muted">Timed exam with no answer reveals until final submission — mirrors annual university exam.</p>' +
-            '</div>' +
-            '<label class="switch"><input type="checkbox" id="exammode"' + (state.exam ? ' checked' : '') + '><span></span></label>' +
-          '</div>' +
-
-          /* Time Limit selector */
-          '<div class="setup__row" id="timerow"' + (state.exam ? '' : ' hidden') + '>' +
-            '<div>' +
-              '<b>Time Limit</b>' +
-              '<p class="small muted">Automatic submission when clock reaches zero.</p>' +
-            '</div>' +
-            '<div class="seg" id="segtime">' +
-              [10, 20, 30, 45, 60, 90].map(function (m) {
-                return '<button type="button" class="seg__btn' + (state.minutes === m ? ' is-on' : '') + '" data-min="' + m + '">' + m + ' min</button>';
-              }).join("") +
-            '</div>' +
-          '</div>' +
-
-          /* Action Bar */
-          '<div class="row mt-8 items-center">' +
-            '<a class="btn btn--ghost" href="#/quiz">Cancel</a>' +
-            '<div class="push"></div>' +
-            '<button class="btn btn--primary btn--lg"' + (maxN ? '' : ' disabled') + ' id="startbtn">' +
-              '🚀 Start Quiz (' + Math.min(state.count, maxN) + ' Questions)' +
-            '</button>' +
           '</div>' +
         '</div>';
 
-      attachEvents();
+      attachSetupEvents();
     }
 
-    function startLabel() {
-      var btn = document.getElementById("startbtn");
-      if (btn) btn.textContent = '🚀 Start Quiz (' + state.count + ' Questions)';
-    }
-
-    function attachEvents() {
-      // Sub-section cards
-      document.querySelectorAll(".subsec-card").forEach(function (card) {
-        card.addEventListener("click", function () {
-          state.subSectionId = card.getAttribute("data-sub");
+    function attachSetupEvents() {
+      // Sub-section selection
+      document.querySelectorAll(".quiz-subsec-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          state.subSectionId = btn.getAttribute("data-sub");
           updateView();
         });
       });
 
-      // Order Mode Toggle
-      document.querySelectorAll("#ordermodetoggle .toggle-pill").forEach(function (btn) {
+      // Order mode
+      document.querySelectorAll("#ordermodetoggle [data-mode]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           state.orderMode = btn.getAttribute("data-mode");
           updateView();
         });
       });
 
-      // Formats Checkboxes
-      document.querySelectorAll("[data-fmt]").forEach(function (chk) {
-        chk.addEventListener("change", function () {
-          var checkedFmts = Array.prototype.slice.call(document.querySelectorAll("[data-fmt]"))
-            .filter(function (c) { return c.checked; })
-            .map(function (c) { return c.getAttribute("data-fmt"); });
-          if (!checkedFmts.length) {
-            app.toast("Select at least one question format");
-            chk.checked = true;
-            return;
-          }
-          state.formats = checkedFmts;
+      // Formats
+      document.querySelectorAll("#fmtbox [data-fmt]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var f = btn.getAttribute("data-fmt");
+          var idx = state.formats.indexOf(f);
+          if (idx === -1) state.formats.push(f);
+          else if (state.formats.length > 1) state.formats.splice(idx, 1);
+          else { app.toast("At least one format must remain selected"); return; }
           updateView();
         });
       });
 
-      // Difficulty Checkboxes
-      document.querySelectorAll("[data-diff]").forEach(function (chk) {
-        chk.addEventListener("change", function () {
-          var checkedDiffs = Array.prototype.slice.call(document.querySelectorAll("[data-diff]"))
-            .filter(function (c) { return c.checked; })
-            .map(function (c) { return parseInt(c.getAttribute("data-diff"), 10); });
-          if (!checkedDiffs.length) {
-            app.toast("Select at least one difficulty tier");
-            chk.checked = true;
-            return;
-          }
-          state.diffs = checkedDiffs;
+      // Difficulty
+      document.querySelectorAll("#diffbox [data-diff]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var d = parseInt(btn.getAttribute("data-diff"), 10);
+          var idx = state.diffs.indexOf(d);
+          if (idx === -1) state.diffs.push(d);
+          else if (state.diffs.length > 1) state.diffs.splice(idx, 1);
+          else { app.toast("At least one difficulty tier must be active"); return; }
           updateView();
         });
       });
 
-      // Question count seg
-      document.querySelectorAll("#segcount .seg__btn").forEach(function (btn) {
+      // Question count
+      document.querySelectorAll("#segcount [data-count]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           state.count = parseInt(btn.getAttribute("data-count"), 10);
-          document.querySelectorAll("#segcount .seg__btn").forEach(function (b) { b.classList.remove("is-on"); });
-          btn.classList.add("is-on");
-          startLabel();
+          updateView();
         });
       });
 
-      // Exam Mode
-      var examChk = document.getElementById("exammode");
-      if (examChk) {
-        examChk.addEventListener("change", function (e) {
-          state.exam = e.target.checked;
-          var tRow = document.getElementById("timerow");
-          if (tRow) tRow.hidden = !e.target.checked;
+      // Exam mode switch
+      var ex = document.getElementById("exammode");
+      if (ex) {
+        ex.addEventListener("change", function () {
+          state.exam = ex.checked;
+          var tr = document.getElementById("timerow");
+          if (tr) tr.style.display = state.exam ? "flex" : "none";
         });
       }
 
-      // Time seg
-      document.querySelectorAll("#segtime .seg__btn").forEach(function (btn) {
+      // Minutes
+      document.querySelectorAll("#segtime [data-min]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           state.minutes = parseInt(btn.getAttribute("data-min"), 10);
-          document.querySelectorAll("#segtime .seg__btn").forEach(function (b) { b.classList.remove("is-on"); });
-          btn.classList.add("is-on");
+          updateView();
         });
       });
 
-      // Start Button
+      // Start button
       var startBtn = document.getElementById("startbtn");
       if (startBtn) {
         startBtn.addEventListener("click", function () {
-          var rawPool = bankFor(unitIds, state.formats, state.subSectionId, state.diffs);
-          if (!rawPool.length) {
-            app.toast("No questions available for this selection");
-            return;
-          }
+          var pool = bankFor(unitIds, state.formats, state.subSectionId, state.diffs);
+          if (!pool.length) { app.toast("No questions match this filter"); return; }
+          var count = Math.min(state.count, pool.length);
+          var chosen = state.orderMode === "shuffle" ? shuffle(pool).slice(0, count) : pickSpread(pool, count);
 
-          var finalQuestions = state.orderMode === "shuffle"
-            ? shuffle(rawPool).slice(0, state.count)
-            : pickSpread(rawPool, state.count);   // curriculum order, spread across units and formats
-
-          var runLabel = label;
-          var subMeta = getSubSectionMeta(id, state.subSectionId);
-          if (subMeta) runLabel = subMeta.icon + " " + subMeta.title;
-
-          start(
-            finalQuestions,
-            kind + (id ? ":" + id : "") + (state.subSectionId !== "all" ? ":" + state.subSectionId : ""),
-            runLabel,
-            state.exam,
-            state.minutes,
-            state.orderMode,
-            state.subSectionId,
-            id
-          );
+          start(chosen, kind + ":" + id, label, state.exam, state.minutes, state.orderMode, state.subSectionId, kind === "unit" ? id : null);
         });
       }
     }
@@ -755,222 +836,199 @@ var quizApp = (function () {
   }
 
   /* ============================================================
-     SMART REVIEW
+     3. SMART REVIEW MODE (SPACED REPETITION)
      ============================================================ */
   function renderReview() {
-    resetRun();
-    var pool = dueQuestions();
-
-    if (!pool.length) {
+    var qs = dueQuestions();
+    if (!qs.length) {
       host.innerHTML =
-        '<div class="pagehead"><span class="eyebrow">Spaced repetition</span><h1>Smart Review</h1></div>' +
-        '<div class="empty"><div class="empty__icon">✅</div><h3>Nothing due right now</h3>' +
-        '<p>Questions you answer wrongly come back tomorrow, then after 2, 4, 8 and 16 days ' +
-        'as you keep getting them right. Take a quiz first and this queue will fill itself.</p>' +
-        '<a class="btn btn--primary mt-4" href="#/quiz">Go to the quiz hub</a></div>';
+        '<div class="quiz-setup-wrap animate-fade-in">' +
+          '<div class="card p-8 text-center">' +
+            '<div style="font-size:3rem;margin-bottom:1rem;">🎉</div>' +
+            '<h2>Your Memory Queue is 100% Cleared!</h2>' +
+            '<p class="muted mt-2">Zero questions due for Leitner spaced repetition review right now.<br>' +
+              'Questions will automatically return here as their review intervals expire.</p>' +
+            '<div class="row row--wrap gap-3 mt-6" style="justify-content:center">' +
+              '<a class="btn btn--primary" href="#/quiz">Browse Unit Quizzes</a>' +
+              '<a class="btn btn--ghost" href="#/dashboard">Check Dashboard</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
       return;
     }
-
-    start(shuffle(pool), "review", "Smart Review", false, 0, "shuffle", "all", null);
+    start(shuffle(qs), "review", "Smart Memory Review (" + qs.length + " Due)", false, 0, "shuffle", "all", null);
   }
 
   /* ============================================================
-     RUNNING A QUIZ
+     4. START ACTIVE TEST RUN
      ============================================================ */
   function start(questions, scope, label, exam, minutes, orderMode, subSectionId, unitId) {
-    stopRun();
+    if (!questions.length) { app.toast("Question set is empty"); location.hash = "#/quiz"; return; }
+
+    resetRun();
+
     run = {
       active: true,
       qs: questions,
-      i: 0,
-      answers: new Array(questions.length).fill(null),
-      checked: new Array(questions.length).fill(false), // per question, so Previous/Next never wipes it
-      graded: new Array(questions.length).fill(false),  // each question feeds the SRS box only once
-      flags: new Array(questions.length).fill(false),   // marked for review
-      times: new Array(questions.length).fill(0),       // milliseconds spent on each question
-      _tickAt: Date.now(),
       scope: scope,
       label: label,
+      exam: !!exam,
+      minutes: minutes || 20,
       orderMode: orderMode || "sequence",
       subSectionId: subSectionId || "all",
-      unitId: unitId || (questions[0] ? questions[0].unitId : null),
-      exam: !!exam,
-      minutes: exam ? minutes : 0,
-      endsAt: exam ? Date.now() + minutes * 60000 : 0,
+      unitId: unitId || null,
+      i: 0,
+      answers: {},
+      times: {},
+      flags: [],
+      checked: {},
+      graded: {},
+      streak: 0,
+      scoreXP: 0,
       startedAt: Date.now(),
-      timer: null,
-      streak: 0
+      endsAt: exam ? Date.now() + (minutes * 60 * 1000) : 0,
+      showMap: false
     };
-    startTimer();
+
     persistRun();
+    startTimer();
     paintRun();
   }
 
   function startTimer() {
-    if (!run) return;
-    var id = setInterval(function () {
-      if (!run || !run.active) { clearInterval(id); return; }
+    if (run._timer) clearInterval(run._timer);
+    run._timer = setInterval(function () {
+      if (!run || !run.active) { clearInterval(run._timer); return; }
       if (run.exam) {
-        if (Date.now() >= run.endsAt) { clearInterval(id); finish(true); return; }
-        var t = document.getElementById("qtimer");
-        if (t) {
-          var left = run.endsAt - Date.now();
-          t.textContent = fmtTime(left);
-          // Last minute turns red so it cannot be missed.
-          t.className = "chip " + (left <= 60000 ? "chip--danger" : left <= 300000 ? "chip--warn" : "chip--subtle") + " font-mono";
+        var remain = run.endsAt - Date.now();
+        var timerEl = document.getElementById("qtimer");
+        if (timerEl) {
+          timerEl.textContent = fmtTime(Math.max(0, remain));
+          if (remain < 120000) timerEl.classList.add("is-urgent");
+        }
+        if (remain <= 0) {
+          clearInterval(run._timer);
+          finish(true);
         }
       } else {
-        var e = document.getElementById("qelapsed");
-        if (e) e.textContent = fmtTime(Date.now() - run.startedAt);
+        var elap = Date.now() - run.startedAt;
+        var elapEl = document.getElementById("qelapsed");
+        if (elapEl) elapEl.textContent = fmtTime(elap);
       }
-    }, 1000);
-    run.timer = id;
+    }, 500);
   }
 
-  /* Stop every timer and key listener this run owns. Called before a new run starts,
-     when the test is quit or finished, and when the student navigates away. */
   function stopRun() {
-    if (!run) return;
-    if (run.timer) { clearInterval(run.timer); run.timer = null; }
-    if (run._keyHandler) { window.removeEventListener("keydown", run._keyHandler); run._keyHandler = null; }
+    if (run) {
+      if (run._timer) clearInterval(run._timer);
+      if (run._keyHandler) window.removeEventListener("keydown", run._keyHandler);
+    }
   }
 
-  /* Move the stopwatch reading onto the question that is currently open. */
   function accrueTime() {
     if (!run || !run.active) return;
     var now = Date.now();
-    if (run._tickAt) {
-      if (!run.times) run.times = new Array(run.qs.length).fill(0);
-      var spent = now - run._tickAt;
-      // A tab left open overnight must not record eight hours on one question.
-      if (spent > 0 && spent < 10 * 60000) run.times[run.i] = (run.times[run.i] || 0) + spent;
-    }
+    var last = run._tickAt || run.startedAt;
+    var delta = Math.max(0, now - last);
+    run.times[run.i] = (run.times[run.i] || 0) + delta;
     run._tickAt = now;
   }
 
-  /* ============================================================
-     SAVING AN UNFINISHED RUN (survives a refresh or app restart)
-     ============================================================ */
-  function questionByKey(key) {
-    var parts = String(key).split(":");
-    if (parts.length !== 3) return null;
-    var bank = (window.quizBank || {})[parts[0]];
-    var list = bank && bank[parts[1]];
-    var idx = parseInt(parts[2], 10);
-    var raw = list && list[idx];
-    if (!raw || !raw.q || !String(raw.q).trim()) return null;
-    return {
-      key: key,
-      format: parts[1],
-      unitId: parts[0],
-      subSection: raw.subSection || null,
-      q: raw.q,
-      o: raw.o,
-      a: raw.a,
-      a_display: raw.a_display || (Array.isArray(raw.a) ? raw.a[0] : raw.a),
-      e: raw.e,
-      topicId: raw.topicId || null,
-      diff: raw.diff || 1
-    };
-  }
-
   function persistRun() {
-    if (!run || !run.active || !store.saveQuizRun) return;
-    store.saveQuizRun({
-      at: Date.now(),
-      keys: run.qs.map(function (q) { return q.key; }),
-      answers: run.answers,
-      checked: run.checked,
-      graded: run.graded,
-      flags: run.flags,
-      times: run.times,
-      i: run.i,
-      scope: run.scope,
-      label: run.label,
-      orderMode: run.orderMode,
-      subSectionId: run.subSectionId,
-      unitId: run.unitId,
-      exam: run.exam,
-      minutes: run.minutes,
-      endsAt: run.endsAt,
-      startedAt: run.startedAt,
-      streak: run.streak
-    });
+    if (!run || !run.active) return;
+    if (store.setQuizRun) {
+      store.setQuizRun({
+        scope: run.scope,
+        label: run.label,
+        exam: run.exam,
+        minutes: run.minutes,
+        orderMode: run.orderMode,
+        subSectionId: run.subSectionId,
+        unitId: run.unitId,
+        startedAt: run.startedAt,
+        endsAt: run.endsAt,
+        i: run.i,
+        answers: run.answers,
+        times: run.times,
+        flags: run.flags,
+        checked: run.checked,
+        graded: run.graded,
+        streak: run.streak,
+        scoreXP: run.scoreXP,
+        qKeys: run.qs.map(function (q) { return q.key; })
+      });
+    }
   }
 
   function savedRun() {
-    if (!store.getQuizRun) return null;
-    var s = store.getQuizRun();
-    if (!s || !s.keys || !s.keys.length) return null;
-    // An exam whose clock ran out while the app was closed cannot be resumed.
-    if (s.exam && s.endsAt && Date.now() >= s.endsAt) { store.clearQuizRun(); return null; }
-    return s;
+    return store.getQuizRun ? store.getQuizRun() : null;
   }
 
   function resumeSavedRun() {
     var s = savedRun();
-    if (!s) return false;
-    var qs = s.keys.map(questionByKey);
-    if (qs.some(function (q) { return !q; })) {   // the question bank changed under us
-      store.clearQuizRun();
-      app.toast("That saved test no longer matches the question bank");
-      return false;
-    }
-    stopRun();
+    if (!s || !s.qKeys || !s.qKeys.length) return;
+    var all = bankFor(scopeUnits("grand"), ["mcq", "tf", "fib"]);
+    var byKey = {};
+    all.forEach(function (q) { byKey[q.key] = q; });
+    var qs = s.qKeys.map(function (k) { return byKey[k]; }).filter(Boolean);
+    if (!qs.length) { if (store.clearQuizRun) store.clearQuizRun(); renderHub(); return; }
+
     run = {
-      active: true, qs: qs, i: Math.min(s.i || 0, qs.length - 1),
-      answers: s.answers || new Array(qs.length).fill(null),
-      checked: s.checked || new Array(qs.length).fill(false),
-      graded: s.graded || new Array(qs.length).fill(false),
-      flags: s.flags || new Array(qs.length).fill(false),
-      times: s.times || new Array(qs.length).fill(0),
-      _tickAt: Date.now(),
-      scope: s.scope, label: s.label, orderMode: s.orderMode, subSectionId: s.subSectionId,
-      unitId: s.unitId, exam: !!s.exam, minutes: s.minutes || 0, endsAt: s.endsAt || 0,
-      startedAt: s.startedAt || Date.now(), timer: null, streak: s.streak || 0
+      active: true,
+      qs: qs,
+      scope: s.scope,
+      label: s.label,
+      exam: s.exam,
+      minutes: s.minutes,
+      orderMode: s.orderMode || "sequence",
+      subSectionId: s.subSectionId || "all",
+      unitId: s.unitId || null,
+      i: Math.min(s.i || 0, qs.length - 1),
+      answers: s.answers || {},
+      times: s.times || {},
+      flags: s.flags || [],
+      checked: s.checked || {},
+      graded: s.graded || {},
+      streak: s.streak || 0,
+      scoreXP: s.scoreXP || 0,
+      startedAt: s.startedAt || Date.now(),
+      endsAt: s.endsAt || 0,
+      showMap: false
     };
+
     startTimer();
     paintRun();
-    return true;
   }
 
   function fmtTime(ms) {
-    var s = Math.max(0, Math.floor(ms / 1000));
-    var h = Math.floor(s / 3600);
-    var m = Math.floor((s % 3600) / 60);
-    var sec = s % 60;
-    return (h ? h + ":" + String(m).padStart(2, "0") : String(m).padStart(2, "0")) +
-      ":" + String(sec).padStart(2, "0");
+    if (ms <= 0) return "00:00";
+    var s = Math.floor(ms / 1000);
+    var m = Math.floor(s / 60);
+    s = s % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
   }
 
-  /* Short human duration for the analysis tables: "4s", "1m 12s". */
   function fmtDur(ms) {
-    var s = Math.round((ms || 0) / 1000);
+    var s = Math.round(ms / 1000);
     if (s < 60) return s + "s";
-    return Math.floor(s / 60) + "m " + (s % 60) + "s";
+    var m = Math.floor(s / 60);
+    s = s % 60;
+    return m + "m " + s + "s";
   }
 
-  function isAnswered(v) {
-    return v !== null && v !== undefined && String(v).trim() !== "";
-  }
-
+  function isAnswered(v) { return v !== undefined && v !== null && v !== ""; }
   function answeredCount() {
-    return run.answers.filter(isAnswered).length;
+    if (!run) return 0;
+    return Object.keys(run.answers).filter(function (k) { return isAnswered(run.answers[k]); }).length;
   }
 
-  function toneFor(p) {
-    return p >= 75 ? "chip--ok" : p >= PASS_MARK ? "chip--warn" : "chip--danger";
-  }
-
+  function toneFor(p) { return p >= 75 ? "chip--ok" : p >= PASS_MARK ? "chip--warn" : "chip--danger"; }
   function verdictFor(p) {
-    return p >= 85 ? "Rank 1 Distinction"
-      : p >= 70 ? "Strong First Class"
-      : p >= PASS_MARK ? "Passing Grade"
-      : "Needs Revision";
+    return p >= 90 ? "Distinction 🏆" : p >= 75 ? "First Class 🌟" : p >= PASS_MARK ? "Pass 👍" : "Needs Revision 📖";
   }
 
   /* ============================================================
-     PAINTING THE CURRENT QUESTION
+     5. ACTIVE QUIZ RUN SCREEN (STREAMLINED & PLAYFUL)
      ============================================================ */
   function paintRun() {
     if (!run || !run.active) return;
@@ -978,192 +1036,210 @@ var quizApp = (function () {
 
     var q = run.qs[run.i];
     var given = run.answers[run.i];
-    var locked = !!run.checked[run.i];        // answered and already marked
-    var showFeedback = !run.exam && locked;   // practice mode shows the answer straight away
+    var locked = !!run.checked[run.i];
+    var showFeedback = !run.exam && locked;
 
-    var body;
+    var body = "";
     if (q.format === "mcq") {
-      body = '<div class="opts">' + (q.o || []).map(function (opt, i) {
-        var cls = "opt";
-        if (given === i) cls += " is-picked";
-        if (showFeedback) {
-          if (i === q.a) cls += " is-right";
-          else if (given === i) cls += " is-wrong";
-        }
-        return '<button type="button" class="' + cls + '" data-pick="' + i + '"' + (showFeedback ? ' disabled' : '') + '>' +
-          '<span class="opt__key">' + "ABCDEF".charAt(i) + '</span>' +
-          '<span class="opt__text">' + app.esc(opt) + '</span>' +
-          (showFeedback && i === q.a ? '<span class="opt__state">&#10003;</span>' : '') +
-          (showFeedback && given === i && i !== q.a ? '<span class="opt__state">&#10007;</span>' : '') +
-        '</button>';
-      }).join("") + '</div>';
+      var optKeyLetters = ["A", "B", "C", "D", "E", "F"];
+      var optColors = ["is-blue", "is-teal", "is-amber", "is-purple", "is-rose", "is-indigo"];
+      body = '<div class="quiz-opts-grid">' +
+        (q.o || []).map(function (opt, i) {
+          var cls = "quiz-opt-btn " + (optColors[i % optColors.length]);
+          if (given === i) cls += " is-picked";
+          if (showFeedback) {
+            if (i === q.a) cls += " is-correct animate-pop";
+            else if (given === i) cls += " is-wrong animate-shake";
+          }
+          return '<button type="button" class="' + cls + '" data-pick="' + i + '"' + (showFeedback ? ' disabled' : '') + '>' +
+            '<span class="quiz-opt-badge">' + optKeyLetters[i] + '</span>' +
+            '<span class="quiz-opt-text">' + app.esc(opt) + '</span>' +
+            (showFeedback && i === q.a ? '<span class="quiz-opt-state-icon">✔</span>' : '') +
+            (showFeedback && given === i && i !== q.a ? '<span class="quiz-opt-state-icon">✖</span>' : '') +
+          '</button>';
+        }).join("") + '</div>';
 
     } else if (q.format === "tf") {
-      body = '<div class="opts opts--2">' + [true, false].map(function (v) {
-        var cls = "opt opt--tf";
-        if (given === v) cls += " is-picked";
-        if (showFeedback) {
-          if (v === q.a) cls += " is-right";
-          else if (given === v) cls += " is-wrong";
-        }
-        return '<button type="button" class="' + cls + '" data-pick="' + v + '"' + (showFeedback ? ' disabled' : '') + '>' +
-          '<span class="opt__key">' + (v ? "T" : "F") + '</span>' +
-          '<span class="opt__text">' + (v ? "True" : "False") + '</span>' +
-          (showFeedback && v === q.a ? '<span class="opt__state">&#10003;</span>' : '') +
-          (showFeedback && given === v && v !== q.a ? '<span class="opt__state">&#10007;</span>' : '') +
-        '</button>';
-      }).join("") + '</div>';
+      body = '<div class="quiz-tf-grid">' +
+        [true, false].map(function (v) {
+          var isT = v === true;
+          var cls = "quiz-tf-btn " + (isT ? "is-true" : "is-false");
+          if (given === v) cls += " is-picked";
+          if (showFeedback) {
+            if (v === q.a) cls += " is-correct animate-pop";
+            else if (given === v) cls += " is-wrong animate-shake";
+          }
+          return '<button type="button" class="' + cls + '" data-pick="' + v + '"' + (showFeedback ? ' disabled' : '') + '>' +
+            '<span class="quiz-tf-icon">' + (isT ? "👍" : "👎") + '</span>' +
+            '<span class="quiz-tf-label">' + (isT ? "TRUE" : "FALSE") + '</span>' +
+            (showFeedback && v === q.a ? '<span class="quiz-opt-state-icon">✔</span>' : '') +
+            (showFeedback && given === v && v !== q.a ? '<span class="quiz-opt-state-icon">✖</span>' : '') +
+          '</button>';
+        }).join("") + '</div>';
 
     } else {
       // Fill in the blanks
-      body = '<div class="fib-card">' +
-        '<div class="fib-input-wrap">' +
-          '<input type="text" id="fibinput" class="fib-input" placeholder="Type your answer here..." autocomplete="off" autocorrect="off" spellcheck="false" ' +
-          'value="' + app.esc(isAnswered(given) ? String(given) : "") + '"' + (showFeedback ? ' disabled' : '') + '>' +
+      body = '<div class="quiz-fib-card">' +
+        '<div class="quiz-fib-input-box">' +
+          '<input type="text" id="fibinput" class="quiz-fib-input" placeholder="Type your answer here..." autocomplete="off" autocorrect="off" spellcheck="false" ' +
+            'value="' + app.esc(isAnswered(given) ? String(given) : "") + '"' + (showFeedback ? ' disabled' : '') + '>' +
           (!showFeedback
-            ? '<button type="button" class="btn btn--primary" id="fibsubmit">' + (run.exam ? 'Save' : 'Check') + '</button>'
+            ? '<button type="button" class="btn btn--primary" id="fibsubmit">' + (run.exam ? 'Save Answer' : 'Check Answer ➔') + '</button>'
             : '') +
         '</div>' +
         (showFeedback
-          ? '<div class="fib-accepted-callout ' + (isCorrect(q, given) ? 'is-ok' : 'is-error') + '">' +
-              '<span class="badge">' + (isCorrect(q, given) ? '&#10003; Correct' : '&#10007; Incorrect') + '</span>' +
-              '<span class="label"><b>Standard Answer:</b> ' + app.esc(q.a_display || (Array.isArray(q.a) ? q.a[0] : q.a)) + '</span>' +
+          ? '<div class="quiz-fib-reveal ' + (isCorrect(q, given) ? 'is-correct animate-pop' : 'is-wrong animate-shake') + '">' +
+              '<span class="quiz-fib-tag">' + (isCorrect(q, given) ? '✔ Spot On!' : '✖ Key Answer') + '</span>' +
+              '<span class="quiz-fib-ans"><b>Correct Term:</b> ' + app.esc(q.a_display || (Array.isArray(q.a) ? q.a[0] : q.a)) + '</span>' +
             '</div>'
           : '') +
-        '</div>';
+      '</div>';
     }
 
     var answered = answeredCount();
-
     var subMeta = getSubSectionMeta(q.unitId, q.subSection);
-    var subBadge = subMeta
-      ? '<span class="chip chip--accent"><span class="qicon">' + subMeta.icon + '</span> ' + app.esc(subMeta.title) + '</span>'
-      : '';
-
-    var diffBadge = '<span class="chip ' + (q.diff === 3 ? 'chip--warn' : 'chip--subtle') + '">' +
-      DIFF_STARS[q.diff] + ' ' + DIFF_NAMES[q.diff] + '</span>';
-
-    var orderBadge = run.orderMode === "sequence"
-      ? '<span class="chip chip--subtle">📋 Sequence Mode</span>'
-      : '<span class="chip chip--subtle">🔀 Shuffle Mode</span>';
-
     var flagged = !!run.flags[run.i];
     var lastOne = run.i === run.qs.length - 1;
+    var progressPct = Math.round(((run.i + 1) / run.qs.length) * 100);
 
-    // In Exam Mode nothing is revealed, so every question needs a way forward —
-    // including fill-in-the-blank questions, which previously showed no button
-    // at all and trapped the student on that question.
-    var hideNav = (q.format === "fib" && !run.exam && !locked);
-    var primaryBtn = hideNav
-      ? ''   // practice mode: the Check button next to the input comes first
-      : (lastOne
-        ? '<button class="btn btn--primary btn--lg" id="finishbtn">Finish &amp; See Analysis 🏆</button>'
-        : '<button class="btn btn--primary btn--lg" id="nextbtn">Next Question →</button>');
+    // Navigation button logic (NEVER traps on FIB!)
+    var nextButtonHtml = "";
+    if (lastOne) {
+      nextButtonHtml = '<button class="btn btn--primary btn--lg quiz-finish-btn pulse-glow" id="finishbtn">Finish &amp; See Results 🏆</button>';
+    } else {
+      if (showFeedback || run.exam) {
+        nextButtonHtml = '<button class="btn btn--primary btn--lg" id="nextbtn">Next Question ➔</button>';
+      } else {
+        nextButtonHtml = '<button class="btn btn--primary btn--lg" id="nextbtn">' + (isAnswered(given) ? 'Next Question ➔' : 'Skip / Next ➔') + '</button>';
+      }
+    }
 
     host.innerHTML =
-      '<div class="quizrun animate-fade-in">' +
-        '<div class="quizrun__bar">' +
-          '<button class="btn btn--sm btn--ghost" id="quitbtn">Quit</button>' +
-          '<span class="chip font-medium">' + app.esc(run.label) + '</span>' +
-          orderBadge +
-          '<div class="push"></div>' +
-          (run.streak >= 2 ? '<span class="chip chip--accent streak-badge">🔥 Streak ' + run.streak + '</span>' : '') +
-          '<button type="button" class="btn btn--sm' + (flagged ? ' btn--primary' : '') + '" id="flagbtn" ' +
-            'title="Mark this question for review (F)">' + (flagged ? '🚩 Flagged' : '⚑ Flag') + '</button>' +
-          (run.exam
-            ? '<span class="chip chip--subtle font-mono" id="qtimer">' + fmtTime(run.endsAt - Date.now()) + '</span>'
-            : '<span class="chip chip--subtle font-mono" id="qelapsed">' + fmtTime(Date.now() - run.startedAt) + '</span>') +
-          '<span class="chip font-mono">' + (run.i + 1) + ' / ' + run.qs.length + '</span>' +
-        '</div>' +
+      '<div class="quiz-arena-wrap animate-fade-in">' +
 
-        '<div class="bar bar--lg mt-3"><div class="bar__fill" style="width:' +
-          (((run.i + 1) / run.qs.length) * 100) + '%"></div></div>' +
-
-        paletteHtml() +
-
-        '<div class="card quizcard mt-5">' +
-          '<div class="quizcard__meta">' +
-            '<span class="chip chip--accent font-bold">' + FMT_NAMES[q.format] + '</span>' +
-            '<span class="chip">' + app.esc((syllabus.unitById[q.unitId] || {}).short || q.unitId) + '</span>' +
-            subBadge +
-            diffBadge +
+        /* Streamlined Top HUD */
+        '<div class="quiz-hud">' +
+          '<div class="quiz-hud__left">' +
+            '<button class="btn btn--sm btn--ghost" id="quitbtn" title="Leave quiz">✕ Exit</button>' +
+            '<button type="button" class="quiz-map-toggle-btn' + (run.showMap ? ' is-active' : '') + '" id="maptogglebtn">' +
+              '🗺️ Question ' + (run.i + 1) + ' of ' + run.qs.length + ' <span class="arrow-down">▾</span>' +
+            '</button>' +
           '</div>' +
 
-          '<h2 class="quizcard__q mt-4">' + app.esc(q.q) + '</h2>' +
+          '<div class="quiz-hud__right">' +
+            '<button type="button" class="quiz-hud-iconbtn" id="soundtogglebtn" title="Toggle Sound">' +
+              (soundFx.isEnabled() ? '🔊' : '🔇') +
+            '</button>' +
+
+            (run.streak >= 2 ? '<span class="quiz-streak-pill animate-bounce">🔥 Streak ' + run.streak + '</span>' : '') +
+
+            (run.exam
+              ? '<span class="quiz-hud-pill quiz-hud-pill--timer" id="qtimer">⏱️ ' + fmtTime(run.endsAt - Date.now()) + '</span>'
+              : '<span class="quiz-hud-pill quiz-hud-pill--timer" id="qelapsed">⏱️ ' + fmtTime(Date.now() - run.startedAt) + '</span>') +
+
+            '<button type="button" class="quiz-hud-pill' + (flagged ? ' is-flagged' : '') + '" id="flagbtn" title="Flag for review (F)">' +
+              (flagged ? '🚩 Flagged' : '⚑ Flag') +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+
+        /* Vibrant Candy Progress Bar */
+        '<div class="quiz-candy-bar">' +
+          '<div class="quiz-candy-bar__fill" style="width:' + progressPct + '%"></div>' +
+        '</div>' +
+
+        /* Expandable Question Map Popover Drawer */
+        (run.showMap ? questionMapHtml() : '') +
+
+        /* Main Question Card */
+        '<div class="quiz-arena-card mt-6">' +
+          '<div class="quiz-card-tags">' +
+            '<span class="quiz-chip quiz-chip--type">' + FMT_ICONS[q.format] + ' ' + FMT_NAMES[q.format] + '</span>' +
+            '<span class="quiz-chip quiz-chip--unit">' + app.esc((syllabus.unitById[q.unitId] || {}).short || q.unitId) + '</span>' +
+            (subMeta ? '<span class="quiz-chip quiz-chip--module">' + subMeta.icon + ' ' + app.esc(subMeta.title) + '</span>' : '') +
+            '<span class="quiz-chip quiz-chip--diff">' + DIFF_STARS[q.diff] + ' ' + DIFF_NAMES[q.diff] + '</span>' +
+          '</div>' +
+
+          '<h2 class="quiz-question-prompt mt-4">' + app.esc(q.q) + '</h2>' +
 
           body +
 
+          /* Friendly Explanation Box */
           (showFeedback && q.e
-            ? '<div class="quiz-explanation-box mt-6 animate-scale-up ' + (isCorrect(q, given) ? 'is-correct' : 'is-wrong') + '">' +
-                '<div class="quiz-explanation-box__head">' +
-                  '<span>' + (isCorrect(q, given) ? '🎉 Excellent! Correct Answer' : '💡 Explanation & High-Yield Key Note') + '</span>' +
+            ? '<div class="quiz-explain-card mt-6 animate-scale-up ' + (isCorrect(q, given) ? 'is-correct' : 'is-wrong') + '">' +
+                '<div class="quiz-explain-head">' +
+                  '<span>' + (isCorrect(q, given) ? '🎉 Excellent! Correct Answer' : '💡 Key Clinical Concept & Explanation') + '</span>' +
                 '</div>' +
-                '<p class="quiz-explanation-box__body">' + q.e + '</p>' +
+                '<p class="quiz-explain-body">' + q.e + '</p>' +
                 (q.topicId && syllabus.topicById[q.topicId]
-                  ? '<a class="btn btn--sm btn--ghost mt-2" href="#/topic/' + q.topicId + '">📖 Read Full Lesson on ' + app.esc(syllabus.topicById[q.topicId].title) + ' →</a>'
+                  ? '<a class="quiz-explain-link mt-3" href="#/topic/' + q.topicId + '">📖 Read Syllabus Lesson: ' + app.esc(syllabus.topicById[q.topicId].title) + ' ➔</a>'
                   : '') +
               '</div>'
             : '') +
         '</div>' +
 
-        '<div class="row row--wrap mt-6 items-center">' +
-          '<button class="btn" id="prevbtn"' + (run.i === 0 ? ' disabled' : '') + '>← Previous</button>' +
-          '<div class="push"></div>' +
-          '<span class="small faint mr-3">' + answered + ' of ' + run.qs.length + ' answered</span>' +
-          primaryBtn +
+        /* Docked Bottom Controls (Unified & Complete!) */
+        '<div class="quiz-bottom-dock mt-6">' +
+          '<button class="btn btn--outline quiz-dock-btn" id="prevbtn"' + (run.i === 0 ? ' disabled' : '') + '>← Previous</button>' +
+
+          '<div class="quiz-dock-center">' +
+            '<span class="quiz-dock-counter">' + answered + ' of ' + run.qs.length + ' Answered</span>' +
+          '</div>' +
+
+          nextButtonHtml +
         '</div>' +
 
         (run.exam
-          ? '<div class="row mt-4"><button class="btn btn--block" id="submitbtn">Submit Paper Now</button></div>'
+          ? '<div class="quiz-exam-submit-row mt-4">' +
+              '<button class="btn btn--block btn--soft" id="submitbtn">Submit Paper Now</button>' +
+            '</div>'
           : '') +
 
-        '<p class="small faint mt-4 text-center quizrun__hint">' +
-          'Keyboard: <b>1–4</b> or <b>A–D</b> to answer · <b>T</b> / <b>F</b> for true-false · ' +
-          '<b>←</b> <b>→</b> to move · <b>F</b> to flag · <b>Enter</b> for next' +
-        '</p>' +
+        '<div class="quiz-shortcuts-hint mt-4">' +
+          'Keyboard: <b>1–4 / A–D</b> select option · <b>T / F</b> true/false · <b>Enter</b> next · <b>F</b> flag · <b>← →</b> arrows' +
+        '</div>' +
+
       '</div>';
 
     wireRun(q);
   }
 
-  /* Question navigator — tap any number to jump; the colours show what is done. */
-  function paletteHtml() {
-    return '<div class="qpalette" id="qpalette">' + run.qs.map(function (q, i) {
-      var cls = "qpalette__dot";
-      if (i === run.i) cls += " is-current";
-      if (run.checked[i] && !run.exam) cls += isCorrect(q, run.answers[i]) ? " is-right" : " is-wrong";
-      else if (isAnswered(run.answers[i])) cls += " is-answered";
-      if (run.flags[i]) cls += " is-flagged";
-      return '<button type="button" class="' + cls + '" data-jump="' + i + '" ' +
-        'aria-label="Question ' + (i + 1) + (run.flags[i] ? ', flagged' : '') + '">' + (i + 1) + '</button>';
-    }).join("") + '</div>';
+  function questionMapHtml() {
+    return '<div class="quiz-map-popover animate-scale-up" id="quizmap">' +
+      '<div class="quiz-map-header">' +
+        '<b>Question Map (' + answeredCount() + '/' + run.qs.length + ' Answered)</b>' +
+        '<span class="small muted">Click any question to jump</span>' +
+      '</div>' +
+      '<div class="quiz-map-grid mt-3">' +
+        run.qs.map(function (q, i) {
+          var cls = "quiz-map-dot";
+          if (i === run.i) cls += " is-current";
+          if (run.checked[i] && !run.exam) cls += isCorrect(q, run.answers[i]) ? " is-correct" : " is-wrong";
+          else if (isAnswered(run.answers[i])) cls += " is-answered";
+          if (run.flags[i]) cls += " is-flagged";
+          return '<button type="button" class="' + cls + '" data-jump="' + i + '" title="Question ' + (i + 1) + '">' +
+            (i + 1) + (run.flags[i] ? '🚩' : '') +
+          '</button>';
+        }).join("") +
+      '</div>' +
+    '</div>';
   }
 
   function isCorrect(q, given) {
-    if (!q) return false;
-    if (!isAnswered(given)) return false;
-    if (q.format === "mcq") return given === q.a;
-    if (q.format === "tf") return given === q.a;
-    // FIB checking: compare against every acceptable answer
+    if (!q || !isAnswered(given)) return false;
+    if (q.format === "mcq" || q.format === "tf") return given === q.a;
     var norm = normAnswer(given);
     var accepted = Array.isArray(q.a) ? q.a : [q.a];
     return accepted.some(function (acc) { return normAnswer(acc) === norm; });
   }
 
-  /* Fill-in-the-blank marking should forgive spacing, case, and the trailing
-     full stop a student types out of habit — but nothing more than that. */
   function normAnswer(v) {
-    return String(v == null ? "" : v)
-      .trim().toLowerCase()
-      .replace(/\s+/g, " ")
-      .replace(/[.,;:!]+$/, "");
+    return String(v == null ? "" : v).trim().toLowerCase().replace(/\s+/g, " ").replace(/[.,;:!]+$/, "");
   }
 
-  /* Record an answer. In practice mode a single tap also marks it and shows the
-     explanation straight away — there is no separate save step. */
   function submitAnswer(value) {
     var q = run.qs[run.i];
-    if (run.checked[run.i] && !run.exam) return;   // already marked; use Previous / Next to move
+    if (run.checked[run.i] && !run.exam) return;
     accrueTime();
     run.answers[run.i] = value;
 
@@ -1176,18 +1252,21 @@ var quizApp = (function () {
       }
       if (ok) {
         run.streak = (run.streak || 0) + 1;
-        if (run.streak === 3 && app.popMilestone) app.popMilestone("🔥 3 in a row!");
-        else if (run.streak === 5 && app.popMilestone) app.popMilestone("🚀 5 streak — unstoppable!");
-        else if (run.streak === 7 && app.popMilestone) app.popMilestone("⚡ 7 straight — pure genius!");
-        else if (run.streak === 10 && app.popMilestone) app.popMilestone("👑 10 streak — Master Biochemist!");
+        run.scoreXP = (run.scoreXP || 0) + 10;
+        soundFx.playCorrect();
+        if (run.streak === 3 && app.popMilestone) app.popMilestone("🔥 3 in a row! Combo x2!");
+        else if (run.streak === 5 && app.popMilestone) { soundFx.playFanfare(); app.popMilestone("🚀 5 Streak! Unstoppable!"); }
+        else if (run.streak === 10 && app.popMilestone) { soundFx.playFanfare(); app.popMilestone("👑 10 Streak! Bio Champion!"); }
       } else {
         run.streak = 0;
+        soundFx.playWrong();
       }
     }
     persistRun();
     paintRun();
+
     if (!run.exam && isCorrect(q, value) && app.burstConfetti) {
-      var anchor = document.querySelector(".opt.is-right") || document.querySelector(".quizcard");
+      var anchor = document.querySelector(".quiz-opt-btn.is-correct") || document.querySelector(".quiz-tf-btn.is-correct") || document.querySelector(".quiz-arena-card");
       if (anchor) app.burstConfetti(anchor);
     }
   }
@@ -1209,7 +1288,7 @@ var quizApp = (function () {
   }
 
   function wireRun(q) {
-    // A single tap on any option selects it (and marks it, outside exam mode)
+    // Option clicks
     document.querySelectorAll("[data-pick]").forEach(function (b) {
       b.addEventListener("click", function () {
         var raw = b.getAttribute("data-pick");
@@ -1217,9 +1296,34 @@ var quizApp = (function () {
       });
     });
 
-    // Question navigator
+    // Map popover toggle
+    var mapToggle = document.getElementById("maptogglebtn");
+    if (mapToggle) {
+      mapToggle.addEventListener("click", function () {
+        run.showMap = !run.showMap;
+        var mapEl = document.getElementById("quizmap");
+        if (mapEl) {
+          mapEl.style.display = run.showMap ? "block" : "none";
+        } else {
+          paintRun();
+        }
+      });
+    }
+
+    // Sound toggle
+    var soundToggle = document.getElementById("soundtogglebtn");
+    if (soundToggle) {
+      soundToggle.addEventListener("click", function () {
+        var isNowOn = soundFx.toggle();
+        soundToggle.textContent = isNowOn ? "🔊" : "🔇";
+        app.toast(isNowOn ? "Sound Effects Enabled 🔊" : "Muted 🔇");
+      });
+    }
+
+    // Question navigator dots
     document.querySelectorAll("[data-jump]").forEach(function (b) {
       b.addEventListener("click", function () {
+        run.showMap = false;
         goTo(parseInt(b.getAttribute("data-jump"), 10));
       });
     });
@@ -1227,17 +1331,15 @@ var quizApp = (function () {
     function submitFib() {
       var input = document.getElementById("fibinput");
       var val = input ? input.value : run.answers[run.i];
-      if (!isAnswered(val)) { app.toast("Please type your answer first"); return; }
+      if (!isAnswered(val)) { app.toast("Type an answer or tap Skip ➔"); return; }
       submitAnswer(val);
     }
 
     // FIB input
     var fib = document.getElementById("fibinput");
     if (fib) {
-      if (!run.checked[run.i]) setTimeout(function () { fib.focus(); }, 50);
-      fib.addEventListener("input", function () {
-        run.answers[run.i] = fib.value;
-      });
+      if (!run.checked[run.i]) setTimeout(function () { fib.focus(); }, 60);
+      fib.addEventListener("input", function () { run.answers[run.i] = fib.value; });
       fib.addEventListener("keydown", function (e) {
         if (e.key === "Enter") { e.preventDefault(); submitFib(); }
       });
@@ -1263,16 +1365,13 @@ var quizApp = (function () {
 
     var quit = document.getElementById("quitbtn");
     if (quit) quit.addEventListener("click", function () {
-      if (confirm("Quit this test? Your answers so far will not be added to the dashboard.")) {
-        stopRun();
-        if (store.clearQuizRun) store.clearQuizRun();
-        resetRun();
+      if (confirm("Exit this test? Partial answers will be preserved so you can resume anytime.")) {
+        leave();
         location.hash = "#/quiz";
       }
     });
 
-    // Keyboard: 1-4 / A-D for MCQ, T / F for True-False, arrows to move,
-    // F to flag, Enter for next.
+    // Keyboard handlers
     function handleKey(e) {
       if (!run || !run.active) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -1286,9 +1385,7 @@ var quizApp = (function () {
           if (cur.format === "mcq") {
             var map = { "1": 0, "2": 1, "3": 2, "4": 3, "a": 0, "b": 1, "c": 2, "d": 3, "A": 0, "B": 1, "C": 2, "D": 3 };
             if (map[e.key] !== undefined && map[e.key] < (cur.o || []).length) {
-              e.preventDefault();
-              submitAnswer(map[e.key]);
-              return;
+              e.preventDefault(); submitAnswer(map[e.key]); return;
             }
           } else if (cur.format === "tf") {
             if (e.key === "t" || e.key === "T" || e.key === "1") { e.preventDefault(); submitAnswer(true); return; }
@@ -1318,131 +1415,139 @@ var quizApp = (function () {
     var flagged = run.flags.filter(Boolean).length;
     var msg = "";
     if (left > 0) msg += left + " question" + (left === 1 ? " is" : "s are") + " still unanswered. ";
-    if (flagged > 0) msg += flagged + " question" + (flagged === 1 ? " is" : "s are") + " flagged for review. ";
-    if (msg && !confirm(msg + "Finish anyway?")) return;
-    finish(false);
+    if (flagged > 0) msg += flagged + " question" + (flagged === 1 ? " is" : "s are") + " marked with a flag. ";
+    msg += "Submit your paper now?";
+
+    if (left === 0 && flagged === 0) finish(false);
+    else if (confirm(msg)) finish(false);
   }
 
   /* ============================================================
-     FINISHING — build the report, save it, then show the analysis
+     6. FINISH TEST & GENERATE CELEBRATION REPORT
      ============================================================ */
   function finish(timedOut) {
+    if (!run) return;
     accrueTime();
     stopRun();
-    if (store.clearQuizRun) store.clearQuizRun();
 
+    var qs = run.qs;
+    var answers = run.answers;
+    var times = run.times;
+    var flags = run.flags;
+
+    var total = qs.length;
     var correct = 0;
-    var formatStats = { mcq: { total: 0, right: 0 }, tf: { total: 0, right: 0 }, fib: { total: 0, right: 0 } };
-    var units = {}, topics = {}, subs = {}, diffs = {};
+    var wrong = 0;
+    var skipped = 0;
 
-    run.qs.forEach(function (q, i) {
-      var ok = isCorrect(q, run.answers[i]);
-      if (ok) correct++;
+    var units = {}, fmts = {}, topics = {}, subs = {}, diffs = {};
 
-      formatStats[q.format].total++;
-      if (ok) formatStats[q.format].right++;
+    qs.forEach(function (q, i) {
+      var g = answers[i];
+      var ok = isCorrect(q, g);
+      var answered = isAnswered(g);
 
-      if (q.unitId) {
-        units[q.unitId] = units[q.unitId] || { total: 0, right: 0 };
-        units[q.unitId].total++; if (ok) units[q.unitId].right++;
-      }
+      if (!answered) skipped++;
+      else if (ok) correct++;
+      else wrong++;
+
+      if (run.exam && answered) store.gradeSrs(q.key, ok);
+
+      // Aggregations
+      var u = q.unitId;
+      units[u] = units[u] || { total: 0, right: 0 };
+      units[u].total++; if (ok) units[u].right++;
+
+      var f = q.format;
+      fmts[f] = fmts[f] || { total: 0, right: 0 };
+      fmts[f].total++; if (ok) fmts[f].right++;
+
       if (q.topicId) {
         topics[q.topicId] = topics[q.topicId] || { total: 0, right: 0 };
         topics[q.topicId].total++; if (ok) topics[q.topicId].right++;
       }
+
       if (q.subSection) {
         subs[q.subSection] = subs[q.subSection] || { total: 0, right: 0 };
         subs[q.subSection].total++; if (ok) subs[q.subSection].right++;
       }
-      diffs[q.diff] = diffs[q.diff] || { total: 0, right: 0 };
-      diffs[q.diff].total++; if (ok) diffs[q.diff].right++;
 
-      // Exam mode grades the Leitner boxes only at submission, because nothing
-      // was revealed during the paper.
-      if (run.exam) store.gradeSrs(q.key, ok);
+      var d = String(q.diff || 1);
+      diffs[d] = diffs[d] || { total: 0, right: 0 };
+      diffs[d].total++; if (ok) diffs[d].right++;
     });
 
-    var total = run.qs.length;
-    var seconds = Math.max(1, Math.round((Date.now() - run.startedAt) / 1000));
-    var mins = Math.max(1, Math.round(seconds / 60));
+    var totalMs = Object.keys(times).reduce(function (n, k) { return n + (times[k] || 0); }, 0);
+    var seconds = Math.max(1, Math.round(totalMs / 1000));
+    var reportId = "rep_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6);
 
     var report = {
-      id: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      id: reportId,
       at: Date.now(),
       scope: run.scope,
       label: run.label,
-      exam: !!run.exam,
-      timedOut: !!timedOut,
+      exam: run.exam,
+      minutes: run.minutes,
       orderMode: run.orderMode,
       subSectionId: run.subSectionId,
       unitId: run.unitId,
+      timedOut: !!timedOut,
       total: total,
       correct: correct,
-      attempted: run.answers.filter(isAnswered).length,
       seconds: seconds,
-      minutes: mins,
-      keys: run.qs.map(function (q) { return q.key; }),
-      answers: run.answers.slice(0),
-      times: (run.times || []).slice(0),
-      flags: (run.flags || []).slice(0)
+      qKeys: qs.map(function (q) { return q.key; }),
+      answers: answers,
+      times: times,
+      flags: flags
     };
 
-    store.saveAttempt({
-      at: report.at,
-      reportId: report.id,
-      scope: report.scope,
-      label: report.label,
+    var attempt = {
+      at: Date.now(),
+      scope: run.scope,
+      label: run.label,
+      exam: run.exam,
+      minutes: run.minutes,
       total: total,
       correct: correct,
-      attempted: report.attempted,
-      exam: report.exam,
-      timedOut: report.timedOut,
-      orderMode: report.orderMode,
-      subSectionId: report.subSectionId,
-      minutes: mins,
       seconds: seconds,
-      formats: formatStats,
+      timedOut: !!timedOut,
+      reportId: reportId,
       units: units,
+      formats: fmts,
       topics: topics,
       subs: subs,
       diffs: diffs
-    });
+    };
 
-    if (store.saveReport) store.saveReport(report);
+    store.saveReport(report);
+    store.saveAttempt(attempt);
+    if (store.clearQuizRun) store.clearQuizRun();
 
     resetRun();
     paintReport(report, true);
   }
 
-  /* ============================================================
-     REPORT — the post-test analysis screen
-     ------------------------------------------------------------
-     Everything here is recomputed from the saved answer sheet and
-     the question bank, so a report opened three weeks later shows
-     exactly what it showed the moment the paper was submitted.
-     ============================================================ */
-
   function renderSavedReport(id) {
     resetRun();
-    var report = store.getReport ? store.getReport(id) : null;
-    if (!report) {
-      host.innerHTML =
-        '<div class="pagehead"><a class="btn btn--sm btn--ghost" href="#/quiz">← Quiz Hub</a>' +
-        '<h1 class="mt-3">Report not found</h1></div>' +
-        '<div class="empty"><div class="empty__icon">📄</div><h3>That test report is no longer stored</h3>' +
-        '<p>Only your last 20 test reports are kept on this device.</p>' +
-        '<a class="btn btn--primary mt-4" href="#/quiz">Back to the quiz hub</a></div>';
+    var rep = store.getReport ? store.getReport(id) : null;
+    if (!rep) {
+      host.innerHTML = '<div class="card p-8 text-center"><h2>Report Not Found</h2>' +
+        '<p class="muted mt-2">This report may have been cleared or expired.</p>' +
+        '<a class="btn btn--primary mt-4" href="#/quiz">Back to Quizzes</a></div>';
       return;
     }
-    paintReport(report, false);
+    paintReport(rep, false);
   }
 
-  /* Rebuild the per-question rows of a report from the bank. */
   function hydrate(report) {
-    return report.keys.map(function (k, i) {
-      var q = questionByKey(k);
+    var all = bankFor(scopeUnits("grand"), ["mcq", "tf", "fib"]);
+    var byKey = {};
+    all.forEach(function (q) { byKey[q.key] = q; });
+
+    return (report.qKeys || []).map(function (k, i) {
+      var q = byKey[k];
       return {
-        i: i,
+        key: k,
         q: q,
         given: report.answers ? report.answers[i] : null,
         time: report.times ? (report.times[i] || 0) : 0,
@@ -1453,6 +1558,9 @@ var quizApp = (function () {
     }).filter(function (r) { return !!r.q; });
   }
 
+  /* ============================================================
+     7. POST-TEST CELEBRATION REPORT SCREEN
+     ============================================================ */
   function paintReport(report, isFresh) {
     var rows = hydrate(report);
     var total = rows.length || report.total || 0;
@@ -1462,507 +1570,226 @@ var quizApp = (function () {
     var flagged = rows.filter(function (r) { return r.flagged; }).length;
     var percent = app.pct(correct, total);
     var verdict = verdictFor(percent);
-    var chipCls = toneFor(percent);
 
     var timed = rows.filter(function (r) { return r.time > 0; });
     var timeSum = timed.reduce(function (n, r) { return n + r.time; }, 0);
     var avgMs = timed.length ? Math.round(timeSum / timed.length) : 0;
-    var slowest = timed.slice().sort(function (a, b) { return b.time - a.time; })[0] || null;
 
-    // Grouped breakdowns
     var byFormat = groupBy(rows, function (r) { return r.q.format; });
-    var byUnit = groupBy(rows, function (r) { return r.q.unitId; });
-    var bySub = groupBy(rows.filter(function (r) { return r.q.subSection; }), function (r) { return r.q.subSection; });
-    var byDiff = groupBy(rows, function (r) { return String(r.q.diff); });
+    var byUnit   = groupBy(rows, function (r) { return r.q.unitId; });
+    var bySub    = groupBy(rows.filter(function (r) { return r.q.subSection; }), function (r) { return r.q.subSection; });
+    var byDiff   = groupBy(rows, function (r) { return String(r.q.diff); });
 
-    // Pacing insight: wrong answers that were rushed (< 8 seconds of thought)
-    var rushed = rows.filter(function (r) { return !r.ok && !r.skipped && r.time > 0 && r.time < 8000; }).length;
-
-    var history = comparisonFor(report);
+    var headerThemes = {
+      distinction: { badge: "🏆 TOP RANK BIOCHEMIST", title: "Phenomenal Performance! Distinction Grade", color: "var(--ok)" },
+      first: { badge: "🌟 FIRST CLASS HONORS", title: "Outstanding Work! Strong Clinical Recall", color: "var(--accent)" },
+      pass: { badge: "👍 SOLID PASS", title: "Well Done! Foundation is Solid", color: "var(--warn)" },
+      fail: { badge: "🌱 REVISION OPPORTUNITY", title: "Good Practice! Strengthen Weak Modules", color: "var(--danger)" }
+    };
+    var theme = percent >= 90 ? headerThemes.distinction : percent >= 75 ? headerThemes.first : percent >= PASS_MARK ? headerThemes.pass : headerThemes.fail;
 
     host.innerHTML =
-      '<div class="report animate-scale-up" id="quizreport">' +
+      '<div class="quiz-report-wrap animate-fade-in" id="quizreport">' +
 
-        reportHeadHtml(report, percent, correct, total, verdict, chipCls) +
+        /* Top Hero */
+        '<div class="quiz-report-hero">' +
+          '<div class="row row--wrap items-center gap-2 mb-4" style="justify-content:center">' +
+            '<a class="btn btn--sm btn--ghost" href="#/quiz">← Quiz Arena</a>' +
+            '<span class="quiz-badge-soft">' + app.esc(report.label || "Quiz") + '</span>' +
+            (report.exam ? '<span class="quiz-badge-soft quiz-badge-soft--warn">⏱️ Exam Mode</span>' : '') +
+            '<span class="quiz-badge-soft font-mono">' + new Date(report.at).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + '</span>' +
+          '</div>' +
 
-        (report.timedOut
-          ? '<div class="callout mb-6"><div class="callout__title">Time Expired</div>' +
-            'Your examination paper was submitted automatically when the countdown reached zero.</div>'
-          : '') +
+          '<div class="quiz-report-ring-wrap">' +
+            app.ringHtml(percent, 160) +
+          '</div>' +
 
-        /* --- Headline numbers --- */
-        '<div class="grid grid--5 mt-6 text-left">' +
-          app.statCard("Score", correct + " / " + total, percent + "% overall", "target") +
-          app.statCard("Correct", correct, pctOf(correct, total) + " of the paper", "check") +
-          app.statCard("Incorrect", wrong, pctOf(wrong, total) + " of the paper", "crossCircle") +
-          app.statCard("Skipped", skipped, skipped ? "left unanswered" : "nothing left blank", "help") +
-          app.statCard("Time taken", fmtDur(report.seconds * 1000), avgMs ? fmtDur(avgMs) + " per question" : "—", "clock") +
+          '<span class="quiz-report-kicker mt-4">' + theme.badge + '</span>' +
+          '<h1 class="quiz-report-title mt-2">' + correct + ' out of ' + total + ' Correct (' + percent + '%)</h1>' +
+          '<p class="quiz-report-sub">' + theme.title + '</p>' +
         '</div>' +
 
-        /* --- Verdict / examiner's note --- */
-        examinerNoteHtml(percent, skipped, rushed, flagged, bySub, history) +
-
-        /* --- Comparison against previous attempts --- */
-        (history ? historyHtml(history, percent) : '') +
-
-        /* --- Breakdown grids --- */
-        '<div class="grid grid--2 mt-8">' +
-          breakdownCard("Accuracy by question type", "Where marks are being lost in the format itself.",
-            ["mcq", "tf", "fib"].filter(function (f) { return byFormat[f]; }).map(function (f) {
-              return { label: FMT_ICONS[f] + " " + FMT_NAMES[f], rows: byFormat[f] };
-            })) +
-          breakdownCard("Accuracy by difficulty tier", "Foundational slips matter more than rank-1 misses.",
-            ["1", "2", "3"].filter(function (d) { return byDiff[d]; }).map(function (d) {
-              return { label: DIFF_STARS[d] + " " + DIFF_NAMES[d], rows: byDiff[d] };
-            })) +
+        /* 4 Big Metric Cards */
+        '<div class="quiz-report-stats-grid mt-6">' +
+          reportStatCard("Score", percent + "%", verdict, "target", "is-blue") +
+          reportStatCard("Correct", correct, pctOf(correct, total) + "% of questions", "check", "is-green") +
+          reportStatCard("Missed", (wrong + skipped), (wrong + " wrong · " + skipped + " skipped"), "crossCircle", "is-orange") +
+          reportStatCard("Pace", avgMs ? fmtDur(avgMs) : "—", "avg time per question", "clock", "is-purple") +
         '</div>' +
 
-        '<div class="grid grid--2 mt-5">' +
-          breakdownCard("Accuracy by unit", "Which unit of the VCI syllabus is carrying you.",
-            Object.keys(byUnit).map(function (u) {
-              return {
-                label: (syllabus.unitById[u] || {}).short || u,
-                rows: byUnit[u],
-                href: "#/quiz/unit/" + u
-              };
-            })) +
-          breakdownCard("Accuracy by sub-section", "The real revision list — weakest module first.",
-            Object.keys(bySub).map(function (s) {
-              var meta = subById[s] || { icon: "📘", title: s, unitId: null };
-              return {
-                label: meta.icon + " " + meta.title,
-                rows: bySub[s],
-                href: meta.unitId ? "#/quiz/unit/" + meta.unitId : null
-              };
-            }).sort(function (a, b) { return accOf(a.rows) - accOf(b.rows); })) +
-        '</div>' +
-
-        /* --- Pacing --- */
-        pacingHtml(rows, avgMs, slowest, rushed) +
-
-        /* --- Answer sheet --- */
-        answerSheetHtml(rows, correct, wrong, skipped, flagged) +
-
-        /* --- Actions --- */
-        '<div class="report-actions row row--wrap mt-12 gap-3" style="justify-content:center">' +
-          (wrong + skipped
-            ? '<a class="btn btn--primary btn--lg" href="#/quiz/retry/' + report.id + '">🎯 Retry the ' + (wrong + skipped) + ' I missed</a>'
+        /* Primary Action Buttons */
+        '<div class="quiz-report-actions mt-8">' +
+          ((wrong + skipped) > 0
+            ? '<a class="btn btn--primary btn--lg pulse-glow" href="#/quiz/retry/' + report.id + '">🎯 Retry Missed Questions (' + (wrong + skipped) + ')</a>'
             : '') +
-          '<a class="btn btn--lg" href="#/quiz/again/' + report.id + '">🔁 Retake this exact test</a>' +
-          '<a class="btn btn--lg" href="#/quiz/review">🧠 Smart Review queue</a>' +
-          '<a class="btn btn--lg" href="#/dashboard">📊 My Dashboard</a>' +
-          '<a class="btn btn--lg btn--ghost" href="#/quiz">Quiz Hub</a>' +
-          '<button class="btn btn--lg btn--ghost" id="printreport">🖨️ Print / Save PDF</button>' +
+          '<a class="btn btn--lg btn--outline" href="#/quiz/again/' + report.id + '">🔁 Retake Quiz</a>' +
+          '<a class="btn btn--lg btn--outline" href="#/quiz/review">🧠 Smart Review Queue</a>' +
+          '<a class="btn btn--lg btn--ghost" href="#/dashboard">📊 My Dashboard</a>' +
         '</div>' +
+
+        /* Filterable Interactive Answer Sheet */
+        '<div class="quiz-sheet-section mt-12">' +
+          '<div class="quiz-sheet-head">' +
+            '<div>' +
+              '<h2 class="quiz-sheet-title">📋 Full Answer Sheet & Key Concept Notes</h2>' +
+              '<p class="small muted mt-1">Review every question, your selected answer, the standard key, and detailed high-yield explanations.</p>' +
+            '</div>' +
+            '<div class="quiz-sheet-tabs" id="sheettabs">' +
+              '<button type="button" class="quiz-sheet-tab is-active" data-filter="all">All (' + total + ')</button>' +
+              '<button type="button" class="quiz-sheet-tab" data-filter="wrong">❌ Missed (' + (wrong + skipped) + ')</button>' +
+              '<button type="button" class="quiz-sheet-tab" data-filter="correct">✔ Correct (' + correct + ')</button>' +
+              (flagged ? '<button type="button" class="quiz-sheet-tab" data-filter="flagged">🚩 Flagged (' + flagged + ')</button>' : '') +
+            '</div>' +
+          '</div>' +
+
+          '<div class="quiz-sheet-list mt-4" id="sheetlist">' +
+            rows.map(function (r, i) { return reportItemHtml(r, i); }).join("") +
+          '</div>' +
+        '</div>' +
+
       '</div>';
 
-    wireReport();
+    wireReport(rows);
 
-    if (isFresh && percent >= 75 && app.burstConfetti) {
-      setTimeout(function () {
-        var ring = document.querySelector('.result__ring');
-        if (ring) app.burstConfetti(ring);
-        if (app.popMilestone) app.popMilestone("🏆 " + verdict + ": " + percent + "%!");
-      }, 250);
-    }
-  }
-
-  function reportHeadHtml(report, percent, correct, total, verdict, chipCls) {
-    var when = new Date(report.at);
-    return '<div class="report__head">' +
-      '<div class="row row--wrap items-center gap-2 mb-4">' +
-        '<a class="btn btn--sm btn--ghost" href="#/quiz">← Quiz Hub</a>' +
-        '<span class="chip">' + app.esc(report.label || "Quiz") + '</span>' +
-        (report.exam ? '<span class="chip chip--warn">⏱️ Exam Mode · ' + report.minutes + ' min limit</span>' : '') +
-        '<span class="chip chip--subtle">' + (report.orderMode === "sequence" ? '📋 Sequence' : '🔀 Shuffle') + '</span>' +
-        '<span class="chip chip--subtle font-mono">' + when.toLocaleString(undefined, {
-          day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit"
-        }) + '</span>' +
-      '</div>' +
-
-      '<div class="result__ring">' + app.ringHtml(percent, 150) + '</div>' +
-      '<h1 class="mt-6 text-center">' + correct + ' out of ' + total + ' Correct</h1>' +
-      '<div class="row row--wrap center mt-3 gap-2" style="justify-content:center">' +
-        '<span class="chip ' + chipCls + ' font-bold">' + verdict + '</span>' +
-        '<span class="chip ' + (percent >= PASS_MARK ? 'chip--ok' : 'chip--danger') + '">' +
-          (percent >= PASS_MARK ? '✔ Above the ' + PASS_MARK + '% pass mark' : '✖ Below the ' + PASS_MARK + '% pass mark') +
-        '</span>' +
-      '</div>' +
-    '</div>';
-  }
-
-  /* A short written verdict, the way an examiner would put it. */
-  function examinerNoteHtml(percent, skipped, rushed, flagged, bySub, history) {
-    var lines = [];
-
-    if (percent >= 85) lines.push("Distinction-level command of this material — hold it there with Smart Review rather than re-reading.");
-    else if (percent >= 70) lines.push("A strong first-class showing. The gap to distinction is a handful of specific facts, not a weak concept base.");
-    else if (percent >= PASS_MARK) lines.push("A pass, but not yet an exam-safe margin. The breakdown below names exactly which modules are costing the marks.");
-    else lines.push("This paper is below the pass mark. Work through the weakest sub-section listed below before attempting a full-length test again.");
-
-    // Weakest sub-section, named explicitly.
-    var subKeys = Object.keys(bySub);
-    if (subKeys.length > 1) {
-      var weakest = subKeys.map(function (s) { return { s: s, acc: accOf(bySub[s]), n: bySub[s].length }; })
-        .filter(function (x) { return x.n >= 2; })
-        .sort(function (a, b) { return a.acc - b.acc; })[0];
-      if (weakest && weakest.acc < 70) {
-        var meta = subById[weakest.s];
-        lines.push("Weakest module: <b>" + app.esc(meta ? meta.title : weakest.s) + "</b> at " +
-          Math.round(weakest.acc) + "%. Revise that lesson first, then re-test only that sub-section.");
+    if (isFresh) {
+      if (percent >= 75) {
+        soundFx.playFanfare();
+        if (app.burstConfetti) {
+          setTimeout(function () {
+            var el = document.querySelector(".quiz-report-ring-wrap");
+            if (el) app.burstConfetti(el);
+          }, 200);
+        }
       }
     }
+  }
 
-    if (skipped > 0) {
-      lines.push(skipped + " question" + (skipped === 1 ? " was" : "s were") +
-        " left blank. In the VCI paper there is no negative marking, so an educated guess is always worth more than a blank.");
-    }
-    if (rushed >= 2) {
-      lines.push(rushed + " wrong answers were given in under eight seconds — that is a reading-speed problem, not a knowledge problem. Read the stem twice.");
-    }
-    if (flagged > 0) {
-      lines.push(flagged + " question" + (flagged === 1 ? " was" : "s were") + " flagged during the test; they are marked 🚩 in the answer sheet.");
-    }
-    if (history && history.prev !== null) {
-      var delta = percent - history.prev;
-      if (delta >= 5) lines.push("Up " + delta + " points on your previous attempt at this scope. The revision is working.");
-      else if (delta <= -5) lines.push("Down " + Math.abs(delta) + " points on your previous attempt at this scope — check whether this test drew on sub-sections the earlier one did not.");
-    }
-
-    return '<div class="card report-note mt-6">' +
-      '<div class="report-note__head">' + app.icon("lightbulb") + ' Examiner\'s note</div>' +
-      '<ul class="report-note__list">' +
-        lines.map(function (l) { return '<li>' + l + '</li>'; }).join("") +
-      '</ul>' +
+  function reportStatCard(label, val, sub, iconName, colorCls) {
+    return '<div class="quiz-stat-card ' + colorCls + '">' +
+      '<div class="quiz-stat-card__head">' +
+        '<span class="quiz-stat-card__label">' + label + '</span>' +
+        '<span class="quiz-stat-card__icon">' + app.icon(iconName) + '</span>' +
+      '</div>' +
+      '<div class="quiz-stat-card__val">' + val + '</div>' +
+      '<div class="quiz-stat-card__sub">' + sub + '</div>' +
     '</div>';
   }
 
-  /* How this test compares with earlier tests of the same scope. */
-  function comparisonFor(report) {
-    var attempts = (store.getQuiz().attempts || []).filter(function (a) {
-      return a.scope === report.scope && a.at <= report.at;
-    });
-    if (attempts.length < 2) return null;
+  function reportItemHtml(r, i) {
+    var q = r.q;
+    var isRight = r.ok;
+    var isSkip  = r.skipped;
+    var subMeta = getSubSectionMeta(q.unitId, q.subSection);
 
-    var scores = attempts.map(function (a) { return app.pct(a.correct, a.total); });
-    var thisScore = scores[scores.length - 1];
-    var prior = scores.slice(0, -1);
+    var ansHtml = "";
+    if (q.format === "mcq") {
+      var optKeyLetters = ["A", "B", "C", "D", "E", "F"];
+      ansHtml = '<div class="quiz-ans-sheet-opts">' +
+        (q.o || []).map(function (opt, oIdx) {
+          var cls = "quiz-ans-opt";
+          if (oIdx === q.a) cls += " is-correct-key";
+          if (r.given === oIdx) cls += (isRight ? " is-picked-right" : " is-picked-wrong");
+          return '<div class="' + cls + '">' +
+            '<span class="quiz-ans-opt-badge">' + optKeyLetters[oIdx] + '</span>' +
+            '<span class="quiz-ans-opt-text">' + app.esc(opt) + '</span>' +
+            (oIdx === q.a ? '<span class="quiz-ans-badge-right">Correct Key</span>' : '') +
+            (r.given === oIdx && !isRight ? '<span class="quiz-ans-badge-wrong">Your Answer</span>' : '') +
+          '</div>';
+        }).join("") + '</div>';
 
-    return {
-      attemptNo: attempts.length,
-      scores: scores.slice(-8),
-      labels: attempts.slice(-8).map(function (a) { return new Date(a.at); }),
-      prev: prior.length ? prior[prior.length - 1] : null,
-      best: Math.max.apply(null, prior.concat([thisScore])),
-      avg: Math.round(prior.concat([thisScore]).reduce(function (n, v) { return n + v; }, 0) / scores.length),
-      isBest: thisScore >= Math.max.apply(null, prior)
-    };
-  }
+    } else if (q.format === "tf") {
+      ansHtml = '<div class="quiz-ans-sheet-opts">' +
+        [true, false].map(function (v) {
+          var cls = "quiz-ans-opt";
+          if (v === q.a) cls += " is-correct-key";
+          if (r.given === v) cls += (isRight ? " is-picked-right" : " is-picked-wrong");
+          return '<div class="' + cls + '">' +
+            '<span>' + (v ? "👍 TRUE" : "👎 FALSE") + '</span>' +
+            (v === q.a ? '<span class="quiz-ans-badge-right">Correct Key</span>' : '') +
+            (r.given === v && !isRight ? '<span class="quiz-ans-badge-wrong">Your Answer</span>' : '') +
+          '</div>';
+        }).join("") + '</div>';
 
-  function historyHtml(h, percent) {
-    var max = Math.max.apply(null, h.scores.concat([100]));
-    return '<div class="card mt-5">' +
-      '<div class="row row--between row--wrap gap-3">' +
-        '<div>' +
-          '<h3>Attempt ' + h.attemptNo + ' at this scope</h3>' +
-          '<p class="muted small mt-1">How today compares with your earlier runs of the same test scope.</p>' +
+    } else {
+      // FIB
+      ansHtml = '<div class="quiz-ans-fib-box">' +
+        '<div><b>Your Answer:</b> ' + (isAnswered(r.given) ? '<span class="' + (isRight ? 'text-ok' : 'text-danger') + '">' + app.esc(String(r.given)) + '</span>' : '<span class="muted">Left blank</span>') + '</div>' +
+        '<div class="mt-1"><b>Standard Key:</b> <span class="text-ok font-bold">' + app.esc(q.a_display || (Array.isArray(q.a) ? q.a[0] : q.a)) + '</span></div>' +
+      '</div>';
+    }
+
+    var filterTag = isRight ? "correct" : "wrong";
+    if (r.flagged) filterTag += " flagged";
+
+    return '<div class="quiz-sheet-item ' + (isRight ? 'is-correct' : 'is-wrong') + '" data-filter-tag="' + filterTag + '">' +
+      '<div class="quiz-sheet-item__head">' +
+        '<div class="quiz-sheet-item__title">' +
+          '<span class="quiz-sheet-no">#' + (i + 1) + '</span>' +
+          '<span class="quiz-sheet-q">' + app.esc(q.q) + '</span>' +
         '</div>' +
-        (h.isBest ? '<span class="chip chip--ok font-bold">🏅 Personal best</span>' : '') +
+        '<div class="quiz-sheet-item__badges">' +
+          (r.flagged ? '<span class="chip chip--warn">🚩 Flagged</span>' : '') +
+          '<span class="quiz-badge-soft ' + (isRight ? 'is-ok' : 'is-wrong') + '">' +
+            (isRight ? '✔ Correct' : isSkip ? '⚪ Skipped' : '✖ Incorrect') +
+          '</span>' +
+        '</div>' +
       '</div>' +
-      '<div class="row row--wrap gap-4 mt-4">' +
-        miniStat("This attempt", percent + "%") +
-        miniStat("Previous", h.prev === null ? "—" : h.prev + "%") +
-        miniStat("Best ever", h.best + "%") +
-        miniStat("Average", h.avg + "%") +
-      '</div>' +
-      '<div class="qtrend mt-4">' +
-        h.scores.map(function (s, i) {
-          var isLast = i === h.scores.length - 1;
-          return '<div class="qtrend__col" title="' + h.labels[i].toLocaleDateString() + ' — ' + s + '%">' +
-            '<div class="qtrend__bar ' + (s >= 75 ? 'is-ok' : s >= PASS_MARK ? 'is-warn' : 'is-low') +
-              (isLast ? ' is-current' : '') + '" style="height:' + Math.max(6, s / max * 100) + '%"></div>' +
-            '<span class="qtrend__lbl">' + s + '</span>' +
-          '</div>';
-        }).join("") +
-      '</div>' +
+
+      ansHtml +
+
+      (q.e
+        ? '<div class="quiz-sheet-explain mt-3">' +
+            '<b>💡 Explanation:</b> ' + q.e +
+            (q.topicId && syllabus.topicById[q.topicId]
+              ? '<div class="mt-2"><a class="small" href="#/topic/' + q.topicId + '">📖 Read Syllabus Topic: ' + app.esc(syllabus.topicById[q.topicId].title) + ' ➔</a></div>'
+              : '') +
+          '</div>'
+        : '') +
     '</div>';
   }
 
-  function miniStat(label, value) {
-    return '<div class="report-ministat"><span class="report-ministat__lbl">' + label + '</span>' +
-      '<span class="report-ministat__val">' + value + '</span></div>';
-  }
+  function wireReport(rows) {
+    var tabs = document.querySelectorAll("#sheettabs [data-filter]");
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        tabs.forEach(function (t) { t.classList.remove("is-active"); });
+        tab.classList.add("is-active");
+        var f = tab.getAttribute("data-filter");
 
-  /* A generic "label — bar — score" breakdown card. */
-  function breakdownCard(title, sub, groups) {
-    if (!groups.length) return "";
-    return '<div class="card">' +
-      '<h3>' + title + '</h3>' +
-      '<p class="muted small mt-1">' + sub + '</p>' +
-      '<div class="qfmt mt-3">' +
-        groups.map(function (g) {
-          var right = g.rows.filter(function (r) { return r.ok; }).length;
-          var p = g.rows.length ? Math.round(right / g.rows.length * 100) : 0;
-          var name = g.href
-            ? '<a href="' + g.href + '">' + app.esc(g.label) + '</a>'
-            : app.esc(g.label);
-          return '<div class="qfmt-row">' +
-            '<span class="qfmt-row__name">' + name + '</span>' +
-            '<span class="bar"><span class="bar__fill ' + barTone(p) + '" style="width:' + p + '%"></span></span>' +
-            '<span class="qfmt-row__val">' + p + '% <small>(' + right + '/' + g.rows.length + ')</small></span>' +
-          '</div>';
-        }).join("") +
-      '</div>' +
-    '</div>';
-  }
-
-  function barTone(p) {
-    return p >= 75 ? "is-ok" : p >= PASS_MARK ? "is-warn" : "is-low";
-  }
-
-  function accOf(rows) {
-    if (!rows.length) return 0;
-    return rows.filter(function (r) { return r.ok; }).length / rows.length * 100;
-  }
-
-  function pctOf(n, total) {
-    return total ? Math.round(n / total * 100) + "%" : "0%";
+        document.querySelectorAll("#sheetlist .quiz-sheet-item").forEach(function (card) {
+          var tags = card.getAttribute("data-filter-tag") || "";
+          if (f === "all") card.style.display = "block";
+          else if (f === "wrong") card.style.display = tags.indexOf("wrong") !== -1 ? "block" : "none";
+          else if (f === "correct") card.style.display = tags.indexOf("correct") !== -1 ? "block" : "none";
+          else if (f === "flagged") card.style.display = tags.indexOf("flagged") !== -1 ? "block" : "none";
+        });
+      });
+    });
   }
 
   function groupBy(rows, keyFn) {
-    var out = {};
+    var m = {};
     rows.forEach(function (r) {
       var k = keyFn(r);
-      if (k === null || k === undefined) return;
-      (out[k] = out[k] || []).push(r);
+      if (!k) return;
+      m[k] = m[k] || [];
+      m[k].push(r);
     });
-    return out;
+    return m;
   }
 
-  /* Time spent per question, drawn as a strip. Red bars are wrong answers,
-     so a run of tall red bars says "you laboured over these and still missed
-     them" — a very different problem from a run of short red bars. */
-  function pacingHtml(rows, avgMs, slowest, rushed) {
-    var timed = rows.filter(function (r) { return r.time > 0; });
-    if (timed.length < 3) return "";
+  function pctOf(n, total) { return total ? Math.round((n / total) * 100) : 0; }
 
-    var maxT = timed.reduce(function (m, r) { return Math.max(m, r.time); }, 1);
-
-    return '<section class="mt-8">' +
-      '<h2>Pacing Analysis</h2>' +
-      '<p class="muted small mt-1">Seconds spent on each question, in the order you attempted them. ' +
-        'Hover any bar for the question.</p>' +
-
-      '<div class="card mt-4">' +
-        '<div class="pace-strip">' +
-          rows.map(function (r) {
-            var h = r.time ? Math.max(4, Math.round(r.time / maxT * 100)) : 4;
-            var cls = r.skipped ? "is-skip" : r.ok ? "is-ok" : "is-wrong";
-            return '<div class="pace-strip__col" title="Q' + (r.i + 1) + ' · ' +
-                (r.skipped ? "skipped" : r.ok ? "correct" : "incorrect") + ' · ' + fmtDur(r.time) + '">' +
-              '<div class="pace-strip__bar ' + cls + '" style="height:' + h + '%"></div>' +
-            '</div>';
-          }).join("") +
-        '</div>' +
-        '<div class="row row--wrap gap-4 mt-4">' +
-          miniStat("Average per question", fmtDur(avgMs)) +
-          miniStat("Longest question", slowest ? "Q" + (slowest.i + 1) + " · " + fmtDur(slowest.time) : "—") +
-          miniStat("Rushed misses (&lt;8s)", String(rushed)) +
-        '</div>' +
-        '<div class="row row--wrap gap-4 mt-3 small faint">' +
-          '<span class="pace-key"><i class="is-ok"></i> Correct</span>' +
-          '<span class="pace-key"><i class="is-wrong"></i> Incorrect</span>' +
-          '<span class="pace-key"><i class="is-skip"></i> Skipped</span>' +
-        '</div>' +
-      '</div>' +
-    '</section>';
-  }
-
-  /* ============================================================
-     ANSWER SHEET — every question, filterable
-     ============================================================ */
-  function answerSheetHtml(rows, correct, wrong, skipped, flagged) {
-    var filters = [
-      { id: "all", label: "All", n: rows.length },
-      { id: "wrong", label: "Incorrect", n: wrong },
-      { id: "skipped", label: "Skipped", n: skipped },
-      { id: "flagged", label: "🚩 Flagged", n: flagged },
-      { id: "correct", label: "Correct", n: correct }
-    ].filter(function (f) { return f.n > 0 || f.id === "all"; });
-
-    return '<section class="mt-12 answersheet">' +
-      '<div class="row row--between row--wrap gap-3">' +
-        '<div>' +
-          '<h2>Answer Sheet &amp; Explanations</h2>' +
-          '<p class="muted small mt-1">Every question with your answer, the correct answer, the high-yield ' +
-            'explanation and a link to the full lesson.</p>' +
-        '</div>' +
-        '<button class="btn btn--sm" id="expandall">Expand all</button>' +
-      '</div>' +
-
-      '<div class="answersheet__filters mt-4" id="asfilters">' +
-        filters.map(function (f, i) {
-          return '<button type="button" class="matrix-tab-btn' + (i === 0 ? ' is-active' : '') +
-            '" data-asfilter="' + f.id + '">' + f.label + ' <span class="chip chip--sm ml-1">' + f.n + '</span></button>';
-        }).join("") +
-      '</div>' +
-
-      '<div class="stack text-left mt-4" id="aslist">' +
-        rows.map(reviewItemHtml).join("") +
-      '</div>' +
-
-      '<p class="small faint mt-3" id="asempty" hidden>No questions in this filter.</p>' +
-    '</section>';
-  }
-
-  function reviewItemHtml(r) {
-    var q = r.q;
-    var state = r.skipped ? "skipped" : r.ok ? "correct" : "wrong";
-    var stateChip = r.skipped
-      ? '<span class="chip chip--warn">⊘ Skipped</span>'
-      : r.ok ? '<span class="chip chip--ok">✔ Correct</span>'
-             : '<span class="chip chip--danger">✖ Incorrect</span>';
-
-    var rightAns = q.format === "mcq" ? (q.o || [])[q.a]
-      : q.format === "tf" ? (q.a ? "True" : "False")
-      : (q.a_display || (Array.isArray(q.a) ? q.a[0] : q.a));
-
-    var myAns = r.skipped ? "Not answered"
-      : q.format === "mcq" ? (q.o || [])[r.given]
-      : q.format === "tf" ? (r.given ? "True" : "False")
-      : r.given;
-
-    var subMeta = q.subSection ? subById[q.subSection] : null;
-
-    // For MCQ, show the whole option list so the distractors can be studied too.
-    var optionsHtml = "";
-    if (q.format === "mcq" && q.o) {
-      optionsHtml = '<div class="as-opts">' + q.o.map(function (opt, i) {
-        var cls = "as-opt";
-        if (i === q.a) cls += " is-right";
-        if (!r.skipped && i === r.given && i !== q.a) cls += " is-wrong";
-        return '<div class="' + cls + '">' +
-          '<span class="as-opt__key">' + "ABCDEF".charAt(i) + '</span>' +
-          '<span class="as-opt__text">' + app.esc(opt) + '</span>' +
-          (i === q.a ? '<span class="as-opt__tag">Correct</span>' : '') +
-          (!r.skipped && i === r.given && i !== q.a ? '<span class="as-opt__tag">Your answer</span>' : '') +
-        '</div>';
-      }).join("") + '</div>';
-    }
-
-    return '<details class="card as-item is-' + state + (r.flagged ? ' is-flagged' : '') + '" data-state="' + state +
-        '" data-flagged="' + (r.flagged ? "1" : "0") + '">' +
-      '<summary class="as-item__summary">' +
-        '<span class="as-item__no">' + (r.i + 1) + '</span>' +
-        '<span class="as-item__q">' + app.esc(q.q) + '</span>' +
-        '<span class="as-item__tags">' +
-          (r.flagged ? '<span class="chip chip--subtle">🚩</span>' : '') +
-          (r.time ? '<span class="chip chip--subtle font-mono">' + fmtDur(r.time) + '</span>' : '') +
-          stateChip +
-        '</span>' +
-      '</summary>' +
-
-      '<div class="as-item__body">' +
-        '<div class="row row--wrap gap-2 mb-3">' +
-          '<span class="chip chip--sm font-mono">' + q.format.toUpperCase() + '</span>' +
-          '<span class="chip chip--sm">' + app.esc((syllabus.unitById[q.unitId] || {}).short || q.unitId) + '</span>' +
-          (subMeta ? '<span class="chip chip--sm chip--accent">' + subMeta.icon + ' ' + app.esc(subMeta.title) + '</span>' : '') +
-          '<span class="chip chip--sm chip--subtle">' + DIFF_STARS[q.diff] + ' ' + DIFF_NAMES[q.diff] + '</span>' +
-        '</div>' +
-
-        optionsHtml +
-
-        (q.format !== "mcq"
-          ? '<div class="row row--wrap gap-4 mt-2">' +
-              '<p class="small"><span class="chip ' + (r.ok ? 'chip--ok' : 'chip--danger') + '">Your answer</span> <b>' +
-                app.esc(String(myAns)) + '</b></p>' +
-              '<p class="small"><span class="chip chip--ok">Correct answer</span> <b>' +
-                app.esc(String(rightAns)) + '</b></p>' +
-            '</div>'
-          : '') +
-
-        (q.e ? '<div class="callout mt-4"><div class="callout__title">High-Yield Explanation</div>' + q.e + '</div>' : '') +
-
-        '<div class="row row--wrap gap-2 mt-4">' +
-          (q.topicId && syllabus.topicById[q.topicId]
-            ? '<a class="btn btn--sm" href="#/topic/' + q.topicId + '">📖 Read the lesson: ' +
-              app.esc(syllabus.topicById[q.topicId].title) + '</a>'
-            : '') +
-          (q.topicId && syllabus.topicById[q.topicId]
-            ? '<button class="btn btn--sm btn--ghost" data-bookmark="' + q.topicId + '">' +
-              (store.isBookmarked(q.topicId) ? '★ Bookmarked' : '☆ Bookmark this topic') + '</button>'
-            : '') +
-        '</div>' +
-      '</div>' +
-    '</details>';
-  }
-
-  function wireReport() {
-    // Answer-sheet filter tabs
-    var list = document.getElementById("aslist");
-    var empty = document.getElementById("asempty");
-    document.querySelectorAll("[data-asfilter]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        document.querySelectorAll("[data-asfilter]").forEach(function (b) { b.classList.remove("is-active"); });
-        btn.classList.add("is-active");
-        var f = btn.getAttribute("data-asfilter");
-        var shown = 0;
-        if (!list) return;
-        Array.prototype.slice.call(list.querySelectorAll(".as-item")).forEach(function (item) {
-          var show = f === "all"
-            || (f === "flagged" ? item.getAttribute("data-flagged") === "1"
-                                : item.getAttribute("data-state") === f);
-          item.hidden = !show;
-          if (show) shown++;
-        });
-        if (empty) empty.hidden = shown > 0;
-      });
-    });
-
-    // Expand / collapse every question at once
-    var expand = document.getElementById("expandall");
-    if (expand) {
-      expand.addEventListener("click", function () {
-        var items = Array.prototype.slice.call(document.querySelectorAll(".as-item"));
-        var anyClosed = items.some(function (d) { return !d.open && !d.hidden; });
-        items.forEach(function (d) { if (!d.hidden) d.open = anyClosed; });
-        expand.textContent = anyClosed ? "Collapse all" : "Expand all";
-      });
-    }
-
-    // Bookmark a topic straight from the answer sheet
-    document.querySelectorAll("[data-bookmark]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var id = btn.getAttribute("data-bookmark");
-        var on = store.toggleBookmark(id);
-        btn.textContent = on ? "★ Bookmarked" : "☆ Bookmark this topic";
-        app.toast(on ? "Topic bookmarked" : "Bookmark removed");
-      });
-    });
-
-    var print = document.getElementById("printreport");
-    if (print) {
-      print.addEventListener("click", function () {
-        // Open every question first, or the printout is a list of headings.
-        document.querySelectorAll(".as-item").forEach(function (d) { d.hidden = false; d.open = true; });
-        window.print();
-      });
-    }
-  }
-
-  /* ============================================================
-     RETRY / RETAKE FROM A SAVED REPORT
-     ============================================================ */
   function retryWrong(id) {
     var report = store.getReport ? store.getReport(id) : null;
     if (!report) { location.hash = "#/quiz"; return; }
     var missed = hydrate(report).filter(function (r) { return !r.ok; }).map(function (r) { return r.q; });
     if (!missed.length) {
-      app.toast("Nothing to retry — you got every question right");
+      app.toast("Nothing to retry — you scored 100%!");
       location.hash = "#/quiz/report/" + id;
       return;
     }
-    start(missed, report.scope + ":retry", "🎯 Retry · " + (report.label || "Quiz"),
+    start(missed, report.scope + ":retry", "🎯 Retry Missed Questions (" + missed.length + ")",
           false, 0, report.orderMode || "sequence", report.subSectionId || "all", report.unitId || null);
   }
 
@@ -1971,7 +1798,7 @@ var quizApp = (function () {
     if (!report) { location.hash = "#/quiz"; return; }
     var qs = hydrate(report).map(function (r) { return r.q; });
     if (!qs.length) { app.toast("Those questions are no longer in the bank"); location.hash = "#/quiz"; return; }
-    start(shuffle(qs), report.scope, "🔁 Retake · " + (report.label || "Quiz"),
+    start(shuffle(qs), report.scope, "🔁 Retake: " + (report.label || "Quiz"),
           !!report.exam, report.minutes || 20, "shuffle", report.subSectionId || "all", report.unitId || null);
   }
 
