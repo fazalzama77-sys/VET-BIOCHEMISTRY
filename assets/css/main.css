@@ -494,20 +494,103 @@ a.card:hover, .card--link:hover {
 }
 .callout__title { font-weight: 640; margin-bottom: var(--s1); }
 
-/* ---------- Math & Chemical Equations ---------- */
+/* ---------- Math & Chemical Equations (Handwritten / Textbook Style) ---------- */
 .equation-block {
   margin: var(--s3) 0 var(--s4);
-  padding: var(--s3) var(--s4);
-  background: var(--surface-2, rgba(255, 255, 255, 0.05));
-  border-left: 3px solid var(--accent, #3b82f6);
-  border-radius: var(--r-sm, 6px);
-  font-family: var(--font-mono, monospace);
-  font-size: 0.95em;
-  line-height: 1.6;
+  padding: 14px 18px;
+  background: var(--surface-2, #f7fafc);
+  border: 1px solid var(--border, rgba(21, 101, 192, .15));
+  border-left: 3.5px solid var(--accent, #1565c0);
+  border-radius: var(--r-md, 10px);
+  font-family: "Georgia", "Cambria", "Times New Roman", var(--font-sans), serif;
+  font-size: 1.06em;
+  line-height: 1.85;
   overflow-x: auto;
   text-align: center;
   color: var(--text, inherit);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em 0.38em;
+}
+.equation-block b, .equation-block strong { font-weight: 680; }
+.equation-block sub, .equation-block sup,
+.lesson-body sub, .lesson-body sup {
+  font-size: 0.74em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.equation-block sup, .lesson-body sup { top: -0.45em; }
+.equation-block sub, .lesson-body sub { bottom: -0.24em; }
+
+/* Stacked handwritten vertical fraction */
+.mfrac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.24em;
+  line-height: 1.28;
+}
+.mnum {
+  padding: 0 0.45em 0.18em;
+  border-bottom: 1.5px solid currentColor;
+  text-align: center;
+}
+.mden {
+  padding: 0.18em 0.45em 0;
+  text-align: center;
+}
+.mslash {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Reaction arrow with enzyme / catalyst neatly written ABOVE the arrow */
+.marrow {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.35em;
+  line-height: 1.15;
+}
+.marrow-lbl {
+  font-size: 0.76em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--accent, #1565c0);
+  padding: 0 0.4em 2px;
+  white-space: nowrap;
+}
+.marrow-arr {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  min-width: 46px;
+  color: var(--text, inherit);
+}
+.marrow-bar {
+  flex: 1;
+  height: 1.5px;
+  background: currentColor;
+}
+.marrow-tip {
+  font-size: 0.72em;
+  line-height: 1;
+  margin-left: -1px;
+}
+.marrow-arr--rev {
+  justify-content: center;
+  font-size: 1.25em;
+  line-height: 0.9;
 }
 
 /* ---------- Tabs ---------- */

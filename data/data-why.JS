@@ -1,4 +1,4 @@
-// Veterinary Biochemistry - Comparative Species "WHY" Section Database
+// Veterinary Biochemistry − Comparative Species "WHY" Section Database
 // 40 High-Yield Comparative Biochemistry & Metabolic Pathology Mechanisms
 // Strictly aligned with B.V.Sc. & A.H. VCI MSVE Curriculum (Units 1, 2, and 3)
 
