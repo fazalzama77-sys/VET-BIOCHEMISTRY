@@ -54,7 +54,13 @@ const glossary = {
                 "two-dimensional electrophoresis",
                 "western blotting",
                 "enzyme-linked immunosorbent assay",
-                "radioimmunoassay"
+                "radioimmunoassay",
+                "osmotic pressure",
+                "tonicity",
+                "colloid",
+                "crystalloid",
+                "high-performance liquid chromatography",
+                "chemiluminescence"
         ],
         "Carbohydrate Chemistry & Metabolism": [
                 "monosaccharide",
@@ -149,7 +155,14 @@ const glossary = {
                 "xylitol toxicity",
                 "limit dextrin",
                 "fructosans",
-                "glucosyltransferase"
+                "glucosyltransferase",
+                "pyruvate dehydrogenase complex",
+                "glucose-6-phosphatase",
+                "glycogen branching enzyme",
+                "glycogen debranching enzyme",
+                "transketolase",
+                "lactose intolerance",
+                "glucose-alanine cycle"
         ],
         "Lipid Chemistry & Metabolism": [
                 "fatty acid",
@@ -236,7 +249,14 @@ const glossary = {
                 "hepatic lipase",
                 "pancreatic colipase",
                 "omega oxidation",
-                "peroxisomal beta-oxidation"
+                "peroxisomal beta-oxidation",
+                "acetyl-coa carboxylase",
+                "hmg-coa reductase",
+                "hmg-coa synthase",
+                "phospholipase a2",
+                "chylomicron remnant",
+                "atherosclerosis",
+                "steatosis"
         ],
         "Protein, Amino Acid & Nitrogen Metabolism": [
                 "amino acid",
@@ -320,7 +340,14 @@ const glossary = {
                 "carbamoyl phosphate synthetase i",
                 "transsulfuration pathway",
                 "tetrahydrobiopterin",
-                "ceruloplasmin"
+                "ceruloplasmin",
+                "hemoglobin",
+                "myoglobin",
+                "bohr effect",
+                "collagen",
+                "elastin",
+                "n-acetylglutamate",
+                "portosystemic shunt"
         ],
         "Enzymology & Biological Oxidation": [
                 "enzyme",
@@ -392,7 +419,13 @@ const glossary = {
                 "hanes-woolf plot",
                 "milk fat depression",
                 "specificity constant",
-                "q10 temperature coefficient"
+                "q10 temperature coefficient",
+                "michaelis-menten equation",
+                "activation energy",
+                "chemiosmotic hypothesis",
+                "reactive oxygen species",
+                "catalase",
+                "metalloenzyme"
         ],
         "Clinical & Analytical Veterinary Biochemistry": [
                 "diabetes mellitus",
@@ -455,7 +488,13 @@ const glossary = {
                 "chylothorax",
                 "exocrine pancreatic insufficiency",
                 "bile acids tolerance test",
-                "hypoalbuminemia"
+                "hypoalbuminemia",
+                "glomerular filtration rate",
+                "hyperkalemia",
+                "hypokalemia",
+                "hypocalcemia",
+                "bilirubinuria",
+                "refractometry"
         ],
         "Toxicology & Xenobiotic Detoxification": [
                 "xenobiotic",
@@ -486,7 +525,12 @@ const glossary = {
                 "pralidoxime",
                 "ethylene glycol toxicity",
                 "strychnine toxicity",
-                "zinc toxicity"
+                "zinc toxicity",
+                "mycotoxin",
+                "dicumarol",
+                "anticholinesterase",
+                "n-acetylcysteine",
+                "methylene blue"
         ],
         "Nucleic Acids & Molecular Biology": [
                 "purine",
@@ -523,7 +567,13 @@ const glossary = {
                 "polymerase chain reaction",
                 "southern blotting",
                 "northern blotting",
-                "recombinant dna"
+                "recombinant dna",
+                "dna ligase",
+                "helicase",
+                "restriction endonuclease",
+                "codon",
+                "anticodon",
+                "rt-pcr"
         ]
 },
 
@@ -1027,7 +1077,57 @@ const glossary = {
         "polymerase chain reaction": "PCR; revolutionary in vitro enzymatic amplification technique that utilizes thermocycling, sequence-specific oligonucleotide forward and reverse primers, and a thermostable DNA polymerase (e.g., Taq polymerase) to generate millions of copies of a targeted DNA sequence.",
         "southern blotting": "Molecular biology technique coupling agarose gel electrophoresis of restriction endonuclease-digested DNA with capillary transfer onto a nylon or nitrocellulose membrane, followed by hybridization with a labeled single-stranded probe to detect specific genomic fragments.",
         "northern blotting": "Molecular biology hybridization method used to detect and quantify specific target RNA transcripts within a complex biological sample, following size-separation by denaturing gel electrophoresis and transfer to a solid hybridization membrane.",
-        "recombinant dna": "Chimeric artificial DNA molecule engineered by combining genetic sequences from two or more distinct biological sources or species that would not naturally occur together, using restriction endonucleases and DNA ligase in molecular cloning."
+        "recombinant dna": "Chimeric artificial DNA molecule engineered by combining genetic sequences from two or more distinct biological sources or species that would not naturally occur together, using restriction endonucleases and DNA ligase in molecular cloning.",
+        "osmotic pressure": "Hydrostatic pressure required to stop the net osmotic flow of water across a semipermeable membrane into a solution of higher solute concentration (van 't Hoff equation: π = iMRT); governs capillary-interstitial fluid exchange and cell volume stability.",
+        "tonicity": "Effective osmotic pressure gradient exerted by an extracellular solution across a semipermeable cell membrane (isotonic, hypotonic, or hypertonic), determining whether erythrocytes maintain normal biconcave shape, swell and lyse, or undergo crenation.",
+        "colloid": "Heterogeneous dispersion of macromolecular particles (1-100 nm diameter, such as plasma albumin and dextrans) that cannot diffuse across capillary membranes, scatter light (Tyndall effect), and remain suspended via Brownian motion.",
+        "crystalloid": "True homogeneous aqueous solution of small electrolytes or low-molecular-weight molecules (<1 nm, such as 0.9% NaCl, lactated Ringer's, or dextrose) that freely pass through semipermeable capillary endothelium into the interstitial space.",
+        "high-performance liquid chromatography": "HPLC; high-pressure analytical chromatographic separation pumping liquid mobile phase rapidly through tightly packed microparticulate columns; provides superior quantitative resolution for amino acids, mycotoxins, fat-soluble vitamins, and veterinary drug residues.",
+        "chemiluminescence": "Emission of visible photons from an electronically excited chemical intermediate produced during an oxidation-reduction reaction; powers ultra-sensitive automated veterinary immunoassays for cortisol, thyroxine (T4), and progesterone.",
+        "pyruvate dehydrogenase complex": "PDH; multi-enzyme mitochondrial matrix complex (E1, E2, E3) requiring five coenzymes (TPP, lipoate, CoA, FAD, NAD+) to catalyze the irreversible oxidative decarboxylation of pyruvate to acetyl-CoA, linking glycolysis to the Krebs cycle.",
+        "glucose-6-phosphatase": "Endoplasmic reticulum hydrolase expressed exclusively in liver, renal cortex, and intestinal mucosa (absent in skeletal muscle and brain) that dephosphorylates glucose-6-phosphate into free glucose to maintain blood glucose homeostasis.",
+        "glycogen branching enzyme": "Amylo-(1,4 → 1,6)-transglycosylase; transfers terminal oligosaccharide segments of 6-7 glucosyl residues from an elongating α(1 → 4) chain to an interior C-6 hydroxyl group, creating α(1 → 6) branch points every 8-12 residues.",
+        "glycogen debranching enzyme": "Bifunctional cytosolic enzyme combining 4-α-glucanotransferase and amylo-α-1,6-glucosidase activities to transfer a trisaccharide unit and hydrolyze the remaining α(1 → 6) branch glucose during glycogenolysis.",
+        "transketolase": "Thiamine pyrophosphate (TPP)-dependent enzyme of the non-oxidative phase of the HMP shunt transferring two-carbon ketol groups between sugar phosphates; erythrocyte transketolase activation assay confirms thiamine deficiency (polioencephalomalacia).",
+        "lactose intolerance": "Gastrointestinal maldigestion in weaned or adult mammals caused by physiological decline in intestinal brush-border lactase activity; unabsorbed lactose draws water osmotically into the colon and ferments into gas and volatile acids.",
+        "glucose-alanine cycle": "Cahill cycle; inter-organ metabolic shuttle transporting peripheral amino nitrogen from skeletal muscle to liver as non-toxic alanine, where hepatic transamination regenerates pyruvate for gluconeogenesis and ammonia enters the urea cycle.",
+        "acetyl-coa carboxylase": "ACC; biotin-dependent, rate-limiting pacemaker enzyme of de novo fatty acid synthesis catalyzing ATP-dependent carboxylation of acetyl-CoA to malonyl-CoA; activated by citrate and insulin, inhibited by palmitoyl-CoA and glucagon.",
+        "hmg-coa reductase": "Smooth endoplasmic reticulum rate-limiting pacemaker enzyme of cholesterol biosynthesis catalyzing NADPH-dependent reduction of HMG-CoA to mevalonate; regulated by sterol feedback (SREBP), insulin, and statin inhibition.",
+        "hmg-coa synthase": "Mitochondrial enzyme condensing acetyl-CoA and acetoacetyl-CoA to form β-hydroxy-β-methylglutaryl-CoA (HMG-CoA), catalyzing the rate-limiting committed step of hepatic ketogenesis during negative energy balance.",
+        "phospholipase a2": "Lipolytic enzyme cleaving the sn-2 fatty acyl ester bond of membrane glycerophospholipids, liberating arachidonic acid for eicosanoid synthesis; indirectly inhibited by glucocorticoids via annexin-1 (lipocortin) induction.",
+        "chylomicron remnant": "Cholesterol-rich, triglyceride-depleted lipoprotein particle remaining after capillary lipoprotein lipase hydrolyzes dietary chylomicron triacylglycerols; rapidly cleared by hepatocytes via ApoE receptor-mediated endocytosis.",
+        "atherosclerosis": "Chronic arterial intimal disease characterized by subendothelial cholesterol-laden plaques, macrophage foam cells, and smooth muscle fibrosis; notably rare in dogs and cats due to HDL-predominant lipid transport and low CETP activity.",
+        "steatosis": "Fatty change; abnormal intracellular accumulation of triacylglycerol droplets within parenchymal cells (especially hepatocytes), occurring when fatty acid mobilization or synthesis exceeds mitochondrial oxidation and VLDL export.",
+        "hemoglobin": "Tetrameric allosteric hemoprotein (α2β2) in erythrocytes containing four iron-protoporphyrin IX (heme) groups in the ferrous (Fe²⁺) state; displays sigmoidal cooperative oxygen binding and physiological H⁺/CO2 buffering.",
+        "myoglobin": "Monomeric globular hemoprotein abundant in skeletal and cardiac muscle fibers containing a single heme group; exhibits a hyperbolic oxygen dissociation curve with higher O2 affinity than hemoglobin, serving as an intramuscular oxygen store.",
+        "bohr effect": "Physiological rightward shift of the hemoglobin-oxygen dissociation curve (decreased O2 affinity) induced by lowered pH (elevated H⁺) and increased pCO2 in metabolically active tissues, facilitating oxygen unloading.",
+        "collagen": "Most abundant structural fibrous protein in the animal body formed by a rigid left-handed triple helix of repeating Gly-X-Y triplets rich in proline and vitamin C-dependent hydroxyproline; provides tensile strength to bone, tendons, and skin.",
+        "elastin": "Cross-linked hydrophobic extracellular matrix protein containing unique lysine-derived desmosine and isodesmosine covalent cross-links; confers reversible elastic recoil to large arteries, lungs, and the equine nuchal ligament.",
+        "n-acetylglutamate": "NAG; obligate allosteric activator of mitochondrial carbamoyl phosphate synthetase I (CPS-I), synthesized from glutamate and acetyl-CoA in hepatocytes after high-protein meals to accelerate urea cycle ammonia detoxification.",
+        "portosystemic shunt": "PSS; congenital or acquired vascular anomaly diverting portal venous blood directly into systemic circulation, bypassing hepatic urea cycle ammonia clearance and causing postprandial hyperammonemia, ammonium biurate urolithiasis, and hepatic encephalopathy.",
+        "michaelis-menten equation": "Fundamental hyperbolic kinetic equation v = (Vmax [S]) / (Km + [S]) describing initial velocity (v) of a single-substrate enzyme reaction as a function of substrate concentration [S], maximum velocity (Vmax), and Michaelis constant (Km).",
+        "activation energy": "Minimum free energy input (Ea or ΔG‡) required for reactant molecules to reach the high-energy transition state before forming products; enzymes accelerate reactions dramatically by providing an alternative pathway with lower activation energy.",
+        "chemiosmotic hypothesis": "Bioenergetic mechanism formulated by Peter Mitchell (1961) demonstrating that electron transport chain proton pumping establishes an electrochemical proton-motive force across the inner mitochondrial membrane that drives ATP synthesis via F0F1-ATP synthase.",
+        "reactive oxygen species": "ROS; chemically reactive oxygen-derived free radicals and peroxides (superoxide O2•⁻, hydrogen peroxide H2O2, hydroxyl radical •OH) generated during mitochondrial electron leakage and phagocytic respiratory burst, causing lipid peroxidation unless scavenged.",
+        "catalase": "High-turnover heme-containing peroxisomal and erythrocytic antioxidant enzyme that rapidly decomposes toxic hydrogen peroxide into water and molecular oxygen (2 H2O2 → 2 H2O + O2) without consuming external reducing equivalents.",
+        "metalloenzyme": "Enzyme containing one or more tightly bound functional metal ion cofactors required directly for catalytic electron transfer or structural active-site geometry (e.g., Zn²⁺ in carbonic anhydrase, Cu²⁺ in cytochrome c oxidase, Se in glutathione peroxidase).",
+        "glomerular filtration rate": "GFR; total volume of protein-free plasma ultrafiltrate produced by renal glomeruli per unit time (mL/min/kg); definitive physiological index of functional renal mass, evaluated clinically via serum creatinine, SDMA, and inulin clearance.",
+        "hyperkalemia": "Pathologically elevated serum potassium concentration (>5.5 mEq/L); depolarizes resting myocardial membrane potential, causing bradycardia, peaked T-waves, absent P-waves, and fatal cardiac arrest in urethral-obstructed tomcats and hypoadrenocorticism.",
+        "hypokalemia": "Abnormally low serum potassium concentration (<3.5 mEq/L) resulting from prolonged anorexia, vomiting, loop diuretics, or feline chronic kidney disease; causes generalized neuromuscular weakness and characteristic feline cervical ventroflexion.",
+        "hypocalcemia": "Abnormally low serum ionized calcium concentration (<8.0 mg/dL total calcium); increases neuronal sodium permeability causing puerperal eclampsia tetany in lactating bitches, while precipitating flaccid paralysis in periparturient dairy cows (milk fever).",
+        "bilirubinuria": "Presence of water-soluble conjugated bilirubin in urine; always pathological in cats and ruminants, whereas small physiological traces may occur in concentrated urine of healthy male dogs due to renal tubular heme conjugation.",
+        "refractometry": "Rapid point-of-care optical clinical technique measuring the refractive index of a single drop of serum or urine to accurately estimate plasma total protein (g/dL) and urine specific gravity (USG).",
+        "mycotoxin": "Toxic secondary fungal metabolite produced by molds (Aspergillus, Fusarium, Penicillium) contaminating stored feeds and silages, notably hepatotoxic aflatoxins, nephrotoxic ochratoxin A, and hyperestrogenic zearalenone.",
+        "dicumarol": "Naturally occurring hemorrhagic coumarin derivative formed when molds metabolize coumarin in spoiled sweet clover hay; competitively inhibits vitamin K epoxide reductase, depleting functional clotting factors II, VII, IX, and X.",
+        "anticholinesterase": "Neurotoxic chemical agent (organophosphate or carbamate insecticide) that inhibits acetylcholinesterase at cholinergic synapses, preventing acetylcholine breakdown and provoking acute SLUDGE muscarinic, nicotinic, and CNS toxicity.",
+        "n-acetylcysteine": "NAC; sulfhydryl-donating therapeutic antidote for feline and canine acetaminophen toxicity; supplies L-cysteine to replenish depleted hepatic glutathione (GSH), detoxifying reactive NAPQI and reducing methemoglobin.",
+        "methylene blue": "Redox-active thiazine dye antidote used cautiously in ruminants for acute nitrate/nitrite poisoning; reduced enzymatically to leukomethylene blue, which rapidly reduces ferric methemoglobin (Fe³⁺) back to oxygen-carrying ferrous hemoglobin (Fe²⁺).",
+        "dna ligase": "ATP- or NAD⁺-dependent enzyme sealing single-stranded breaks in the DNA sugar-phosphate backbone by catalyzing phosphodiester bond formation between adjacent 3'-OH and 5'-phosphate termini to join Okazaki fragments.",
+        "helicase": "ATP-hydrolyzing motor enzyme that moves along the replication fork to unwind double-stranded DNA helices into single-stranded templates by disrupting interstrand Watson-Crick hydrogen bonds.",
+        "restriction endonuclease": "Bacterial enzyme recognizing specific short palindromic double-stranded DNA sequences (4-8 bp) and cleaving internal phosphodiester bonds to produce defined sticky or blunt ends essential for recombinant DNA cloning.",
+        "codon": "Sequence of three consecutive nucleotides in messenger RNA (mRNA) representing the fundamental unit of the genetic code that specifies a single amino acid (61 sense codons) or translation termination (UAA, UAG, UGA).",
+        "anticodon": "Specialized three-nucleotide sequence within the anticodon loop of transfer RNA (tRNA) that forms antiparallel complementary Watson-Crick or wobble base pairs with a corresponding mRNA codon inside the ribosome.",
+        "rt-pcr": "Reverse transcription-polymerase chain reaction; two-step molecular diagnostic assay utilizing reverse transcriptase to convert viral or cellular RNA into complementary DNA (cDNA) prior to PCR amplification; gold standard for RNA viruses such as rabies, FMDV, and BVDV."
 },
 
     _regex: null,
