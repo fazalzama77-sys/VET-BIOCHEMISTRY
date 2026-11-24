@@ -259,11 +259,9 @@
 
   S["u1-t13"] = [
     {
-      engine: "molecule",
-      kind: "folding",
-      title: "Protein 3D Folding Stability & Thermal Denaturation Simulator",
-      subtitle: "Increase temperature to observe disruption of non-covalent 2°/3° stabilizing forces while covalent primary peptide bonds remain intact.",
-      temp: 37
+      engine: "protein3d",
+      title: "3D Protein Structure Hierarchy (α-Helix, β-Sheet) & Denaturation Lab",
+      subtitle: "Drag to rotate the 3D α-helix (3.6 res/turn, i→i+4 H-bonds), inspect Antiparallel β-Sheets, and test heat + β-Mercaptoethanol denaturation!"
     }
   ];
 
@@ -282,14 +280,9 @@
 
   S["u1-t15"] = [
     {
-      engine: "molecule",
-      kind: "zwitterion",
-      title: "Isoelectric Point (pI) & Electrophoretic Mobility Simulator",
-      subtitle: "Find the exact pH = pI where net charge is 0 (zwitterion, zero migration, minimum solubility — basis of casein precipitation at pH 4.6).",
-      pk1: 2.34,
-      pk2: 9.60,
-      ph: 5.97,
-      rGroup: "Glycine (pI = 5.97)"
+      engine: "peptide3d",
+      title: "Peptide Bond Condensation (-H₂O, Trans-Planar) & pI Electrophoresis Lab",
+      subtitle: "Form a rigid trans-planar peptide bond (40% partial double-bond resonance) and separate Aspartate, Glycine, and Lysine across pH 2–11!"
     }
   ];
 
@@ -303,13 +296,10 @@
 
   S["u1-t17"] = [
     {
-      engine: "molecule",
-      kind: "helix",
+      engine: "dna3d",
       sectionMatch: "DNA",
-      title: "Watson-Crick DNA Double Helix & Thermal Melting (Tm) Simulator",
-      subtitle: "Vary GC% (3 H-bonds) vs AT% (2 H-bonds) and raise temperature to observe strand denaturation and Marmur-Doty Tm shift.",
-      gc: 50,
-      temp: 37
+      title: "3D Rotatable B-DNA Double Helix, Chargaff Base-Pairing & Tm Melting Lab",
+      subtitle: "Drag to rotate the 3D antiparallel double helix! Vary GC% (3 H-bonds) vs AT% (2 H-bonds) and raise temperature to watch strands unzip above Tm."
     }
   ];
 })();

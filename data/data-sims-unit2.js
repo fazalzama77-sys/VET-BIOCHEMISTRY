@@ -476,42 +476,9 @@
 
   S["u2-t17"] = [
     {
-      engine: "pathway",
-      title: "Ribosomal Protein Biosynthesis (A–P–E Sites) & Antibiotic Targets",
-      subtitle: "Follow 5'→3' mRNA translation (N→C polypeptide growth) and see where Tetracyclines, Chloramphenicol, and Macrolides block bacterial ribosomes.",
-      nodes: [
-        { label: "Aminoacyl-tRNA", sub: "-2 ATP Equiv.", x: 0.15, y: 0.30, kind: "energy", enzyme: "aa-tRNA Synthetase", info: "Charges tRNA with matching amino acid (ATP → AMP + PPi = 2 high-energy bonds). Proofreading ensures translational fidelity." },
-        { label: "A-Site (Acceptor)", sub: "Codon-Anticodon", x: 0.42, y: 0.50, kind: "rate", enzyme: "EF-Tu / eEF-1α (GTP)", info: "Incoming aa-tRNA binds mRNA codon. Tetracyclines block bacterial 30S A-site binding!" },
-        { label: "P-Site (Peptidyl)", sub: "Peptide Bond!", x: 0.68, y: 0.50, kind: "rate", enzyme: "Peptidyl Transferase (23S rRNA)", info: "Ribozyme catalyzes peptide bond transfer. Chloramphenicol blocks bacterial 50S peptidyl transferase." },
-        { label: "E-Site & Translocation", sub: "EF-G (GTP)", x: 0.88, y: 0.50, kind: "normal", enzyme: "Translocase", info: "Ribosome shifts 3 nt (1 codon) toward 3' end. Macrolides (Erythromycin/Tylosin) block 50S exit tunnel!" }
-      ],
-      edges: [
-        { from: 0, to: 1, label: "GTP" },
-        { from: 1, to: 2, label: "Peptide Transfer" },
-        { from: 2, to: 3, label: "Translocation (GTP)" }
-      ],
-      modes: [
-        {
-          id: "active", label: "Active Translation (4 P/bond)", speed: 1.2, boost: [0, 1, 2],
-          note: "Total energy cost per peptide bond = 4 high-energy bonds (2 ATP for tRNA charging + 1 GTP A-site + 1 GTP translocation).",
-          metrics: [
-            { label: "Cost / Peptide Bond", val: "4 High-Energy Bonds", cls: "is-warn" },
-            { label: "mRNA Read Dir.", val: "5' → 3'", cls: "is-info" },
-            { label: "Protein Growth", val: "N-term → C-term", cls: "is-ok" },
-            { label: "Start Codon", val: "AUG (Met / fMet)", cls: "is-info" }
-          ]
-        },
-        {
-          id: "tetra", label: "Tetracycline (30S Block)", speed: 0.1, blocked: [0, 1],
-          note: "Binds bacterial 30S subunit, preventing aminoacyl-tRNA entry at A-site (bacteriostatic — selective because host has 80S ribosomes!).",
-          metrics: [
-            { label: "Target Ribosome", val: "Prokaryotic 30S", cls: "is-danger" },
-            { label: "Blocked Step", val: "A-Site Binding", cls: "is-danger" },
-            { label: "Host 80S", val: "Spared (Selective)", cls: "is-ok" },
-            { label: "Degradation", val: "Ubiquitin-Proteasome", cls: "is-info" }
-          ]
-        }
-      ]
+      engine: "ribosome3d",
+      title: "Live 70S Ribosome Translation (A–P–E Sites) & Antibiotic Blockade Lab",
+      subtitle: "Watch 5'→3' mRNA codons translate into an N→C polypeptide chain — and test Tetracycline (30S), Chloramphenicol (50S), and Macrolide/Tylosin blockade!"
     }
   ];
 
@@ -634,32 +601,9 @@
 
   S["u2-t21"] = [
     {
-      engine: "pathway",
-      title: "Central Dogma: DNA Replication Fork, Transcription & Lac Operon",
-      subtitle: "Inspect semiconservative 5'→3' synthesis (Leading vs Okazaki Lagging strands), RNA Polymerase, and Lac Operon induction.",
-      nodes: [
-        { label: "Helicase + SSB", sub: "Unwinds dsDNA", x: 0.16, y: 0.48, kind: "rate", enzyme: "DNA Helicase & Topoisomerase", info: "Helicase breaks H-bonds; Topoisomerase II (DNA Gyrase — target of Enrofloxacin/Fluoroquinolones!) relieves positive supercoiling." },
-        { label: "Leading Strand", sub: "Continuous 5'→3'", x: 0.48, y: 0.24, kind: "energy", enzyme: "DNA Pol III / δ", info: "Synthesized continuously toward the fork using 1 RNA primer and 3'→5' exonuclease proofreading." },
-        { label: "Lagging Strand", sub: "Okazaki Fragments", x: 0.48, y: 0.74, kind: "warn", enzyme: "Primase + Pol I + Ligase", info: "Synthesized discontinuously away from fork; Pol I removes RNA primers (5'→3' exo) and DNA Ligase seals nicks." },
-        { label: "mRNA Transcript", sub: "RNA Pol (No Primer)", x: 0.84, y: 0.48, kind: "organ", enzyme: "RNA Polymerase II", info: "Transcribes 3'→5' template into 5'→3' mRNA (adds 5' 7-mG cap, 3' poly-A tail, splices introns in eukaryotes)." }
-      ],
-      edges: [
-        { from: 0, to: 1, label: "Continuous" },
-        { from: 0, to: 2, label: "Discontinuous" },
-        { from: 1, to: 3, label: "Transcription" }
-      ],
-      modes: [
-        {
-          id: "rep", label: "Replication & Transcription ON", speed: 1.2, boost: [0, 1, 2],
-          note: "All nucleic acid polymerases synthesize strictly 5' → 3' by adding dNTPs/NTPs to a free 3'-OH.",
-          metrics: [
-            { label: "Synthesis Dir.", val: "Strictly 5' → 3'", cls: "is-ok" },
-            { label: "Gyrase Inhibitor", val: "Enrofloxacin", cls: "is-warn" },
-            { label: "Proofreading", val: "3'→5' Exonuclease", cls: "is-info" },
-            { label: "Lac Operon", val: "Lactose + Low Glc = ON", cls: "is-ok" }
-          ]
-        }
-      ]
+      engine: "replication3d",
+      title: "Live DNA Replication Fork (Leading vs Okazaki Lagging & Enrofloxacin)",
+      subtitle: "Watch Helicase & DNA Gyrase unwind dsDNA as the Leading Strand runs continuously 5'→3' and the Lagging Strand builds Okazaki fragments!"
     }
   ];
 

@@ -879,4 +879,558 @@
       }
     };
   });
+
+  /* ============================================================
+     7. 3D PROTEIN STRUCTURE HIERARCHY & DENATURATION LAB (u1-t13)
+     ============================================================ */
+  window.BioSim.registerEngine("protein3d", function (cfg, state) {
+    state.tab = "helix";
+    state.temp = 37;
+    state.bme = false; // β-Mercaptoethanol (reduces S-S disulfide bonds)
+    state.rotY = 0.35;
+    state.rotX = 0.18;
+    state.autoSpin = true;
+
+    return {
+      tabs: [
+        { id: "helix", label: "2° Right-Handed α-Helix" },
+        { id: "sheet", label: "2° Antiparallel β-Sheet" },
+        { id: "tertiary", label: "3° Fold & Denaturation" }
+      ],
+      onTab: function (id) { state.tab = id; },
+      controls: function () {
+        if (state.tab === "tertiary") {
+          return [
+            { type: "slider", key: "temp", label: "Temperature (Heat Denaturation)", min: 20, max: 85, step: 1, unit: " °C" },
+            { type: "toggle", key: "bme", label: "Add β-Mercaptoethanol (Cleaves S–S)", onClass: "is-on" }
+          ];
+        }
+        return [{ type: "toggle", key: "autoSpin", label: "Auto-Rotate 3D Structure", onClass: "is-on-blue" }];
+      },
+      metrics: function () {
+        if (state.tab === "helix") {
+          return [
+            { label: "Residues / Turn", val: "3.6 Amino Acids", cls: "is-ok" },
+            { label: "Pitch / Turn", val: "5.4 Å (0.54 nm)", cls: "is-info" },
+            { label: "H-Bond Pattern", val: "C=O (i) ··· H-N (i+4)", cls: "is-ok" },
+            { label: "Helix Breakers", val: "Proline & Glycine", cls: "is-warn" }
+          ];
+        }
+        if (state.tab === "sheet") {
+          return [
+            { label: "Stabilization", val: "Inter-Strand H-Bonds", cls: "is-ok" },
+            { label: "Strand Direction", val: "Antiparallel (Stronger)", cls: "is-info" },
+            { label: "R-Group Orient.", val: "Alternating Up / Down", cls: "is-info" },
+            { label: "Classic Examples", val: "Silk Fibroin, IgG, Prions", cls: "is-warn" }
+          ];
+        }
+        var denat = state.temp > 58;
+        return [
+          { label: "2° / 3° Fold", val: denat ? "UNFOLDED (Denatured!)" : "Native Active Fold", cls: denat ? "is-danger" : "is-ok" },
+          { label: "Disulfide (S–S)", val: state.bme ? "REDUCED (2 –SH)" : "INTACT Covalent", cls: state.bme ? "is-danger" : "is-ok" },
+          { label: "1° Peptide Bonds", val: "100% INTACT (Covalent)", cls: "is-ok" },
+          { label: "Biological Activity", val: (denat || state.bme) ? "LOST" : "100% Functional", cls: (denat || state.bme) ? "is-danger" : "is-ok" }
+        ];
+      },
+      inspector: function () {
+        if (state.tab === "helix") return '<span class="biosim-inspector__tag">3D α-HELIX</span><strong>Drag to rotate!</strong> Every backbone carbonyl <strong>C=O (residue i)</strong> forms a dashed intra-chain hydrogen bond parallel to the helix axis with the amide <strong>N-H (residue i+4)</strong>. Side-chains (R-groups, amber) project outward to avoid steric clash.';
+        if (state.tab === "sheet") return '<span class="biosim-inspector__tag">β-PLEATED SHEET</span>Adjacent extended polypeptide strands run in opposite directions (N→C vs C←N), forming straight, maximally stable <strong>inter-strand H-bonds</strong>. In BSE / Scrapie (prion diseases), normal α-helical PrPᶜ misfolds into toxic β-sheet PrPˢᶜ!';
+        return '<span class="biosim-inspector__tag">ANFINSEN &amp; DENATURATION</span>Raise temperature above <strong>58 °C</strong> to snap non-covalent H-bonds &amp; hydrophobic core (destroying 2°/3° activity), while <strong>1° peptide bonds stay intact</strong>! Toggle <strong>β-Mercaptoethanol</strong> to reduce covalent Cys–Cys disulfide (S–S) bridges to –SH.';
+      },
+      onDrag: function (dx, dy) {
+        state.autoSpin = false;
+        state.rotY += dx * 0.012;
+        state.rotX = clamp(state.rotX + dy * 0.012, -1.0, 1.0);
+      },
+      step: function (dt) { if (state.autoSpin) state.rotY += dt * 0.45; },
+      draw: function (ctx, w, h, t, theme) {
+        ctx.clearRect(0, 0, w, h);
+        var cx = w * 0.5, cy = h * 0.54;
+        if (state.tab === "helix") {
+          ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+          ctx.fillText("3D Right-Handed α-Helix (3.6 Res/Turn · i → i+4 H-Bonds · Drag to Rotate)", cx, 24);
+          var n = 15, pts = [];
+          for (var i = 0; i < n; i++) {
+            var ang = (i / 3.6) * Math.PI * 2;
+            var p = project3D({ x: Math.cos(ang) * 0.95, y: (i - 7) * 0.24, z: Math.sin(ang) * 0.95 }, state.rotX, state.rotY, cx, cy, Math.min(w, h) * 0.26);
+            var rp = project3D({ x: Math.cos(ang) * 1.48, y: (i - 7) * 0.24, z: Math.sin(ang) * 1.48 }, state.rotX, state.rotY, cx, cy, Math.min(w, h) * 0.26);
+            pts.push({ i: i, x: p.x, y: p.y, z: p.z, s: p.s, rx: rp.x, ry: rp.y });
+          }
+          // Backbone ribbon
+          ctx.strokeStyle = theme.blue; ctx.lineWidth = 4;
+          ctx.beginPath();
+          pts.forEach(function (p, idx) { if (idx === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+          ctx.stroke();
+          // i -> i+4 intra-chain H-bonds
+          ctx.strokeStyle = "#d84315"; ctx.lineWidth = 2.2; ctx.setLineDash([4, 4]);
+          for (var k = 0; k < n - 4; k++) {
+            ctx.beginPath(); ctx.moveTo(pts[k].x, pts[k].y); ctx.lineTo(pts[k + 4].x, pts[k + 4].y); ctx.stroke();
+          }
+          ctx.setLineDash([]);
+          pts.slice().sort(function (a, b) { return a.z - b.z; }).forEach(function (p) {
+            ctx.strokeStyle = theme.amber; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.rx, p.ry); ctx.stroke();
+            drawSphere3D(ctx, p.rx, p.ry, 7 * p.s, "#ffa000", "R");
+            drawSphere3D(ctx, p.x, p.y, 11 * p.s, "#1565c0", String(p.i + 1));
+          });
+          ctx.fillStyle = theme.muted; ctx.font = "600 11.5px monospace";
+          ctx.fillText("Blue = Cα Backbone (1→15)   |   Dashed Red = i→i+4 H-Bonds   |   Amber = Outward R-Groups", cx, h - 10);
+          ctx.textAlign = "left";
+          return;
+        }
+        if (state.tab === "sheet") {
+          ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+          ctx.fillText("Antiparallel β-Pleated Sheet (Alternating N→C / C←N + Inter-Strand H-Bonds)", cx, 24);
+          var ys = [cy - 64, cy + 4, cy + 72];
+          var dirs = ["N → C  ▶", "◀  C ← N", "N → C  ▶"];
+          ys.forEach(function (y, ri) {
+            ctx.strokeStyle = ri === 1 ? theme.teal : theme.blue; ctx.lineWidth = 5;
+            ctx.beginPath();
+            for (var c = 0; c < 7; c++) {
+              var sx = 95 + c * ((w - 190) / 6);
+              var sy = y + (c % 2 === 0 ? -9 : 9);
+              if (c === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+            }
+            ctx.stroke();
+            ctx.fillStyle = ri === 1 ? theme.teal : theme.blue; ctx.font = "700 11.5px monospace";
+            ctx.fillText(dirs[ri], w - 48, y + 4);
+            if (ri < 2) {
+              ctx.strokeStyle = "#d84315"; ctx.lineWidth = 2.4; ctx.setLineDash([4, 4]);
+              for (var c2 = 1; c2 < 6; c2++) {
+                var hx = 95 + c2 * ((w - 190) / 6);
+                ctx.beginPath(); ctx.moveTo(hx, ys[ri] + 12); ctx.lineTo(hx, ys[ri + 1] - 12); ctx.stroke();
+              }
+              ctx.setLineDash([]);
+            }
+          });
+          ctx.fillStyle = theme.muted; ctx.font = "600 11.5px monospace";
+          ctx.fillText("Dashed Red = Linear Inter-Strand H-Bonds (C=O ··· H-N)   |   Zig-Zag = Pleated Cα Backbone", cx, h - 10);
+          ctx.textAlign = "left";
+          return;
+        }
+        // 3° Tertiary Fold & Denaturation
+        var unfold = clamp((state.temp - 44) / 28, 0, 1);
+        ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText(unfold > 0.55 ? "Denatured Random Coil (2°/3° Lost — Covalent 1° Peptide Chain Intact!)" : "Native 3° Globular Protein (Hydrophobic Core + S–S Disulfide + Salt Bridges)", cx, 24);
+        ctx.strokeStyle = theme.blue; ctx.lineWidth = 5;
+        ctx.beginPath();
+        var s1, s2;
+        for (var j = 0; j <= 80; j++) {
+          var f = j / 80;
+          var nx = cx + Math.cos(f * Math.PI * 5) * (76 - f * 20) + Math.sin(f * Math.PI * 9) * 18;
+          var ny = cy + Math.sin(f * Math.PI * 5) * (66 - f * 14);
+          var ux = 55 + f * (w - 110);
+          var uy = cy + Math.sin(f * Math.PI * 6 + t * 2.4) * 34;
+          var px = nx * (1 - unfold) + ux * unfold;
+          var py = ny * (1 - unfold) + uy * unfold;
+          if (j === 22) s1 = { x: px, y: py };
+          if (j === 58) s2 = { x: px, y: py };
+          if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        // Covalent Disulfide S-S bridge (survives heat unless β-ME added!)
+        if (s1 && s2) {
+          if (!state.bme) {
+            ctx.strokeStyle = "#ffa000"; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(s2.x, s2.y); ctx.stroke();
+            drawSphere3D(ctx, (s1.x + s2.x) / 2, (s1.y + s2.y) / 2, 14, "#ffa000", "S–S");
+          } else {
+            drawSphere3D(ctx, s1.x, s1.y, 12, "#c62828", "SH");
+            drawSphere3D(ctx, s2.x, s2.y, 12, "#c62828", "SH");
+          }
+        }
+        ctx.textAlign = "left";
+      }
+    };
+  });
+
+  /* ============================================================
+     8. PEPTIDE BOND CONDENSATION & pI ELECTROPHORESIS (u1-t15)
+     ============================================================ */
+  window.BioSim.registerEngine("peptide3d", function (cfg, state) {
+    state.tab = "condense";
+    state.bonded = false;
+    state.ph = 7.0;
+    return {
+      tabs: [
+        { id: "condense", label: "Peptide Bond Formation (-H₂O)" },
+        { id: "electro", label: "pI Electrophoresis (Asp / Gly / Lys)" }
+      ],
+      onTab: function (id) { state.tab = id; },
+      controls: function () {
+        if (state.tab === "condense") {
+          return [{ type: "toggle", key: "bonded", label: "Condense (-H₂O) → Form Trans-Planar Peptide Bond", onClass: "is-on-teal" }];
+        }
+        return [{ type: "slider", key: "ph", label: "Buffer pH", min: 2.0, max: 11.0, step: 0.2, unit: "" }];
+      },
+      metrics: function () {
+        if (state.tab === "condense") {
+          return [
+            { label: "Bond Character", val: state.bonded ? "40% Partial Double Bond" : "Separate Amino Acids", cls: state.bonded ? "is-ok" : "is-info" },
+            { label: "Geometry", val: "Rigid Trans-Planar (1.33 Å)", cls: "is-info" },
+            { label: "Rotatable Bonds", val: "Only φ (N-Cα) & ψ (Cα-C)", cls: "is-warn" },
+            { label: "Byproduct", val: state.bonded ? "1 H₂O Released ✓" : "Dehydration Required", cls: "is-ok" }
+          ];
+        }
+        var asp = state.ph > 2.77 ? "Anion (-) → Anode (+)" : "Cation (+) → Cathode";
+        var gly = Math.abs(state.ph - 5.97) < 0.6 ? "Zwitterion (0 · Origin)" : (state.ph > 5.97 ? "(-) → Anode" : "(+) → Cathode");
+        var lys = state.ph < 9.74 ? "Cation (+) → Cathode (-)" : "Anion (-) → Anode (+)";
+        return [
+          { label: "Aspartate (pI 2.77)", val: asp, cls: "is-info" },
+          { label: "Glycine (pI 5.97)", val: gly, cls: "is-ok" },
+          { label: "Lysine (pI 9.74)", val: lys, cls: "is-warn" },
+          { label: "Rule", val: "pH > pI = (-), pH < pI = (+)", cls: "is-info" }
+        ];
+      },
+      inspector: function () {
+        if (state.tab === "condense") return '<span class="biosim-inspector__tag">PEPTIDE BOND RESONANCE</span>Toggle <strong>Condense (-H₂O)</strong>! Removing OH from α-COOH and H from α-NH₂ forms a <strong>rigid, uncharged, trans-planar C–N peptide bond</strong> (40% double-bond character from C=O resonance). Therefore rotation occurs ONLY around φ and ψ single bonds!';
+        return '<span class="biosim-inspector__tag">ISOELECTRIC MIGRATION</span>Slide Buffer pH! Whenever <strong>pH &gt; pI</strong>, an amino acid loses H⁺ → becomes <strong>negative (-)</strong> and migrates to the <strong>Anode (+)</strong>. At <strong>pH = pI</strong>, net charge is 0 and it stays motionless at the origin!';
+      },
+      draw: function (ctx, w, h, t, theme) {
+        ctx.clearRect(0, 0, w, h);
+        var cx = w * 0.5, cy = h * 0.54;
+        if (state.tab === "condense") {
+          ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+          ctx.fillText(state.bonded ? "Trans-Planar Peptide Bond (C–N = 1.33 Å · Partial Double Bond · R₁ & R₂ Trans!)" : "Two Free Amino Acids Ready for Dehydration Condensation (-H₂O)", cx, 24);
+          var gap = state.bonded ? 0 : 44;
+          var x1 = cx - 78 - gap, x2 = cx + 78 + gap;
+          // Rigid planar highlight box when bonded
+          if (state.bonded) {
+            ctx.fillStyle = theme.isDark ? "rgba(0,137,123,0.22)" : "rgba(0,137,123,0.14)";
+            ctx.strokeStyle = theme.teal; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+            roundRect(ctx, cx - 64, cy - 52, 128, 104, 10); ctx.fill(); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = theme.teal; ctx.font = "700 11px monospace";
+            ctx.fillText("RIGID PLANAR UNIT", cx, cy - 58);
+          }
+          // AA1 backbone: H3N+ - Cα1(R1 UP) - C(=O)
+          ctx.strokeStyle = theme.text; ctx.lineWidth = 3.5;
+          ctx.beginPath();
+          ctx.moveTo(x1 - 58, cy); ctx.lineTo(x1 + 36, cy);
+          ctx.moveTo(x1 - 12, cy); ctx.lineTo(x1 - 12, cy - 48); // R1 UP
+          ctx.moveTo(x1 + 36, cy); ctx.lineTo(x1 + 36, cy - 40); // =O UP
+          ctx.stroke();
+          // AA2 backbone: N(H) - Cα2(R2 DOWN) - COO-
+          ctx.beginPath();
+          ctx.moveTo(x2 - 36, cy); ctx.lineTo(x2 + 58, cy);
+          ctx.moveTo(x2 + 12, cy); ctx.lineTo(x2 + 12, cy + 48); // R2 DOWN (TRANS!)
+          ctx.moveTo(x2 - 36, cy); ctx.lineTo(x2 - 36, cy + 40); // -H DOWN
+          ctx.stroke();
+
+          if (state.bonded) {
+            // Partial double bond C--N
+            ctx.strokeStyle = "#d84315"; ctx.lineWidth = 4.5;
+            ctx.beginPath(); ctx.moveTo(x1 + 36, cy); ctx.lineTo(x2 - 36, cy); ctx.stroke();
+            ctx.strokeStyle = "#ffa000"; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+            ctx.beginPath(); ctx.moveTo(x1 + 36, cy - 7); ctx.lineTo(x2 - 36, cy - 7); ctx.stroke();
+            ctx.setLineDash([]);
+            // Floating H2O released above
+            drawSphere3D(ctx, cx, cy - 92 - Math.sin(t * 3) * 4, 15, "#1565c0", "H₂O");
+          } else {
+            ctx.fillStyle = "#d84315"; ctx.font = "700 12px monospace";
+            ctx.fillText("OH + H → H₂O", cx, cy + 4);
+          }
+          drawSphere3D(ctx, x1 - 58, cy, 14, "#1565c0", "NH₃⁺");
+          drawSphere3D(ctx, x1 - 12, cy, 13, "#37474f", "Cα");
+          drawSphere3D(ctx, x1 - 12, cy - 52, 13, "#6a48b5", "R₁↑");
+          drawSphere3D(ctx, x1 + 36, cy, 13, "#37474f", "C");
+          drawSphere3D(ctx, x1 + 36, cy - 42, 12, "#d32f2f", "=O");
+          drawSphere3D(ctx, x2 - 36, cy, 13, "#00897b", "N");
+          drawSphere3D(ctx, x2 - 36, cy + 42, 11, "#546e7a", "H");
+          drawSphere3D(ctx, x2 + 12, cy, 13, "#37474f", "Cα");
+          drawSphere3D(ctx, x2 + 12, cy + 52, 13, "#6a48b5", "R₂↓");
+          drawSphere3D(ctx, x2 + 58, cy, 14, "#d84315", "COO⁻");
+          ctx.textAlign = "left";
+          return;
+        }
+        // Electrophoresis Strip at variable pH
+        ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("Amino Acid Electrophoresis Strip at pH " + state.ph.toFixed(1), cx, 24);
+        var sx = 54, sw = w - 108, sy = 56, sh = h - 98;
+        ctx.fillStyle = theme.surface; ctx.strokeStyle = theme.border; ctx.lineWidth = 2;
+        roundRect(ctx, sx, sy, sw, sh, 10); ctx.fill(); ctx.stroke();
+        // Origin line
+        ctx.strokeStyle = theme.muted; ctx.setLineDash([5, 5]);
+        ctx.beginPath(); ctx.moveTo(cx, sy); ctx.lineTo(cx, sy + sh); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#c62828"; ctx.font = "700 13px monospace"; ctx.fillText("ANODE (+)", sx + 48, sy - 8);
+        ctx.fillStyle = "#1565c0"; ctx.fillText("CATHODE (-)", sx + sw - 54, sy - 8);
+        ctx.fillStyle = theme.muted; ctx.fillText("Origin", cx, sy + sh + 16);
+
+        var aas = [
+          { name: "Asp (pI 2.77)", pi: 2.77, y: sy + sh * 0.22, col: "#d84315" },
+          { name: "Gly (pI 5.97)", pi: 5.97, y: sy + sh * 0.50, col: "#00897b" },
+          { name: "Lys (pI 9.74)", pi: 9.74, y: sy + sh * 0.78, col: "#6a48b5" }
+        ];
+        aas.forEach(function (a) {
+          // If pH > pI => negative => moves LEFT toward Anode (+)
+          var shift = clamp((a.pi - state.ph) / 7.5, -0.88, 0.88);
+          var ax = cx + shift * (sw * 0.45);
+          drawSphere3D(ctx, ax, a.y, 17, a.col, a.name.slice(0, 3));
+          ctx.fillStyle = theme.text; ctx.font = "700 11.5px monospace"; ctx.textAlign = "center";
+          ctx.fillText(a.name, ax, a.y - 22);
+        });
+        ctx.textAlign = "left";
+      }
+    };
+  });
+
+  /* ============================================================
+     9. 3D ROTATABLE B-DNA DOUBLE HELIX & Tm MELTING LAB (u1-t17)
+     ============================================================ */
+  window.BioSim.registerEngine("dna3d", function (cfg, state) {
+    state.gc = 50;
+    state.temp = 37;
+    state.rotY = 0;
+    state.autoSpin = true;
+    return {
+      controls: function () {
+        return [
+          { type: "slider", key: "gc", label: "GC Base-Pair Content (3 H-Bonds)", min: 20, max: 80, step: 5, unit: "%" },
+          { type: "slider", key: "temp", label: "Temperature (Denaturation)", min: 35, max: 100, step: 1, unit: " °C" },
+          { type: "toggle", key: "autoSpin", label: "Rotate 3D B-DNA Helix", onClass: "is-on-blue" }
+        ];
+      },
+      metrics: function () {
+        var tm = 69.3 + 0.41 * state.gc;
+        var melted = state.temp > tm + 4;
+        return [
+          { label: "Melting Temp (Tm)", val: tm.toFixed(1) + " °C", cls: "is-warn" },
+          { label: "G≡C / A=T Ratio", val: state.gc + "% / " + (100 - state.gc) + "%", cls: "is-info" },
+          { label: "Helix State", val: melted ? "Denatured ssDNA (↑A260)" : (Math.abs(state.temp - tm) <= 4 ? "50% Melted (At Tm)" : "Intact B-DNA (10.5 bp/turn)"), cls: melted ? "is-danger" : "is-ok" },
+          { label: "Chargaff's Rule", val: "A = T and G = C", cls: "is-ok" }
+        ];
+      },
+      inspector: function () {
+        return '<span class="biosim-inspector__tag">3D B-DNA DOUBLE HELIX</span><strong>Drag to rotate!</strong> Antiparallel 5\'→3\' (blue) and 3\'←5\' (purple) sugar-phosphate strands spiral right-handedly (10.5 bp/turn, 3.4 nm pitch). <strong>G≡C pairs (3 H-bonds, teal)</strong> are stronger than <strong>A=T (2 H-bonds, amber)</strong> — raise GC% to see <strong>Tm</strong> climb, and heat above Tm to watch strands unzip (Hyperchromic shift at 260 nm)!';
+      },
+      onDrag: function (dx) { state.autoSpin = false; state.rotY += dx * 0.015; },
+      step: function (dt) { if (state.autoSpin) state.rotY += dt * 0.9; },
+      draw: function (ctx, w, h, t, theme) {
+        ctx.clearRect(0, 0, w, h);
+        var cy = h * 0.54, tm = 69.3 + 0.41 * state.gc;
+        var sep = clamp((state.temp - (tm - 10)) / 22, 0, 1);
+        ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("3D Watson-Crick B-DNA Double Helix (Tm = " + tm.toFixed(1) + " °C · Drag to Rotate)", w * 0.5, 24);
+
+        var pairs = 15, left = 56, right = w - 56, items = [];
+        for (var i = 0; i < pairs; i++) {
+          var u = i / (pairs - 1);
+          var px = left + u * (right - left);
+          var ang = i * 0.58 - state.rotY;
+          var amp = 56 * (1 - sep * 0.45);
+          var y1 = cy + Math.sin(ang) * amp - sep * 42;
+          var z1 = Math.cos(ang);
+          var y2 = cy - Math.sin(ang) * amp + sep * 42;
+          var z2 = -Math.cos(ang);
+          var isGC = ((i * 29) % 100) < state.gc;
+          items.push({ px: px, y1: y1, z1: z1, y2: y2, z2: z2, isGC: isGC });
+        }
+        // Draw H-bond rungs first
+        items.forEach(function (it) {
+          if (sep < 0.65) {
+            ctx.strokeStyle = it.isGC ? "#00897b" : "#ffa000";
+            ctx.lineWidth = it.isGC ? 3.5 : 2.0;
+            ctx.setLineDash(it.isGC ? [5, 3] : [3, 4]);
+            ctx.beginPath(); ctx.moveTo(it.px, it.y1); ctx.lineTo(it.px, it.y2); ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        });
+        // Depth-sorted spheres
+        var spheres = [];
+        items.forEach(function (it) {
+          spheres.push({ x: it.px, y: it.y1, z: it.z1, col: "#1565c0", lbl: it.isGC ? "G" : "A" });
+          spheres.push({ x: it.px, y: it.y2, z: it.z2, col: "#6a48b5", lbl: it.isGC ? "C" : "T" });
+        });
+        spheres.sort(function (a, b) { return a.z - b.z; }).forEach(function (s) {
+          drawSphere3D(ctx, s.x, s.y, 10 + (s.z + 1) * 2.5, s.col, s.lbl);
+        });
+        ctx.fillStyle = theme.muted; ctx.font = "600 11.5px monospace"; ctx.textAlign = "center";
+        ctx.fillText("5'→3' Strand (Blue)  |  3'←5' Strand (Purple)  |  Teal = G≡C (3 H-Bonds)  |  Amber = A=T (2 H-Bonds)", w * 0.5, h - 10);
+        ctx.textAlign = "left";
+      }
+    };
+  });
+
+  /* ============================================================
+     10. LIVE RIBOSOME TRANSLATION (A-P-E SITES) LAB (u2-t17)
+     ============================================================ */
+  window.BioSim.registerEngine("ribosome3d", function (cfg, state) {
+    state.blocker = "none";
+    state.phase = 0;
+    return {
+      tabs: [
+        { id: "none", label: "Active Translation" },
+        { id: "tetra", label: "Tetracycline (30S A-Site)" },
+        { id: "chlor", label: "Chloramphenicol (50S Peptidyl)" },
+        { id: "macro", label: "Macrolide / Tylosin (50S Exit)" }
+      ],
+      onTab: function (id) { state.blocker = id; },
+      metrics: function () {
+        var active = state.blocker === "none";
+        return [
+          { label: "mRNA Read Dir.", val: "5' → 3' (Codon by Codon)", cls: "is-info" },
+          { label: "Polypeptide Growth", val: "N-terminus → C-terminus", cls: "is-ok" },
+          { label: "Energy / Bond", val: "4 High-Energy Bonds (2 ATP + 2 GTP)", cls: "is-warn" },
+          { label: "Translation Status", val: active ? "ELONGATING ✓" : "BLOCKED (" + state.blocker.toUpperCase() + ")", cls: active ? "is-ok" : "is-danger" }
+        ];
+      },
+      inspector: function () {
+        var notes = {
+          none: "<strong>Ribosomal Elongation Cycle:</strong> Charged aa-tRNA enters the <strong>A-site</strong> (EF-Tu + GTP) → <strong>23S rRNA Peptidyl Transferase</strong> transfers the growing chain from P-site to A-site → <strong>EF-G + GTP</strong> translocates the ribosome 3 bases toward 3', ejecting empty tRNA from the <strong>E-site</strong>.",
+          tetra: "<strong>Tetracyclines (Oxytetracycline / Doxycycline):</strong> Bind bacterial <strong>30S subunit</strong>, blocking incoming aminoacyl-tRNA from entering the A-site!",
+          chlor: "<strong>Chloramphenicol / Florfenicol:</strong> Inhibit <strong>50S Peptidyl Transferase</strong>, halting peptide bond formation (used in bovine respiratory disease as Florfenicol).",
+          macro: "<strong>Macrolides (Erythromycin / Tylosin / Tulathromycin):</strong> Bind the <strong>50S subunit</strong> exit tunnel, blocking polypeptide translocation!"
+        };
+        return '<span class="biosim-inspector__tag">PROKARYOTIC 70S RIBOSOME</span>' + (notes[state.blocker] || notes.none);
+      },
+      step: function (dt) {
+        if (state.blocker === "none") state.phase = (state.phase + dt * 0.35) % 1;
+      },
+      draw: function (ctx, w, h, t, theme) {
+        ctx.clearRect(0, 0, w, h);
+        var cx = w * 0.5, cy = h * 0.56;
+        ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("70S Ribosome Translation: E-P-A Sites, 5'→3' mRNA & Antibiotic Targets", cx, 24);
+
+        // Large 50S subunit (top dome) & Small 30S subunit (bottom)
+        ctx.fillStyle = theme.isDark ? "rgba(21,101,192,0.22)" : "rgba(21,101,192,0.14)";
+        ctx.strokeStyle = theme.blue; ctx.lineWidth = 2.5;
+        roundRect(ctx, cx - 155, cy - 92, 310, 108, 44); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = theme.isDark ? "rgba(0,137,123,0.22)" : "rgba(0,137,123,0.14)";
+        ctx.strokeStyle = theme.teal;
+        roundRect(ctx, cx - 135, cy + 28, 270, 56, 26); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = theme.blue; ctx.font = "700 11px monospace";
+        ctx.fillText("50S LARGE SUBUNIT", cx - 95, cy - 72);
+        ctx.fillStyle = theme.teal;
+        ctx.fillText("30S SMALL SUBUNIT", cx - 80, cy + 72);
+
+        // E, P, A site slots
+        var sites = [
+          { lbl: "E-Site (Exit)", x: cx - 88, col: theme.muted },
+          { lbl: "P-Site (Peptidyl)", x: cx, col: theme.purple },
+          { lbl: "A-Site (Acceptor)", x: cx + 88, col: theme.coral }
+        ];
+        sites.forEach(function (s) {
+          ctx.strokeStyle = s.col; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+          roundRect(ctx, s.x - 32, cy - 62, 64, 76, 10); ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = s.col; ctx.font = "700 11px sans-serif";
+          ctx.fillText(s.lbl, s.x, cy - 46);
+        });
+
+        // Sliding 5' -> 3' mRNA ribbon
+        ctx.fillStyle = theme.amberFill;
+        ctx.fillRect(36, cy + 14, w - 72, 18);
+        var codons = ["5'", "AUG", "GCA", "UUU", "CGA", "UAA", "3'"];
+        codons.forEach(function (cd, idx) {
+          var mx = 60 + idx * ((w - 120) / 6) - state.phase * 28;
+          ctx.fillStyle = "#000"; ctx.font = "700 11.5px monospace";
+          ctx.fillText(cd, mx, cy + 27);
+        });
+
+        // Growing N->C Polypeptide chain emerging from P-site
+        var chain = ["Met", "Ala", "Phe", "Arg"];
+        chain.forEach(function (aa, idx) {
+          var ax = cx - idx * 24 - Math.sin(t * 2 + idx) * 3;
+          var ay = cy - 76 - idx * 14;
+          drawSphere3D(ctx, ax, ay, 13, "#2e7d32", aa);
+        });
+
+        // Incoming aa-tRNA at A-site (or blocked!)
+        var aY = state.blocker === "tetra" ? cy - 22 : (cy - 18 + Math.sin(state.phase * Math.PI) * 14);
+        drawSphere3D(ctx, cx + 88, aY, 15, state.blocker === "tetra" ? "#c62828" : "#d84315", state.blocker === "tetra" ? "✕" : "tRNA");
+        if (state.blocker !== "none") {
+          var bx = state.blocker === "tetra" ? cx + 88 : (state.blocker === "chlor" ? cx + 42 : cx);
+          var by = state.blocker === "tetra" ? cy + 44 : (state.blocker === "chlor" ? cy - 24 : cy - 84);
+          ctx.fillStyle = "#c62828"; ctx.font = "700 12.5px sans-serif";
+          ctx.fillText("🛑 BLOCKED HERE!", bx, by);
+        }
+        ctx.textAlign = "left";
+      }
+    };
+  });
+
+  /* ============================================================
+     11. LIVE Y-SHAPED DNA REPLICATION FORK LAB (u2-t21)
+     ============================================================ */
+  window.BioSim.registerEngine("replication3d", function (cfg, state) {
+    state.fluoroquinolone = false;
+    state.prog = 0;
+    return {
+      controls: function () {
+        return [{ type: "toggle", key: "fluoroquinolone", label: "Add Enrofloxacin (Blocks Bacterial DNA Gyrase!)", onClass: "is-on" }];
+      },
+      metrics: function () {
+        return [
+          { label: "All Polymerases", val: "Strictly 5' → 3' Only!", cls: "is-ok" },
+          { label: "Leading Strand", val: "Continuous (1 Primer)", cls: "is-ok" },
+          { label: "Lagging Strand", val: "Okazaki Fragments + Ligase", cls: "is-warn" },
+          { label: "Fork Status", val: state.fluoroquinolone ? "HALTED (Gyrase Blocked!)" : "Unwinding & Replicating ✓", cls: state.fluoroquinolone ? "is-danger" : "is-ok" }
+        ];
+      },
+      inspector: function () {
+        return '<span class="biosim-inspector__tag">SEMICONSERVATIVE FORK</span><strong>Helicase</strong> unzips dsDNA while <strong>DNA Gyrase (Topoisomerase II)</strong> relieves positive supercoils ahead of the fork. Because DNA Pol III only builds <strong>5\'→3\'</strong>, the top Leading Strand runs continuously while the bottom Lagging Strand builds discontinuous <strong>Okazaki fragments</strong> sealed by <strong>DNA Ligase</strong>. Toggle <strong>Enrofloxacin</strong> (veterinary fluoroquinolone) to halt bacterial Gyrase!';
+      },
+      step: function (dt) {
+        if (!state.fluoroquinolone) state.prog = (state.prog + dt * 0.35) % 1;
+      },
+      draw: function (ctx, w, h, t, theme) {
+        ctx.clearRect(0, 0, w, h);
+        var cy = h * 0.54, forkX = w * 0.58;
+        ctx.fillStyle = theme.text; ctx.font = "700 13.5px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("DNA Replication Fork: Continuous Leading Strand vs Discontinuous Okazaki Lagging Strand", w * 0.5, 24);
+
+        // Unwound parent double helix on RIGHT (forkX -> w-40)
+        ctx.strokeStyle = theme.blue; ctx.lineWidth = 4;
+        ctx.beginPath();
+        for (var x = forkX; x <= w - 42; x += 6) {
+          var y1 = cy + Math.sin((x - forkX) * 0.08 - t * (state.fluoroquinolone ? 0 : 4)) * 18;
+          if (x === forkX) ctx.moveTo(x, y1); else ctx.lineTo(x, y1);
+        }
+        ctx.stroke();
+        ctx.strokeStyle = theme.purple;
+        ctx.beginPath();
+        for (var x2 = forkX; x2 <= w - 42; x2 += 6) {
+          var y2 = cy - Math.sin((x2 - forkX) * 0.08 - t * (state.fluoroquinolone ? 0 : 4)) * 18;
+          if (x2 === forkX) ctx.moveTo(x2, y2); else ctx.lineTo(x2, y2);
+        }
+        ctx.stroke();
+
+        // Top Parent Template (3' -> 5') & Bottom Parent Template (5' -> 3')
+        ctx.strokeStyle = theme.blue; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(forkX, cy - 8); ctx.lineTo(64, cy - 78); ctx.stroke();
+        ctx.strokeStyle = theme.purple;
+        ctx.beginPath(); ctx.moveTo(forkX, cy + 8); ctx.lineTo(64, cy + 78); ctx.stroke();
+
+        // Leading Strand (continuous 5' -> 3' toward fork!)
+        ctx.strokeStyle = "#2e7d32"; ctx.lineWidth = 4.5;
+        ctx.beginPath(); ctx.moveTo(90, cy - 52); ctx.lineTo(forkX - 36, cy - 18); ctx.stroke();
+        ctx.fillStyle = "#2e7d32"; ctx.font = "700 12px sans-serif";
+        ctx.fillText("Leading Strand (Continuous 5' → 3' ▶)", w * 0.30, cy - 72);
+
+        // Lagging Strand Okazaki Fragments (5' -> 3' AWAY from fork!)
+        for (var f = 0; f < 3; f++) {
+          var fx1 = forkX - 42 - f * 88;
+          var fx2 = fx1 - 58;
+          var fy1 = cy + 20 + f * 17;
+          var fy2 = fy1 + 11;
+          // RNA Primer (amber) + DNA (teal)
+          ctx.strokeStyle = "#ffa000"; ctx.lineWidth = 5;
+          ctx.beginPath(); ctx.moveTo(fx1, fy1); ctx.lineTo(fx1 - 14, fy1 + 3); ctx.stroke();
+          ctx.strokeStyle = "#00897b"; ctx.lineWidth = 4.5;
+          ctx.beginPath(); ctx.moveTo(fx1 - 14, fy1 + 3); ctx.lineTo(fx2, fy2); ctx.stroke();
+        }
+        ctx.fillStyle = "#00897b"; ctx.font = "700 12px sans-serif";
+        ctx.fillText("◀ Lagging Strand: Discontinuous Okazaki Fragments (Amber = RNA Primer, Ligase Seals)", w * 0.34, cy + 98);
+
+        // Helicase wedge at fork + DNA Gyrase ahead
+        drawSphere3D(ctx, forkX, cy, 20, "#d84315", "Hel");
+        drawSphere3D(ctx, w - 82, cy, 20, state.fluoroquinolone ? "#c62828" : "#6a48b5", state.fluoroquinolone ? "✕" : "Gyr");
+        ctx.fillStyle = state.fluoroquinolone ? "#c62828" : theme.text; ctx.font = "700 11.5px monospace";
+        ctx.fillText(state.fluoroquinolone ? "Gyrase BLOCKED (Enrofloxacin)" : "DNA Gyrase", w - 92, cy - 30);
+        ctx.textAlign = "left";
+      }
+    };
+  });
 })();
