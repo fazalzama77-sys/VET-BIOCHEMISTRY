@@ -82,7 +82,7 @@ D:\VET BIOCHEMISTRY\
 ├── SYNC-TO-REPO.bat           Local offline robocopy mirror into repo/
 ├── index.html                 Single-page app shell. All sections live here.
 ├── manifest.json              PWA manifest
-├── service-worker.js          Offline cache (CACHE_VERSION = "vbioc-v1")
+├── service-worker.js          Offline cache (CACHE_VERSION = "vbioc-v34")
 ├── README.md                  Content writing guide
 ├── REPO.md                    GitHub repository guide
 ├── CLAUDE-CONTEXT.md          THIS FILE (AI reads this first)
@@ -98,6 +98,11 @@ D:\VET BIOCHEMISTRY\
 │   ├── data-theory-unit2.JS   Unit 2: Intermediary Metabolism (22 topics)
 │   ├── data-theory-unit3.JS   Unit 3: Veterinary Analytical Biochemistry (16 topics)
 │   ├── data-practical.JS      All 3 practical units (22 topics)
+│   ├── data-images.js         Open-licensed Wikimedia/NIH/PDB biochemical figure atlas
+│   ├── data-sims-unit1.js     Interactive simulations for Theory Unit 1 (17 topics)
+│   ├── data-sims-unit2.js     Interactive simulations for Theory Unit 2 (22 topics)
+│   ├── data-sims-unit3.js     Interactive simulations for Theory Unit 3 (16 topics)
+│   ├── data-sims-practical.js Virtual lab benches for Practical Units 1–3 (22 topics)
 │   ├── data-why.JS            Mechanism-first WHY entries
 │   ├── data-qa.JS             Written-exam Q&A bank
 │   ├── data-quiz.JS           Quiz question bank
@@ -111,7 +116,10 @@ D:\VET BIOCHEMISTRY\
 │   ├── glossary.js            500 term UG dictionary + tooltip decorator + SpeechSynthesis
 │   ├── search.js              Global search engine (Ctrl+K)
 │   ├── deep-guide.js          Contextual deep guide overlay controller
-│   └── events.js              Department announcements renderer
+│   ├── events.js              Department announcements renderer
+│   ├── sync.js                Cross-device cloud sync & QR pairing
+│   ├── simulations.js         Core BioSim interactive Canvas engine (lifecycle, themes, modal)
+│   └── simulations-3d.js      3D rotatable & live microscopic engines (chairs, helices, ribosome, fork)
 │
 ├── assets/css/
 │   ├── tokens.css             ★ SHARED IVRI THEME — copied verbatim
@@ -119,7 +127,8 @@ D:\VET BIOCHEMISTRY\
 │   ├── sections.css           Per-screen styles (lesson, quiz, dashboard, etc.)
 │   ├── animations.css         GPU-accelerated micro-interactions (transform/opacity only)
 │   ├── deep-guide.css         Deep guide presentation styles
-│   └── events.css             Department announcements styles
+│   ├── events.css             Department announcements styles
+│   └── simulations.css        Interactive lab cards, controls, readouts & full-screen modal
 │
 ├── images/                    theory/ practical/ why/ qa/ figures
 └── tools/
@@ -155,3 +164,20 @@ D:\VET BIOCHEMISTRY\
 4. **Desktop Sidebar:** Hideable via `< Hide Sidebar` button, hamburger button, or <kbd>Ctrl</kbd>+<kbd>B</kbd>.
 5. **Mobile Navigation:** Exactly 5 slots (Theory, Practical, Quiz FAB, Q&A, Progress).
 6. **Pre-paint Theme Script:** Placed inline in `<head>` to eliminate any white flash on reload.
+
+---
+
+## 🧪 INTERACTIVE BIOCHEMISTRY LABS (`window.BioSim`)
+
+Every one of the **77 syllabus topics** (55 Theory + 22 Practical) includes **1–2 inline, 100% offline interactive simulations** (79 total) with Play/Pause, Reset, live quantitative readouts, plain-English explanations, and an **Expand Full-Screen** modal.
+
+### Engine Architecture
+- **`js/simulations.js`** (`window.BioSim`): Manages HiDPI Canvas rendering, `requestAnimationFrame` lifecycle cleanup on route change (`BioSim.unmountAll()` in `app.js`), Light/Dark theme token reading, pointer-drag 3D rotation, section-matched inline injection (`BioSim.injectSectionSims()`), and full-screen modal expansion. Core engines: `membrane`, `donnan`, `henderson`, `enzyme`, `etc`, `pathway` (with Step-by-Step Guided Walkthrough), `molecule`, `clinical`, `lab`.
+- **`js/simulations-3d.js`**: Registers 11 dedicated 3D rotatable & live microscopic engines via `BioSim.registerEngine(...)`: `monosaccharide3d` (⁴C₁ chair & epimers), `disaccharide3d` (Haworth rings + Benedict's Cu²⁺ + hydrolysis), `polysaccharide3d` (3D Amylose helix + I₃⁻, Glycogen branching, Rumen Cellulose), `peptidoglycan3d` (Lysozyme/Penicillin + GAG cushion), `lipid3d` (TAG Lipase + Phospholipid bilayer), `atp3d` (γ-phosphate cleavage), `protein3d` (3D α-Helix, β-Sheet, Denaturation + β-ME), `peptide3d` (Condensation + pI Electrophoresis), `dna3d` (3D B-DNA + Marmur-Doty Tm), `ribosome3d` (70S E-P-A sites + Antibiotics), `replication3d` (Y-fork + Okazaki + Enrofloxacin).
+- **Data Registry (`window.topicSims`):** Split cleanly across `data/data-sims-unit1.js`, `data/data-sims-unit2.js`, `data/data-sims-unit3.js`, and `data/data-sims-practical.js`.
+
+### Mandatory Simulation Quality Rules
+1. **100% Exam Accuracy:** All stoichiometry, stereochemistry, kinetic equations, reference ranges, and veterinary clinical correlations must be strictly accurate — never approximate or oversimplify in a way that could mislead in exams.
+2. **No Crude Box-and-Line Placeholders:** Use true 3D renders or authentic microscopic/quantitative mechanisms, never lazy generic boxes.
+3. **Readable Typography:** Keep UI controls, metric readouts, explanation boxes, and Canvas labels comfortably large and high-contrast in both Light and Dark themes.
+4. **Offline Cache:** Whenever adding or modifying simulation JS/CSS files, update `PRECACHE` and bump `CACHE_VERSION` in `service-worker.js`.
