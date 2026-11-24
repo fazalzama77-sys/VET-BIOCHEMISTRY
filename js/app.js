@@ -293,6 +293,7 @@ var app = (function () {
      RENDER DISPATCH
      ============================================================ */
   function render() {
+    if (window.BioSim && BioSim.unmountAll) BioSim.unmountAll();
     // Clean up any open WHY modal when navigating away
     var existingModal = document.getElementById("why-modal-overlay");
     if (existingModal && existingModal.parentNode && state.section !== "why") {
@@ -1574,8 +1575,19 @@ var app = (function () {
         main = injected.html;
         remainingFigs = injected.remaining;
       }
+      var remainingSims = [];
+      if (window.BioSim && BioSim.injectSectionSims) {
+        var simInj = BioSim.injectSectionSims(main || "", t.id);
+        main = simInj.html;
+        remainingSims = simInj.remaining || [];
+      }
       body =
         (main ? block(showDeep ? "Deep diagnostic guide" : "Standard description", main, null, showDeep ? "sparkle" : "microscope") : "") +
+        (remainingSims.length
+          ? block("Interactive Biochemistry Labs & Simulations",
+              remainingSims.map(function (rs) { return BioSim.placeholderHtml(t.id, rs.idx); }).join(""),
+              "sims", "atom")
+          : "") +
         (remainingFigs && remainingFigs.length
           ? block("Biochemical Visual Atlas & Verified Reference Figures",
               '<div class="micro-fig-stack">' + remainingFigs.map(function (f) { return renderFigureCard(f, false); }).join("") + '</div>',
@@ -1691,6 +1703,7 @@ var app = (function () {
       '</div>';
 
     wireTopicActions(t);
+    if (window.BioSim && BioSim.mountAll) BioSim.mountAll(view);
     var cur = el(".rail__item.is-current");
     if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: "nearest" });
   }

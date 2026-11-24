@@ -12,7 +12,7 @@
    IMPORTANT: bump CACHE_VERSION whenever precached files change.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v31";
+var CACHE_VERSION = "vbioc-v33";
 var SHELL_CACHE = CACHE_VERSION + "-shell";
 var IMG_CACHE = CACHE_VERSION + "-img";
 
@@ -36,6 +36,7 @@ var PRECACHE = [
   "assets/css/deep-guide.css",
   "assets/css/events.css",
   "assets/css/animations.css",
+  "assets/css/simulations.css",
 
   // Data & Syllabus
   "data/data-syllabus.JS",
@@ -44,6 +45,10 @@ var PRECACHE = [
   "data/data-theory-unit3.JS",
   "data/data-practical.JS",
   "data/data-images.js",
+  "data/data-sims-unit1.js",
+  "data/data-sims-unit2.js",
+  "data/data-sims-unit3.js",
+  "data/data-sims-practical.js",
   "data/data-why.JS",
   "data/data-qa.JS",
   "data/data-quiz.JS",
@@ -58,6 +63,8 @@ var PRECACHE = [
   "js/deep-guide.js",
   "js/events.js",
   "js/sync.js",
+  "js/simulations.js",
+  "js/simulations-3d.js",
   "js/app.js"
 ];
 
