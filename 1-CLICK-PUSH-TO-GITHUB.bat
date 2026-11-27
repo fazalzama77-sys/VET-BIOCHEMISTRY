@@ -53,13 +53,17 @@ if %ERRORLEVEL% NEQ 0 (
     git config user.email "fazalzama77@gmail.com"
 )
 
-:: Step 1: Synchronize offline repo folder
-echo [1/3] Synchronizing 'repo' folder...
-robocopy "%SRC%" "%DEST%" /MIR /XD .git .claude repo tmp /XF SYNC-TO-REPO.bat 1-CLICK-PUSH-TO-GITHUB.bat *.tmp *.bak *.log >nul
+:: Step 1: Generate the version and synchronize the offline repo folder
+echo [1/3] Generating the version and synchronizing 'repo' folder...
+node tools\build-version.js
+if errorlevel 1 goto :build_error
+call :mirror
+if errorlevel 1 goto :build_error
 
 :: Step 2: Stage and commit local changes
 echo [2/3] Checking for modified files...
 git add -A
+if errorlevel 1 goto :build_error
 
 git diff --cached --quiet
 if %ERRORLEVEL% EQU 0 (
@@ -67,6 +71,7 @@ if %ERRORLEVEL% EQU 0 (
 ) else (
     echo Saving updates to local Git...
     git commit -m "Update Biochemistry Studio content (%date% %time%)"
+    if errorlevel 1 goto :build_error
 )
 
 :: Step 3: Upload to GitHub
@@ -75,8 +80,22 @@ set ATTEMPT=1
 
 :try_push
 git pull --rebase --autostash origin main >nul 2>&1
-git push -u origin main
-if %ERRORLEVEL% EQU 0 goto :push_success
+if not errorlevel 1 (
+    rem A pull can introduce new site content after the initial build.
+    node tools\build-version.js
+    if errorlevel 1 goto :build_error
+    git diff --quiet -- index.html service-worker.js version.json
+    if errorlevel 1 (
+        git add -- index.html service-worker.js version.json
+        if errorlevel 1 goto :build_error
+        git commit -m "Regenerate Biochemistry Studio version after sync"
+        if errorlevel 1 goto :build_error
+    )
+    call :mirror
+    if errorlevel 1 goto :build_error
+    git push -u origin main
+    if not errorlevel 1 goto :push_success
+)
 
 set /a ATTEMPT+=1
 if %ATTEMPT% LEQ 3 (
@@ -95,6 +114,11 @@ echo   - Your local changes are safely committed in Git!
 echo ============================================================
 goto :finish
 
+:build_error
+color 0C
+echo [ERROR] Could not generate or save the versioned site. Check the errors above.
+goto :finish
+
 :push_success
 color 0A
 echo.
@@ -102,12 +126,16 @@ echo ============================================================
 echo   [SUCCESS] ALL CHANGES UPLOADED TO GITHUB!
 echo   Repository: %REPO_URL%
 for /f "tokens=*" %%c in ('git log -1 --oneline') do echo   Latest Commit: %%c
-echo   Your website will update automatically in 1-2 minutes.
-echo   (Tip: In your browser, press Ctrl+F5 to reload the new
-echo    offline cache immediately)
+echo   Open app tabs will refresh automatically after GitHub Pages deploys the update.
 echo ============================================================
 
 :finish
 echo.
 echo Press any key to close this window...
 pause >nul
+exit /b
+
+:mirror
+robocopy "%SRC%" "%DEST%" /MIR /XD .git .claude repo tmp /XF SYNC-TO-REPO.bat 1-CLICK-PUSH-TO-GITHUB.bat *.tmp *.bak *.log >nul
+if errorlevel 8 exit /b 1
+exit /b 0

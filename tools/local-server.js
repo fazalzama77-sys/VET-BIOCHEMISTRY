@@ -5,6 +5,7 @@
 var http = require("http"),
     fs = require("fs"),
     path = require("path"),
+    buildVersion = require("./build-version"),
     root = path.resolve(__dirname, "..");
 
 var types = {
@@ -27,6 +28,15 @@ var port = Number(process.argv[2]) || 5199;
 http.createServer(function (req, res) {
   var url = decodeURIComponent(req.url.split("?")[0]);
   if (url === "/") url = "/index.html";
+  if (url === "/index.html" || url === "/version.json" || url === "/service-worker.js") {
+    try {
+      buildVersion();
+    } catch (err) {
+      console.error("Could not generate the site version:", err);
+      res.writeHead(500);
+      return res.end("Could not generate the site version");
+    }
+  }
   var file = path.resolve(root, "." + url);
 
   if (!file.startsWith(root + path.sep) && file !== root) {

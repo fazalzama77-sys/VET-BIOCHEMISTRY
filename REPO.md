@@ -56,7 +56,8 @@ repo/ (or VET BIOCHEMISTRY/)
 ├── SYNC-TO-REPO.bat            ← Offline mirror synchronization script
 ├── index.html                  ← Standalone web application entry point
 ├── manifest.json               ← Progressive Web App (PWA) manifest configuration
-├── service-worker.js           ← Offline cache-first service worker (vbioc-v1)
+├── service-worker.js           ← Network-first service worker with an offline fallback
+├── version.json                ← Generated SHA-256 site version
 ├── README.md                   ← Student guide & documentation
 └── REPO.md                     ← This repository guide
 ```
@@ -70,7 +71,7 @@ To publish your latest edits, double-click:
 1-CLICK-PUSH-TO-GITHUB.bat
 ```
 This automatically:
-1. Synchronizes all project files into `repo/`.
+1. Generates the site version and synchronizes the project files into `repo/`.
 2. Stages and commits your changes with a local timestamp.
 3. Pushes to your GitHub repository: `https://github.com/fazalzama77-sys/VET-BIOCHEMISTRY.git`
 

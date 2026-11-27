@@ -1,6 +1,6 @@
 # Veterinary Biochemistry Studio
 
-A modern, fast, offline-first curriculum companion for **B.V.Sc & A.H. second-year Veterinary Biochemistry**, following the official VCI MSVE syllabus (Credit hours 2+1=3). Built in pure vanilla JavaScript, HTML, and CSS — zero build steps, zero npm dependencies, zero complex toolchains.
+A curriculum companion for **B.V.Sc & A.H. second-year Veterinary Biochemistry**, following the official VCI MSVE syllabus (Credit hours 2+1=3). The site uses vanilla JavaScript, HTML, and CSS. Version generation uses Node.js with no npm dependencies.
 
 ---
 
@@ -17,6 +17,10 @@ http://localhost:5199
 ### Option B — Direct Double-Click
 Double-click **`index.html`** in File Explorer. Every route, lesson reader, quiz runner, and dashboard view runs directly from `file:///`.
 
+## Versioning
+
+The local server and the sync and upload shortcuts regenerate `version.json`, the asset URLs in `index.html`, and the build version in `service-worker.js`. For a manual Git commit or upload, run `node tools/build-version.js` first and include all three generated files. The SHA-256 hash covers HTML, CSS, JavaScript (including `.JS`), JSON, and all files in `data/`.
+
 ---
 
 ## Project Structure
@@ -26,7 +30,8 @@ D:\VET BIOCHEMISTRY\
 │
 ├── index.html                 Single-page application shell.
 ├── manifest.json              PWA manifest (standalone, theme-color #1565c0).
-├── service-worker.js          Offline caching (CACHE_VERSION = "vbioc-v1").
+├── service-worker.js          Network-first service worker with an offline fallback.
+├── version.json               Generated site version used by the app's update checks.
 ├── 1-CLICK-PUSH-TO-GITHUB.bat Double-click → syncs repo, stages, commits, and pushes to GitHub!
 ├── SYNC-TO-REPO.bat           Double-click → mirrors all files into repo/ sequentially.
 ├── README.md                  This content guide.

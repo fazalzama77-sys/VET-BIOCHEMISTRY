@@ -4187,8 +4187,8 @@ var app = (function () {
             '</div>'
         ) +
         '<div class="mt-4 row row--wrap" style="align-items:center; gap:10px;">' +
-          '<button class="btn" type="button" onclick="app.updateAppCache()">' + icon("repeat") + ' Refresh Offline Cache</button>' +
-          '<span class="small faint" id="sw-status-msg">Offline Cache v4 &middot; 100% Ready</span>' +
+          '<button class="btn" type="button" onclick="app.updateAppCache()">' + icon("repeat") + ' Check for Updates</button>' +
+          '<span class="small faint" id="sw-status-msg" role="status"></span>' +
         '</div>' +
       '</div>' +
 
@@ -5027,6 +5027,7 @@ var app = (function () {
 
     route();
     setupInstallPrompt();
+    setupAppUpdates();
     checkFirstVisitOnboarding();
     _scheduleNextSrsNotification();
     document.addEventListener("visibilitychange", function () {
@@ -5133,29 +5134,172 @@ var app = (function () {
     }
   }
 
-  function updateAppCache() {
-    var statusEl = el("#sw-status-msg");
-    if (!("serviceWorker" in navigator)) {
-      toast("Offline service worker is not supported in this browser.");
+  var appVersion;
+  var versionCheck;
+  var reloadStarted = false;
+
+  function readAppVersion(doc) {
+    var meta = doc.querySelector('meta[name="app-version"]');
+    return meta && meta.content;
+  }
+
+  function registerAppWorker(hash) {
+    return navigator.serviceWorker.register("./service-worker.js?v=" + hash, {
+      scope: "./",
+      updateViaCache: "none"
+    });
+  }
+
+  function reloadOnce() {
+    if (reloadStarted) return;
+    reloadStarted = true;
+    window.location.reload();
+  }
+
+  function waitForAppWorker(registration, hash) {
+    var worker = registration.installing || registration.waiting || registration.active;
+    if (!worker || new URL(worker.scriptURL).searchParams.get("v") !== hash) {
+      return Promise.reject(new Error("Update worker unavailable"));
+    }
+    return new Promise(function (resolve, reject) {
+      var timer = setTimeout(function () {
+        worker.removeEventListener("statechange", onStateChange);
+        reject(new Error("Update worker is still installing"));
+      }, 15000);
+
+      function onStateChange() {
+        if (worker.state !== "activated" && worker.state !== "redundant") return;
+        clearTimeout(timer);
+        worker.removeEventListener("statechange", onStateChange);
+        if (worker.state === "activated") resolve();
+        else reject(new Error("Update worker could not install"));
+      }
+
+      worker.addEventListener("statechange", onStateChange);
+      onStateChange();
+    });
+  }
+
+  async function clearOldAppCaches(hash) {
+    if (!("caches" in window)) return;
+    var scope = new URL("./", window.location.href);
+    var prefix = "vbioc:" + scope.pathname + ":";
+    var keys = await caches.keys();
+    await Promise.all(keys.filter(function (key) {
+      // Retain the new worker's offline copy, including when another tab installed it.
+      return key !== prefix + hash &&
+        (key.startsWith(prefix) || /^vbioc-v\d+-(?:shell|img)$/.test(key));
+    }).map(function (key) { return caches.delete(key); }));
+  }
+
+  function fetchUpdateResource(url) {
+    var options = { cache: "no-store" };
+    if (typeof AbortSignal !== "undefined" && AbortSignal.timeout) {
+      options.signal = AbortSignal.timeout(10000);
+    }
+    return fetch(url, options);
+  }
+
+  async function applyAppUpdate(hash) {
+    toast("Updating study materials…");
+    var noticeStarted = Date.now();
+    try {
+      var registration;
+      if (navigator.serviceWorker) {
+        try {
+          registration = await registerAppWorker(hash);
+          // Keep the previous offline shell available until the new one has installed.
+          await waitForAppWorker(registration, hash);
+        } catch (err) {
+          if (navigator.serviceWorker.controller) throw err;
+          registration = null;
+        }
+      }
+
+      await clearOldAppCaches(hash).catch(function (err) { console.warn("Offline cache cleanup:", err); });
+      if (registration) await registration.update();
+
+      var response = await fetchUpdateResource(window.location.href);
+      if (!response.ok) return "pending";
+      var html = new DOMParser().parseFromString(await response.text(), "text/html");
+      if (readAppVersion(html) !== hash) return "pending";
+
+      // Give the notice time to appear even when the update is already installed.
+      var delay = Math.max(0, 500 - (Date.now() - noticeStarted));
+      if (delay) await new Promise(function (resolve) { setTimeout(resolve, delay); });
+      reloadOnce();
+      return "updating";
+    } catch (err) {
+      console.warn("App update will retry:", err);
+      return "pending";
+    }
+  }
+
+  function checkAppVersion() {
+    if (reloadStarted) return Promise.resolve("updating");
+    if (versionCheck) return versionCheck;
+
+    versionCheck = fetchUpdateResource("./version.json?t=" + Date.now())
+      .then(async function (response) {
+        if (!response.ok) return "unavailable";
+        var version = await response.json();
+        if (!version || typeof version.hash !== "string" || !/^[a-f0-9]{64}$/.test(version.hash)) {
+          return "unavailable";
+        }
+        return version.hash === appVersion ? "current" : applyAppUpdate(version.hash);
+      })
+      .catch(function () { return "unavailable"; })
+      .finally(function () { versionCheck = null; });
+    return versionCheck;
+  }
+
+  function setupAppUpdates() {
+    if (!/^https?:$/.test(window.location.protocol)) return;
+    appVersion = readAppVersion(document);
+    if (!appVersion || !/^[a-f0-9]{64}$/.test(appVersion)) return;
+
+    var workers = navigator.serviceWorker;
+    if (workers) {
+      workers.addEventListener("controllerchange", function () {
+        if (!workers.controller || reloadStarted) return;
+        checkAppVersion().then(function (result) {
+          if (result === "current" || result === "unavailable") reloadOnce();
+        });
+      });
+    }
+
+    async function onLoad() {
+      var result = await checkAppVersion();
+      if (workers && !reloadStarted && (result === "current" || result === "unavailable")) {
+        registerAppWorker(appVersion).catch(function (err) {
+          console.warn("Service worker registration:", err);
+        });
+      }
+    }
+
+    if (document.readyState === "complete") onLoad();
+    else window.addEventListener("load", onLoad, { once: true });
+    window.addEventListener("focus", checkAppVersion);
+    window.addEventListener("online", checkAppVersion);
+    setInterval(checkAppVersion, 120000);
+  }
+
+  async function updateAppCache() {
+    if (!appVersion) {
+      toast("Update checks are available when the app is served over HTTP or HTTPS.");
       return;
     }
+    var statusEl = el("#sw-status-msg");
     if (statusEl) statusEl.textContent = "Checking for updates…";
-    navigator.serviceWorker.getRegistration().then(function (reg) {
-      if (!reg) {
-        if (statusEl) statusEl.textContent = "Offline cache active";
-        toast("App is already cached for offline use.");
-        return;
-      }
-      reg.update().then(function () {
-        if (statusEl) statusEl.textContent = "All files up to date · 100% offline";
-        toast("Offline cache refreshed. Everything is up to date!");
-      }).catch(function () {
-        if (statusEl) statusEl.textContent = "Offline mode active";
-        toast("Running from local cache in offline mode.");
-      });
-    }).catch(function () {
-      toast("Offline cache is active.");
-    });
+    var result = await checkAppVersion();
+    var message = {
+      current: "Study materials are up to date.",
+      unavailable: "Could not check for updates. Try again when connected.",
+      pending: "An update is available. The app will check again shortly.",
+      updating: "Updating study materials…"
+    }[result];
+    if (statusEl) statusEl.textContent = message;
+    if (result === "current" || result === "unavailable") toast(message);
   }
 
   /* ---------- public ---------- */

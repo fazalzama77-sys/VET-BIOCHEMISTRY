@@ -1,24 +1,16 @@
 /* ============================================================
    service-worker.js  —  Offline PWA engine
    Veterinary Biochemistry Studio
-   ------------------------------------------------------------
-   Strategy:
-     - Navigation requests (HTML): Cache-first with background
-       refresh, with robust fallback to cached app shell when offline.
-     - Static assets (CSS, JS, data files, icons): Cache-first with
-       background update so the app launches instantaneously offline.
-     - Dynamic assets & images: Stored on demand in image cache.
-
-   IMPORTANT: bump CACHE_VERSION whenever precached files change.
+   Network first, with a precached app shell for offline use.
    ============================================================ */
 
-var CACHE_VERSION = "vbioc-v34";
-var SHELL_CACHE = CACHE_VERSION + "-shell";
-var IMG_CACHE = CACHE_VERSION + "-img";
+var BUILD_HASH = "492ccf1338d5b5f6ae57ab3b4e83d7505afa9912527ec0a005c1eeb5306a2d48";
+var APP_SCOPE = self.registration.scope;
+var CACHE_PREFIX = "vbioc:" + new URL(APP_SCOPE).pathname + ":";
+var SHELL_CACHE = CACHE_PREFIX + BUILD_HASH;
+var SHELL_URLS = [new URL("./", APP_SCOPE), new URL("index.html", APP_SCOPE)];
 
 var PRECACHE = [
-  "./",
-  "index.html",
   "manifest.json",
 
   // App Icons
@@ -68,149 +60,101 @@ var PRECACHE = [
   "js/app.js"
 ];
 
-// Network request that gives up after `ms`, so "Wi-Fi without internet" falls back
-// to the offline copy quickly instead of leaving a blank screen.
-function fetchWithTimeout(req, ms) {
-  return new Promise(function (resolve, reject) {
-    var t = setTimeout(function () { reject(new Error("timeout")); }, ms);
-    fetch(req).then(
-      function (res) { clearTimeout(t); resolve(res); },
-      function (err) { clearTimeout(t); reject(err); }
-    );
-  });
-}
+var PRECACHE_URLS = new Map(PRECACHE.map(function (file) {
+  var url = new URL(file, APP_SCOPE);
+  url.searchParams.set("v", BUILD_HASH);
+  return [url.pathname, url.href];
+}));
 
-// Normalize request matching for root vs index.html
-function matchPrecache(req) {
-  return caches.match(req, { ignoreSearch: true }).then(function (hit) {
-    if (hit) return hit;
-    var url = new URL(req.url);
-    if (url.pathname.endsWith("/") || url.pathname.endsWith("/index.html")) {
-      return caches.match("index.html").then(function (c) {
-        return c || caches.match("./");
-      });
+// Cache the full shell before taking over from the previous worker.
+async function installShell() {
+  var documents = await Promise.all(SHELL_URLS.map(async function (url) {
+    var response = await fetch(url, { cache: "no-store" });
+    var marker = '<meta name="app-version" content="' + BUILD_HASH + '">';
+    if (!response.ok || !(await response.clone().text()).includes(marker)) {
+      throw new Error("App shell version is not ready: " + url.pathname);
     }
-    return null;
+    return response;
+  }));
+
+  var cache = await caches.open(SHELL_CACHE);
+  var requests = Array.from(PRECACHE_URLS.values(), function (url) {
+    return new Request(url, { cache: "no-store" });
   });
+  await cache.addAll(requests);
+  await Promise.all(SHELL_URLS.map(function (url, i) { return cache.put(url.href, documents[i]); }));
+  await self.skipWaiting();
 }
 
-// Install event — precache all critical shell assets
 self.addEventListener("install", function (e) {
-  e.waitUntil(
-    caches.open(SHELL_CACHE)
-      .then(function (cache) {
-        // All-or-nothing: if any file fails to download, this update is abandoned and the
-        // previous, complete offline copy stays in charge (it is retried on the next visit).
-        // Previously a failed file was skipped and the old copy deleted, leaving a broken
-        // offline copy after any update on a weak connection.
-        return Promise.all(
-          PRECACHE.map(function (url) {
-            return fetch(new Request(url, { cache: "reload" }))
-              .then(function (response) {
-                if (!response || !response.ok) throw new Error("precache failed: " + url);
-                return cache.put(url, response);
-              });
-          })
-        );
-      })
-      .then(function () {
-        return self.skipWaiting();
-      })
-  );
+  e.waitUntil(installShell());
 });
 
-// Activate event — clean up any outdated caches
 self.addEventListener("activate", function (e) {
   e.waitUntil(
     caches.keys().then(function (keys) {
-      return Promise.all(
-        keys.map(function (k) {
-          if (k.indexOf(CACHE_VERSION) !== 0) {
-            return caches.delete(k);
-          }
-        })
-      );
+      return Promise.all(keys.filter(function (key) {
+        return key !== SHELL_CACHE &&
+          (key.startsWith(CACHE_PREFIX) || /^vbioc-v\d+-(?:shell|img)$/.test(key));
+      }).map(function (key) { return caches.delete(key); }));
+    }).catch(function (err) {
+      console.warn("Offline cache cleanup:", err);
     }).then(function () {
       return self.clients.claim();
     })
   );
 });
 
-// Fetch event — offline-first with background revalidation
+function fetchFresh(req) {
+  if (req.mode !== "navigate") return fetch(req, { cache: "no-store" });
+
+  // Fall back promptly when the device has Wi-Fi but the host is unreachable.
+  var abort = new AbortController();
+  var timer = setTimeout(function () { abort.abort(); }, 5000);
+  return fetch(req, { cache: "no-store", signal: abort.signal }).finally(function () {
+    clearTimeout(timer);
+  });
+}
+
+async function matchOffline(req, url) {
+  var options = { cacheName: SHELL_CACHE };
+  var cached = await caches.match(req, options);
+  if (cached) return cached;
+
+  var precached = PRECACHE_URLS.get(url.pathname);
+  if (!url.search && precached) {
+    cached = await caches.match(precached, options);
+    if (cached) return cached;
+  }
+  if (req.mode === "navigate") return caches.match(SHELL_URLS[1].href, options);
+}
+
 self.addEventListener("fetch", function (e) {
   var req = e.request;
-  if (req.method !== "GET") return;
-
   var url = new URL(req.url);
+  if (req.method !== "GET" || url.origin !== self.location.origin) return;
 
-  // Never intercept cross-origin / third-party requests
-  if (url.origin !== location.origin) return;
-
-  // 1. Navigation requests (Opening the site / refreshing in browser / PWA launch)
-  if (req.mode === "navigate") {
-    e.respondWith(
-      fetchWithTimeout(req, 5000)
-        .then(function (networkRes) {
-          if (networkRes && networkRes.ok) {
-            var copy = networkRes.clone();
-            caches.open(SHELL_CACHE).then(function (cache) {
-              cache.put(req, copy);
-            });
-          }
-          return networkRes;
-        })
-        .catch(function () {
-          // Offline fallback — return cached index.html or shell root
-          return matchPrecache(req).then(function (cached) {
-            return cached || caches.match("index.html") || caches.match("./");
-          });
-        })
-    );
+  if (url.pathname.endsWith("/version.json") || url.searchParams.has("update_check")) {
+    e.respondWith(fetch(req, { cache: "no-store" }).catch(function () { return Response.error(); }));
     return;
   }
 
-  // 2. Images — Cache first, fetch and store on demand
-  if (/\.(png|jpg|jpeg|webp|gif|svg|ico)$/i.test(url.pathname)) {
-    e.respondWith(
-      caches.match(req).then(function (hit) {
-        if (hit) return hit;
-        return caches.open(IMG_CACHE).then(function (imgCache) {
-          return imgCache.match(req).then(function (imgHit) {
-            if (imgHit) return imgHit;
-            return fetch(req).then(function (res) {
-              if (res && res.ok) {
-                imgCache.put(req, res.clone());
-              }
-              return res;
-            }).catch(function () {
-              return null;
-            });
-          });
-        });
-      })
-    );
-    return;
-  }
-
-  // 3. Static shell resources (CSS, JS, data files, manifest)
-  // Cache-first for lightning instant offline loading, revalidate in background
-  e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(function (cachedRes) {
-      var fetchPromise = fetch(req).then(function (netRes) {
-        if (netRes && netRes.ok) {
-          var copy = netRes.clone();
-          caches.open(SHELL_CACHE).then(function (cache) {
-            cache.put(req, copy);
-          });
-        }
-        return netRes;
-      }).catch(function () {
-        return cachedRes;
-      });
-
-      return cachedRes || fetchPromise;
-    })
-  );
+  var network = fetchFresh(req).catch(function () { return null; });
+  e.waitUntil(network.then(async function (response) {
+    if (!response || !response.ok || response.status === 206) return;
+    // Keep the precached documents aligned with this worker's offline assets.
+    if (SHELL_URLS.some(function (shell) { return shell.pathname === url.pathname; })) return;
+    var copy = response.clone();
+    var cache = await caches.open(SHELL_CACHE);
+    await cache.put(req, copy);
+  }).catch(function () {
+    // Cache quotas or an uncacheable response must not interrupt online use.
+  }));
+  e.respondWith(network.then(async function (response) {
+    if (response && response.status < 500) return response;
+    var cached = await matchOffline(req, url).catch(function () { return null; });
+    return cached || response || Response.error();
+  }));
 });
 
 // Listen for message events (e.g. from in-app update trigger)
