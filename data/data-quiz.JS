@@ -1870,7 +1870,7 @@ var quizBank = {
       {
         "q": "Mammalian digestive enzymes can hydrolyze the beta-1,4 glycosidic linkages of cellulose.",
         "a": false,
-        "e": "False. Mammalian digestive enzymes (such as alpha-amylase) hydrolyze only alpha-1,4 linkages. Breakdown of cellulose requires microbial cellulase produced by symbiotic rumen or cecal microbes.",
+        "e": "False. Mammalian alpha-amylases hydrolyze only internal alpha-1,4 linkages (and while brush-border lactase cleaves the beta-1,4 bond of lactose, no mammalian enzyme cleaves the beta-1,4 glucose linkages of cellulose). Breakdown of cellulose requires microbial cellulase produced by symbiotic rumen or cecal microbes.",
         "topicId": "u1-t08",
         "subSection": "u1-s2",
         "diff": 1
@@ -1996,7 +1996,7 @@ var quizBank = {
         "diff": 2
       },
       {
-        "q": "All 20 standard amino acids incorporated into proteins during ribosomal translation belong to the L-stereochemical configuration.",
+        "q": "All 19 chiral standard amino acids incorporated into proteins during ribosomal translation belong to the L-stereochemical configuration.",
         "a": true,
         "e": "True. With the sole exception of achiral glycine, all standard proteinogenic amino acids in biological proteins have the L-configuration at the alpha-carbon.",
         "topicId": "u1-t14",
@@ -2565,7 +2565,7 @@ var quizBank = {
         "diff": 1
       },
       {
-        "q": "In veterinary medicine, the prostaglandin analogue PGF2alpha is injected into farm animals to induce regression of the _____ luteum.",
+        "q": "In veterinary medicine, prostaglandin F2alpha (PGF2alpha) or its synthetic analogues are injected into farm animals to induce regression of the _____ luteum.",
         "a": [
           "corpus",
           "corpus luteum"
@@ -3359,7 +3359,7 @@ var quizBank = {
           "Complex II (Succinate dehydrogenase)"
         ],
         "a": 1,
-        "e": "Cyanide, CO, and azide bind tightly to the Fe3+ and CuB centers of cytochrome a3 in Complex IV, arresting cellular respiration and causing histotoxic anoxia.",
+        "e": "Cyanide and azide bind tightly to the oxidized Fe3+ (and CuB) center of cytochrome a3, whereas CO binds to the reduced Fe2+ center of cytochrome a3 in Complex IV, arresting cellular respiration and causing histotoxic anoxia.",
         "topicId": "u2-t09",
         "subSection": "u2-s2",
         "diff": 2
@@ -3396,7 +3396,7 @@ var quizBank = {
         "q": "Thermogenin (Uncoupling Protein-1, UCP-1) is a physiological uncoupler found abundantly in brown adipose tissue that functions to:",
         "o": [
           "Accelerate rapid hepatic gluconeogenesis and glycogenolysis to supply circulating glucose during severe hypothermia",
-          "Generate non-shivering thermogenesis to protect newborn calves, lambs, and piglets from hypothermia",
+          "Generate non-shivering thermogenesis to protect newborn calves and lambs from hypothermia",
           "Maximize mitochondrial ATP production per mole of consumed oxygen to support violent skeletal shivering contractions",
           "Inhibit carnitine palmitoyltransferase-1 to prevent excessive beta-oxidation of fatty acids during cold weather shock"
         ],
@@ -3919,7 +3919,7 @@ var quizBank = {
           "Leucine and Isoleucine"
         ],
         "a": 0,
-        "e": "Lysine and threonine do not undergo transamination because their keto acids would cyclize into toxic or non-metabolizable products; they are degraded by direct cleavage/deamination.",
+        "e": "Lysine and threonine do not undergo classical reversible transamination; lysine's alpha-keto acid would spontaneously cyclize (it degrades via the saccharopine pathway), while threonine is catabolized directly by threonine dehydratase, dehydrogenase, or aldolase.",
         "topicId": "u2-t18",
         "subSection": "u2-s5",
         "diff": 2
@@ -4157,7 +4157,7 @@ var quizBank = {
           "Ammonia"
         ],
         "a": 2,
-        "e": "Xanthine oxidase oxidizes hypoxanthine and xanthine to uric acid. Most mammals convert uric acid to allantoin via hepatic uricase, but Dalmatians lack uricase transport, excreting uric acid.",
+        "e": "Xanthine oxidase oxidizes hypoxanthine and xanthine to uric acid. Most non-primate mammals convert uric acid to allantoin via hepatic uricase, whereas Dalmatians possess hepatic uricase but carry a defective SLC2A9 urate transporter impairing hepatic uptake and renal reabsorption.",
         "topicId": "u2-t20",
         "subSection": "u2-s6",
         "diff": 1
@@ -5041,7 +5041,7 @@ var quizBank = {
       {
         "q": "The eukaryotic Fatty Acid Synthase (FAS) complex consists of seven distinct monofunctional enzymes floating freely as soluble monomers in the cytoplasm.",
         "a": false,
-        "e": "False. Eukaryotic FAS is a single homodimeric multi-enzyme polypeptide possessing all seven catalytic domains and an acyl carrier protein (ACP) on a single chain.",
+        "e": "False. Eukaryotic FAS is a homodimeric multi-enzyme complex composed of two identical multifunctional polypeptide chains, each possessing all seven catalytic domains and an acyl carrier protein (ACP).",
         "topicId": "u2-t16",
         "subSection": "u2-s4",
         "diff": 2
@@ -5479,7 +5479,7 @@ var quizBank = {
           "uncoupling protein 1"
         ],
         "a<sub>display</sub>": "Thermogenin (UCP-1)",
-        "e": "Thermogenin (UCP-1) dissipates the proton gradient into heat to protect newborn calves, lambs, and piglets from hypothermia.",
+        "e": "Thermogenin (UCP-1) dissipates the proton gradient into heat to protect newborn calves and lambs from hypothermia (piglets lack brown adipose tissue and functional UCP-1).",
         "topicId": "u2-t09",
         "subSection": "u2-s2",
         "diff": 1
@@ -5769,7 +5769,7 @@ var quizBank = {
           "uricotelic"
         ],
         "a<sub>display</sub>": "Uricotelic",
-        "e": "Uricotelic species convert waste nitrogen into semi-solid, insoluble uric acid to minimize evaporative water loss.",
+        "e": "Uricotelic species convert waste nitrogen into semi-solid, insoluble uric acid to minimize urinary (excretory) water loss.",
         "topicId": "u2-t19",
         "subSection": "u2-s5",
         "diff": 1
@@ -5890,7 +5890,7 @@ var quizBank = {
           "ions"
         ],
         "a<sub>display</sub>": "Activators (cofactors)",
-        "e": "Inorganic cofactors (metal activators) include Mg2+ for kinases, Zn2+ for carbonic anhydrase and Cu2+ for cytochrome oxidase. Metal-activated enzymes differ from metalloenzymes, in which the metal is tightly bound.",
+        "e": "Inorganic cofactors include loosely bound metal activators (such as Mg2+ for kinases in metal-activated enzymes) and tightly bound prosthetic metals (such as Zn2+ in carbonic anhydrase and Cu2+ in cytochrome oxidase in metalloenzymes).",
         "topicId": "u2-t02",
         "subSection": "u2-s1",
         "diff": 1
@@ -6392,7 +6392,7 @@ var quizBank = {
         "diff": 2
       },
       {
-        "q": "Glucated hemoglobin (HbA1c) measurement reflects average circulating blood glucose concentration over:",
+        "q": "Glycated hemoglobin (HbA1c) measurement reflects average circulating blood glucose concentration over:",
         "o": [
           "The immediate post-prandial absorptive interval (approximately 1 to 2 hours)",
           "The circulating lifespan of the erythrocyte (60 to 120 days depending on species)",
@@ -6470,7 +6470,7 @@ var quizBank = {
           "Cow (bovine)"
         ],
         "a": 0,
-        "e": "Dogs possess a unique gene for a corticosteroid-induced ALP isoenzyme (C-ALP) that is markedly induced by endogenous hyperadrenocorticism (Cushing's) or exogenous glucocorticoid therapy.",
+        "e": "In dogs, glucocorticoids (Cushing's or steroid therapy) induce hepatic expression of the intestinal ALP gene (ALPI) with altered post-translational glycosylation to form the corticosteroid-induced ALP isoenzyme (C-ALP).",
         "topicId": "u3-t07",
         "subSection": "u3-s2",
         "diff": 2
@@ -6638,7 +6638,7 @@ var quizBank = {
           "Massive induction of liver-specific alkaline phosphatase with normal circulating bilirubin"
         ],
         "a": 1,
-        "e": "Massive intravascular or extravascular hemolysis (e.g., babesiosis, autoimmune hemolytic anemia) floods the liver with biliverdin/bilirubin, elevating unconjugated bilirubin in blood.",
+        "e": "Massive intravascular or extravascular hemolysis (e.g., babesiosis, autoimmune hemolytic anemia) floods the liver with unconjugated bilirubin (from macrophage biliverdin reduction), elevating unconjugated bilirubin in blood.",
         "topicId": "u3-t08",
         "subSection": "u3-s2",
         "diff": 2
@@ -6722,7 +6722,7 @@ var quizBank = {
           "85% to 90%"
         ],
         "a": 0,
-        "e": "SDMA is an methylated arginine derivative excreted almost entirely by renal filtration; it detects renal compromise much earlier (~25-40% GFR decline) than serum creatinine (~75% loss).",
+        "e": "SDMA is a methylated arginine derivative excreted almost entirely by renal filtration; it detects renal compromise much earlier (~25-40% GFR decline) than serum creatinine (~75% loss).",
         "topicId": "u3-t09",
         "subSection": "u3-s2",
         "diff": 2
@@ -7030,7 +7030,7 @@ var quizBank = {
           "Endogenous sulfuric and phosphoric acids generated from severe metabolic tissue breakdown and renal retention"
         ],
         "a": 2,
-        "e": "Alcohol dehydrogenase oxidizes ethylene glycol to glycoaldehyde, glycolic acid (severe acidosis), and oxalic acid, which complexes with Ca2+ to form insoluble oxalate crystals that destroy tubular epithelium.",
+        "e": "Alcohol dehydrogenase oxidizes ethylene glycol to glycoaldehyde, which aldehyde dehydrogenase and glycolate oxidase/LDH convert to glycolic acid (severe acidosis) and oxalic acid; oxalate complexes with Ca2+ to form insoluble calcium oxalate crystals that destroy tubular epithelium.",
         "topicId": "u3-t11",
         "subSection": "u3-s3",
         "diff": 2
@@ -7466,7 +7466,7 @@ var quizBank = {
       {
         "q": "Corticosteroid-induced alkaline phosphatase (C-ALP) is an isoenzyme unique to domestic canines (dogs).",
         "a": true,
-        "e": "True. Dogs possess a specific gene encoding C-ALP that is induced by glucocorticoids (hyperadrenocorticism or steroid therapy); this isoenzyme does not occur in other domestic species.",
+        "e": "True. In dogs, glucocorticoids (hyperadrenocorticism or steroid therapy) induce hepatocytes to express the intestinal ALP (ALPI) gene with altered glycosylation to produce C-ALP; this isoform does not occur in other domestic species.",
         "topicId": "u3-t07",
         "subSection": "u3-s2",
         "diff": 1
@@ -7576,9 +7576,9 @@ var quizBank = {
         "diff": 2
       },
       {
-        "q": "In severe ruminal acidosis, explosive growth of Streptococcus bovis produces both D- and L-isomers of lactic acid.",
+        "q": "In severe ruminal acidosis, explosive growth of Lactobacillus species at ruminal pH < 5.0 produces both D- and L-isomers of lactic acid.",
         "a": true,
-        "e": "True. Amylolytic bacteria produce both isomers; because ruminant tissues have limited D-lactate dehydrogenase, D-lactic acid accumulates systemically.",
+        "e": "True. While Streptococcus bovis initiates the pH drop by producing primarily L-lactic acid, acid-tolerant Lactobacillus species dominate below pH 5.0 and produce both D- and L-isomers; limited mammalian D-lactate metabolism causes systemic D-lactic acidosis.",
         "topicId": "u3-t12",
         "subSection": "u3-s3",
         "diff": 1
@@ -7891,7 +7891,7 @@ var quizBank = {
           "dogs"
         ],
         "a<sub>display</sub>": "Dog (Canine)",
-        "e": "Only dogs possess the unique C-ALP gene, which is markedly induced in canine Cushing's syndrome or during steroid therapy.",
+        "e": "Only dogs express this unique C-ALP isoform (via glucocorticoid-induced hepatic expression of the intestinal ALP gene with altered glycosylation), markedly elevated in canine Cushing's syndrome or steroid therapy.",
         "topicId": "u3-t07",
         "subSection": "u3-s2",
         "diff": 1

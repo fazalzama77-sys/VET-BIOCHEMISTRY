@@ -455,9 +455,9 @@
           // ATP -> ADP + Pi badge
           var stepLabel = state.ouabain ? "BLOCKED BY OUABAIN (K⁺ binding site inhibited)"
             : ph < 0.25 ? "1. 3 Cytosolic Na⁺ bind E1"
-            : ph < 0.45 ? "2. ATP → ADP + Pᵢ (Phosphorylation E1→E2-P)"
+            : ph < 0.45 ? "2. ATP → ADP (Asp phosphorylation: E1 → E2-P)"
             : ph < 0.65 ? "3. 3 Na⁺ released outside; 2 K⁺ bind E2-P"
-            : "4. Dephosphorylation (E2→E1) releases 2 K⁺ inside";
+            : "4. Dephosphorylation (E2-P → E1 + Pᵢ) releases 2 K⁺ inside";
           ctx.fillStyle = theme.text;
           ctx.font = "700 13px sans-serif";
           ctx.fillText(stepLabel, cx, botHeadY + 52);
@@ -523,18 +523,28 @@
       var na_i = p + cl_i;
       var cl_o = 2 * c - cl_i;
       var na_o = cl_o;
+      var k_i = 0, k_o = 0;
+      var ratio, em, osmIn, osmOut;
       if (state.pumpOn) {
-        // Active Na/K pump opposes Donnan osmotic swelling
-        na_i = Math.max(12, na_i * 0.45);
-        cl_i = Math.max(8, cl_i * 0.55);
+        // Active Na+/K+-ATPase extrudes 3 Na+ / imports 2 K+, creating a negative resting Em and stabilizing cell volume
+        na_i = Math.round(Math.min(15, 0.12 * c) * 10) / 10;
+        cl_i = Math.round(0.08 * c * 10) / 10;
+        k_i = Math.max(4, p + cl_i - na_i);
+        na_o = c;
+        k_o = 4;
+        cl_o = c + k_o;
+        em = -61.5 * Math.log10((k_i + 0.04 * na_i) / (k_o + 0.04 * na_o)); // GHK resting potential (mV)
+        osmOut = na_o + k_o + cl_o;
+        osmIn = osmOut; // Double-Donnan pump stabilization prevents net osmotic water influx
+      } else {
+        ratio = na_i / Math.max(0.1, na_o);
+        em = -61.5 * Math.log10(ratio); // mV at 37°C
+        osmIn = p + na_i + cl_i;
+        osmOut = na_o + cl_o;
       }
-      var ratio = na_i / Math.max(0.1, na_o);
-      var em = -61.5 * Math.log10(ratio); // mV at 37°C
-      var osmIn = p + na_i + cl_i;
-      var osmOut = na_o + cl_o;
       return {
-        na_i: na_i, cl_i: cl_i, pr: p,
-        na_o: na_o, cl_o: cl_o,
+        na_i: na_i, cl_i: cl_i, k_i: k_i, pr: p,
+        na_o: na_o, cl_o: cl_o, k_o: k_o,
         prodIn: na_i * cl_i, prodOut: na_o * cl_o,
         em: em, dOsm: osmIn - osmOut
       };
@@ -559,8 +569,15 @@
       },
       inspector: function () {
         var r = solve();
+        if (state.pumpOn) {
+          return '<span class="biosim-inspector__tag">DOUBLE-DONNAN PUMP</span><strong>Active Na⁺/K⁺-ATPase</strong> extrudes Na⁺ ([Na⁺]ᵢ = ' +
+            r.na_i.toFixed(1) + ' mM, [K⁺]ᵢ = ' + r.k_i.toFixed(1) + ' mM, [Cl⁻]ᵢ = ' + r.cl_i.toFixed(1) +
+            ' mM) &amp; maintains a negative membrane potential (' + r.em.toFixed(1) + ' mV), opposing Donnan swelling (ΔΠ = ' +
+            r.dOsm.toFixed(1) + ' mOsm, iso-osmotic).';
+        }
         return '<span class="biosim-inspector__tag">GIBBS-DONNAN LAW</span><strong>[Na⁺]ᵢ × [Cl⁻]ᵢ = [Na⁺]ₒ × [Cl⁻]ₒ</strong> (' +
-          Math.round(r.prodIn) + ' vs ' + Math.round(r.prodOut) + '). Non-diffusible anionic proteins (Pr⁻) trap extra Na⁺ inside, creating an osmotic excess (ΔΠ = +' + r.dOsm.toFixed(1) + ' mOsm) that would cause cell lysis unless countered by the <strong>Na⁺/K⁺-ATPase pump</strong> (toggle above!).';
+          Math.round(r.prodIn) + ' vs ' + Math.round(r.prodOut) + '). Non-diffusible anionic proteins (Pr⁻) trap extra Na⁺ inside, creating an osmotic excess (ΔΠ = ' +
+          (r.dOsm >= 0 ? '+' : '') + r.dOsm.toFixed(1) + ' mOsm) that would cause cell lysis unless countered by the <strong>Na⁺/K⁺-ATPase pump</strong> (toggle above!).';
       },
       draw: function (ctx, w, h, t, theme) {
         ctx.clearRect(0, 0, w, h);
@@ -627,6 +644,12 @@
           ctx.textAlign = "center";
           var arrowX = midX - Math.sin(t * 3) * 6;
           ctx.fillText("← H₂O Osmotic Influx (Swelling Risk)", arrowX, h - 6);
+        } else if (r.dOsm < -5) {
+          ctx.fillStyle = theme.warn;
+          ctx.font = "700 13px sans-serif";
+          ctx.textAlign = "center";
+          var arrowX2 = midX + Math.sin(t * 3) * 6;
+          ctx.fillText("H₂O Osmotic Efflux (Cell Shrinkage) →", arrowX2, h - 6);
         } else {
           ctx.fillStyle = theme.ok;
           ctx.font = "700 13px sans-serif";
@@ -652,7 +675,7 @@
       bicarb: { name: "Bicarbonate (H₂CO₃/HCO₃⁻)", pka: 6.1, ha: "H₂CO₃", a: "HCO₃⁻" },
       phos: { name: "Phosphate (H₂PO₄⁻/HPO₄²⁻)", pka: 6.86, ha: "H₂PO₄⁻", a: "HPO₄²⁻" },
       acetate: { name: "Acetate (CH₃COOH/CH₃COO⁻)", pka: 4.76, ha: "HAc", a: "Ac⁻" },
-      histidine: { name: "Histidine / Hb Buffer", pka: 6.0, ha: "HisH⁺", a: "His" }
+      histidine: { name: "Hemoglobin Histidine Imidazole", pka: 6.8, ha: "Hb-HisH⁺", a: "Hb-His" }
     };
 
     function calcPH() {
@@ -730,7 +753,7 @@
         var ph = calcPH();
         if (mode === "bloodgas") {
           var d = diagnoseBloodGas(ph);
-          return '<span class="biosim-inspector__tag">CLINICAL ACID-BASE</span><strong>pH = 6.1 + log₁₀([HCO₃⁻] / 0.03 × pCO₂)</strong> = <strong>' + ph.toFixed(2) + '</strong>. ' + d.vet;
+          return '<span class="biosim-inspector__tag">CLINICAL ACID-BASE</span><strong>pH = 6.1 + log₁₀([HCO₃⁻] / (0.03 × pCO₂))</strong> = <strong>' + ph.toFixed(2) + '</strong>. ' + d.vet;
         }
         var b = buffers[state.bufferKey] || buffers.bicarb;
         return '<span class="biosim-inspector__tag">HENDERSON-HASSELBALCH</span><strong>pH = pKa + log₁₀([A⁻]/[HA])</strong>. When [A⁻] = [HA] (50% titrated), pH = pKa (' + b.pka + ') and buffering power against added H⁺ or OH⁻ is maximal (shaded green zone: pKa ± 1).';
@@ -960,7 +983,7 @@
       metrics: function () {
         if (state.mode === "factors") {
           var r = calcTempPhRate();
-          var status = state.temp > 52 ? "Thermal Denaturation" : (Math.abs(state.ph - (cfg.optPh || 7.4)) > 2.4 ? "Active Site Deionized" : "Optimal Catalysis");
+          var status = state.temp > 52 ? "Thermal Denaturation" : (Math.abs(state.ph - (cfg.optPh || 7.4)) > 2.4 ? "Active Site Ionization Altered" : "Optimal Catalysis");
           return [
             { label: "Relative Activity", val: Math.round(r) + "%", cls: r > 60 ? "is-ok" : (r > 20 ? "is-warn" : "is-danger") },
             { label: "Temperature", val: state.temp + " °C", cls: state.temp > 50 ? "is-danger" : "is-info" },
@@ -970,9 +993,9 @@
         }
         var k = calcKinetics(state.sub);
         return [
-          { label: "Velocity (v₀)", val: k.v.toFixed(1) + " U/min", cls: "is-ok" },
-          { label: "Apparent Km", val: k.kmEff.toFixed(1) + " mM", cls: k.kmEff > state.km + 1 ? "is-danger" : "is-info" },
-          { label: "Apparent Vmax", val: k.vmEff.toFixed(1) + " U/min", cls: k.vmEff < state.vmax - 1 ? "is-danger" : "is-info" },
+          { label: "Velocity (v₀)", val: k.v.toFixed(1) + " U", cls: "is-ok" },
+          { label: state.inhib === "allosteric" ? "K₀.₅ (S₀.₅)" : "Apparent Km", val: k.kmEff.toFixed(1) + " mM", cls: k.kmEff > state.km + 1 ? "is-danger" : "is-info" },
+          { label: "Apparent Vmax", val: k.vmEff.toFixed(1) + " U", cls: k.vmEff < state.vmax - 1 ? "is-danger" : "is-info" },
           { label: "Saturation", val: Math.round((k.v / Math.max(1, k.vmEff)) * 100) + "% Vmax", cls: "is-warn" }
         ];
       },
@@ -1087,8 +1110,23 @@
             ctx.stroke(); ctx.setLineDash([]);
           }
           drawLB(state.km, state.vmax, theme.faint, true);
-          var ke = calcKinetics(state.sub);
-          drawLB(ke.kmEff, ke.vmEff, theme.blue, false);
+          if (state.inhib === "allosteric") {
+            ctx.strokeStyle = theme.blue; ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            var startedHill = false;
+            for (var invS2 = 0.005; invS2 <= 0.14; invS2 += 0.004) {
+              var sVal = 1 / invS2;
+              var invV2 = 1 / Math.max(0.001, calcKinetics(sVal).v);
+              if (invV2 < 0 || invV2 > 0.08) continue;
+              var hx = xZero + (invS2 / 0.14) * (pR - xZero);
+              var hy = pB - (invV2 / 0.08) * gh;
+              if (!startedHill) { ctx.moveTo(hx, hy); startedHill = true; } else ctx.lineTo(hx, hy);
+            }
+            ctx.stroke();
+          } else {
+            var ke = calcKinetics(state.sub);
+            drawLB(ke.kmEff, ke.vmEff, theme.blue, false);
+          }
 
           ctx.fillStyle = theme.muted; ctx.font = "600 11.5px monospace";
           ctx.fillText("-1/Km", pL + 4, pB - 6);
@@ -1264,7 +1302,7 @@
           }
           // O2 -> H2O at Complex IV
           ctx.fillStyle = theme.text; ctx.font = "700 12px monospace";
-          ctx.fillText("½O₂ + 2H⁺ → H₂O", comps[3].x, botY + 34);
+          ctx.fillText("½O₂ + 2H⁺ + 2e⁻ → H₂O", comps[3].x, botY + 34);
         }
 
         // ATP Synthase proton return & rotor
@@ -1382,7 +1420,7 @@
           var a = nodes[ed.from], b = nodes[ed.to];
           if (!a || !b) continue;
           var ax = a.x * w, ay = a.y * h, bx = b.x * w, by = b.y * h;
-          var isBlocked = blocked.indexOf(e) !== -1 || blocked.indexOf(ed.from) !== -1;
+          var isBlocked = blocked.indexOf(e) !== -1;
           var isBoosted = boost.indexOf(e) !== -1;
 
           ctx.strokeStyle = isBlocked ? theme.danger : (isBoosted ? theme.ok : theme.blue);
@@ -1491,8 +1529,10 @@
       metrics: function () {
         if (kind === "zwitterion") {
           var pk1 = cfg.pk1 || 2.34, pk2 = cfg.pk2 || 9.60, pkr = cfg.pkr;
-          var pi = pkr ? (cfg.acidic ? (pk1 + pkr) / 2 : (pk2 + pkr) / 2) : (pk1 + pk2) / 2;
-          var net = state.ph < pk1 ? "+1 (Cation)" : (state.ph > pk2 ? "-1 (Anion)" : "0 (Zwitterion)");
+          var pi = pkr != null ? (cfg.acidic ? (pk1 + pkr) / 2 : (pk2 + pkr) / 2) : (pk1 + pk2) / 2;
+          var charge = (state.ph < pk2 ? 1 : 0) + (state.ph >= pk1 ? -1 : 0) +
+            (pkr != null ? (cfg.acidic ? (state.ph >= pkr ? -1 : 0) : (state.ph < pkr ? 1 : 0)) : 0);
+          var net = charge === 0 ? "0 (Zwitterion)" : ((charge > 0 ? "+" + charge + " (Cation)" : charge + " (Anion)"));
           var mig = state.ph < pi - 0.3 ? "→ Cathode (-)" : (state.ph > pi + 0.3 ? "→ Anode (+)" : "Stationary (At pI)");
           return [
             { label: "Solution pH", val: state.ph.toFixed(1), cls: "is-info" },
@@ -1553,11 +1593,19 @@
         var cx = w * 0.5, cy = h * 0.5;
 
         if (kind === "zwitterion") {
-          var pk1 = cfg.pk1 || 2.34, pk2 = cfg.pk2 || 9.60;
+          var pk1 = cfg.pk1 || 2.34, pk2 = cfg.pk2 || 9.60, pkr = cfg.pkr;
           var nh3 = state.ph < pk2 ? "NH₃⁺" : "NH₂";
           var coo = state.ph < pk1 ? "COOH" : "COO⁻";
           var nhCol = state.ph < pk2 ? theme.blue : theme.muted;
           var cooCol = state.ph < pk1 ? theme.muted : theme.coral;
+          var rLabel = cfg.rGroup || "R (Side Chain)";
+          if (pkr != null) {
+            rLabel = cfg.acidic
+              ? (state.ph < pkr ? "R-COOH (0)" : "R-COO⁻ (-1)")
+              : (state.ph < pkr ? "R-H⁺ (+1)" : "R (0)");
+          }
+          var charge2 = (state.ph < pk2 ? 1 : 0) + (state.ph >= pk1 ? -1 : 0) +
+            (pkr != null ? (cfg.acidic ? (state.ph >= pkr ? -1 : 0) : (state.ph < pkr ? 1 : 0)) : 0);
 
           // Central alpha-carbon backbone
           ctx.strokeStyle = theme.text; ctx.lineWidth = 2.5;
@@ -1576,10 +1624,11 @@
           drawGroup(cx - 110, cy, nh3, nhCol, 34);
           drawGroup(cx + 110, cy, coo, cooCol, 34);
           drawGroup(cx, cy - 64, "H", theme.teal, 18);
-          drawGroup(cx, cy + 64, cfg.rGroup || "R (Side Chain)", theme.amber, 54);
+          drawGroup(cx, cy + 64, rLabel, theme.amber, 58);
 
           ctx.fillStyle = theme.text; ctx.font = "700 12px sans-serif"; ctx.textAlign = "center";
-          var title = state.ph < pk1 ? "Acidic pH → Cation (+1)" : (state.ph > pk2 ? "Alkaline pH → Anion (-1)" : "Physiological / pI → Zwitterion (Net 0)");
+          var title = charge2 > 0 ? ("Acidic pH → Cation (+" + charge2 + ")")
+            : (charge2 < 0 ? ("Alkaline pH → Anion (" + charge2 + ")") : "Physiological / pI → Zwitterion (Net 0)");
           ctx.fillText(title, cx, 24);
           ctx.textAlign = "left";
           return;
@@ -1835,7 +1884,7 @@
             ctx.fillText(names[j], pL + pos[j] * (pR - pL), pB + 16);
           }
           ctx.fillStyle = theme.muted; ctx.font = "600 11.5px monospace";
-          ctx.fillText("Anode (+) ← Migration Direction → Cathode (-)", (pL + pR) / 2, pB + 32);
+          ctx.fillText("Anode (+) ← Migration Direction (from Cathode -)", (pL + pR) / 2, pB + 32);
           ctx.textAlign = "left";
           return;
         }
@@ -1931,6 +1980,9 @@
         state.sampleIdx = parseInt(id, 10) || 0;
         state.vol = 0;
         state.solventProg = 0;
+        if (kind === "flame") {
+          state.conc = state.sampleIdx === 1 ? 4.5 : (cfg.defaultConc != null ? cfg.defaultConc : 142);
+        }
       },
       controls: function () {
         if (kind === "colorimeter") {
@@ -1954,10 +2006,14 @@
           return [{ type: "toggle", key: "heated", label: cfg.heatLabel || "Apply Reagents & Heat / Observe", onClass: "is-on-teal" }];
         }
         if (kind === "flame") {
+          var isK = state.sampleIdx === 1;
           return [{
             type: "slider", key: "conc",
-            label: "Serum Ion Concentration",
-            min: cfg.minConc || 2, max: cfg.maxConc || 160, step: 1, unit: " mEq/L"
+            label: isK ? "Serum K⁺ Concentration" : "Serum Na⁺ Concentration",
+            min: isK ? 1.0 : (cfg.minConc != null ? cfg.minConc : 100),
+            max: isK ? 10.0 : (cfg.maxConc != null ? cfg.maxConc : 170),
+            step: isK ? 0.1 : 1,
+            unit: " mEq/L"
           }];
         }
         if (kind === "chromatography") {
@@ -2001,8 +2057,8 @@
         }
         if (kind === "flame") {
           var isK = state.sampleIdx === 1;
-          var lam = isK ? "766 nm (Lilac-Violet)" : "589 nm (Golden Yellow)";
-          var emission = clamp((state.conc / (isK ? 8 : 160)) * 100, 2, 100);
+          var lam = isK ? "766 nm (Deep Red; visual lilac)" : "589 nm (Golden Yellow)";
+          var emission = clamp((state.conc / (isK ? 10 : 170)) * 100, 2, 100);
           return [
             { label: "Analyte Ion", val: isK ? "Potassium (K⁺)" : "Sodium (Na⁺)", cls: "is-info" },
             { label: "Emission λ", val: lam, cls: "is-warn" },
@@ -2161,7 +2217,7 @@
             // Liquid
             ctx.fillStyle = state.heated ? (tb.color || theme.blueLight) : (theme.isDark ? "rgba(255,255,255,0.12)" : "rgba(21,101,192,0.10)");
             roundRect(ctx, tx - tw / 2 + 2, ty + 48, tw - 4, th - 50, 14); ctx.fill();
-            // Optional purple interface ring (Molisch / Heller / Rothera)
+            // Optional interface ring (purple for Molisch/Rothera; white for Heller)
             if (state.heated && tb.ring) {
               ctx.fillStyle = tb.ring;
               ctx.fillRect(tx - tw / 2 + 2, ty + 78, tw - 4, 9);
@@ -2183,7 +2239,7 @@
         if (kind === "flame") {
           var isK = state.sampleIdx === 1;
           var flameCol = isK ? "#ab47bc" : "#ffb300";
-          var intensity2 = clamp(state.conc / (isK ? 8 : 160), 0.15, 1);
+          var intensity2 = clamp(state.conc / (isK ? 10 : 170), 0.15, 1);
           var fx = w * 0.34, fy = h * 0.72;
 
           // Burner base
@@ -2206,7 +2262,7 @@
           ctx.fillStyle = "#fff"; ctx.font = "700 12px monospace"; ctx.textAlign = "center";
           ctx.fillText(isK ? "Filter: 766 nm" : "Filter: 589 nm", w * 0.58 + 75, h * 0.36 + 28);
           ctx.font = "700 16px monospace";
-          ctx.fillText(state.conc + " mEq/L", w * 0.58 + 75, h * 0.36 + 54);
+          ctx.fillText((isK ? Number(state.conc).toFixed(1) : Math.round(state.conc)) + " mEq/L", w * 0.58 + 75, h * 0.36 + 54);
           ctx.textAlign = "left";
           return;
         }

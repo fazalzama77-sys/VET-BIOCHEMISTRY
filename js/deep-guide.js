@@ -89,7 +89,7 @@
             <button class="deep-guide-close" type="button" aria-label="Dismiss guide">&times;</button>
             <div class="deep-guide-kicker"><i class="fas fa-microscope"></i> TWO LEVELS OF DETAIL</div>
             <h2>Unlock Deep Diagnostic View</h2>
-            <p>Tap <strong>Deep View</strong> for comprehensive microbial pathogenesis, cultural characteristics, diagnostic workflows, and clinical correlations.</p>
+            <p>Tap <strong>Deep View</strong> for molecular mechanisms, thermodynamics, kinetic derivations, species variations, and clinical correlations.</p>
             <div class="deep-guide-actions">
                 <button class="deep-guide-secondary" type="button">Got it</button>
                 <button class="deep-guide-primary" type="button">Open Deep View</button>

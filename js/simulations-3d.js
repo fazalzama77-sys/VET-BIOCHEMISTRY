@@ -330,31 +330,31 @@
     }
 
     function drawHaworthFuranose(ctx, cx, cy, r, title, unlocked, theme) {
-      // 5-membered Fructose furanose ring with O at top, C2 at left
+      // Standard 180°-rotated β-D-fructofuranose for Sucrose: ring O at bottom, C3-C4 back-top, C2 left, C5 right
       var pts = [
-        { x: cx, y: cy - r * 0.72, lbl: "O" },                // 0: Ring O (top)
-        { x: cx + r * 0.86, y: cy - r * 0.08, lbl: "C5" },    // 1: C5 (right)
-        { x: cx + r * 0.52, y: cy + r * 0.68, lbl: "C4" },    // 2: C4 (bottom-right)
-        { x: cx - r * 0.52, y: cy + r * 0.68, lbl: "C3" },    // 3: C3 (bottom-left)
-        { x: cx - r * 0.86, y: cy - r * 0.08, lbl: "C2" }     // 4: C2 anomeric (left)
+        { x: cx, y: cy + r * 0.72, lbl: "O" },                // 0: Ring O (bottom)
+        { x: cx + r * 0.86, y: cy + r * 0.08, lbl: "C5" },    // 1: C5 (right)
+        { x: cx + r * 0.52, y: cy - r * 0.68, lbl: "C4" },    // 2: C4 (top-right)
+        { x: cx - r * 0.52, y: cy - r * 0.68, lbl: "C3" },    // 3: C3 (top-left)
+        { x: cx - r * 0.86, y: cy + r * 0.08, lbl: "C2" }     // 4: C2 anomeric (left)
       ];
       for (var i = 0; i < 5; i++) {
         var a = pts[i], b = pts[(i + 1) % 5];
         ctx.strokeStyle = theme.text;
-        ctx.lineWidth = (i === 2) ? 5.0 : 2.8;
+        ctx.lineWidth = (i === 0 || i === 4) ? 4.8 : 2.8;
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
-      // C1-CH2OH & C6-CH2OH
+      // C1-CH2OH (UP on C2) & C6-CH2OH (DOWN on C5 in rotated D-fructofuranose)
       ctx.fillStyle = theme.blue; ctx.font = "700 11px monospace"; ctx.textAlign = "center";
-      ctx.fillText("CH₂OH (C6)", pts[1].x + 12, pts[1].y - 24);
-      ctx.fillText("CH₂OH (C1)", pts[4].x - 6, pts[4].y + 36);
+      ctx.fillText("CH₂OH (C6)", pts[1].x + 12, pts[1].y + 34);
+      ctx.fillText("CH₂OH (C1)", pts[4].x - 6, pts[4].y - 26);
 
       pts.forEach(function (p, idx) {
         drawSphere3D(ctx, p.x, p.y, idx === 0 ? 13 : 11, idx === 0 ? "#d32f2f" : "#6a48b5", p.lbl);
       });
       if (unlocked) {
         ctx.fillStyle = "#2e7d32"; ctx.font = "700 11.5px sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("FREE C2-OH ✓", pts[4].x, pts[4].y - 24);
+        ctx.fillText("FREE C2-OH ✓", pts[4].x - 2, pts[4].y + 34);
       }
       ctx.fillStyle = theme.text; ctx.font = "700 13px sans-serif"; ctx.textAlign = "center";
       ctx.fillText(title, cx, cy + r + 32);
@@ -629,7 +629,7 @@
       controls: function () {
         if (state.tab === "peptido") {
           return [
-            { type: "toggle", key: "lysozyme", label: "Add Lysozyme (Cuts β1→4 NAG–NAM)", onClass: "is-on" },
+            { type: "toggle", key: "lysozyme", label: "Add Lysozyme (Cuts β1→4 NAM–NAG)", onClass: "is-on" },
             { type: "toggle", key: "penicillin", label: "Add Penicillin (Blocks Cross-Links)", onClass: "is-on-blue" }
           ];
         }
@@ -638,7 +638,7 @@
       metrics: function () {
         if (state.tab === "gag") {
           return [
-            { label: "Polyanions", val: "-COO⁻ & -SO₄²⁻", cls: "is-info" },
+            { label: "Polyanions", val: "-COO⁻ & -OSO₃⁻", cls: "is-info" },
             { label: "Hydration Shell", val: state.lysozyme ? "Compressed (Rebounding!)" : "Fully Hydrated Cushion", cls: "is-ok" },
             { label: "Synovial Fluid", val: "Hyaluronic Acid", cls: "is-ok" },
             { label: "Anticoagulant GAG", val: "Heparin (AT-III)", cls: "is-warn" }
@@ -671,7 +671,7 @@
             ctx.strokeStyle = theme.teal; ctx.lineWidth = 3;
             ctx.beginPath(); ctx.moveTo(bx, cy - len); ctx.lineTo(bx, cy + len); ctx.stroke();
             drawSphere3D(ctx, bx, cy - len, 10, "#1565c0", "H₂O");
-            drawSphere3D(ctx, bx, cy + len, 10, "#d84315", "SO₄⁻");
+            drawSphere3D(ctx, bx, cy + len, 10, "#d84315", "-OSO₃⁻");
           }
           ctx.textAlign = "left";
           return;
@@ -1270,7 +1270,7 @@
         return [
           { label: "mRNA Read Dir.", val: "5' → 3' (Codon by Codon)", cls: "is-info" },
           { label: "Polypeptide Growth", val: "N-terminus → C-terminus", cls: "is-ok" },
-          { label: "Energy / Bond", val: "4 High-Energy Bonds (2 ATP + 2 GTP)", cls: "is-warn" },
+          { label: "Energy / Bond", val: "4 High-Energy Bonds (1 ATP→AMP+PPᵢ + 2 GTP)", cls: "is-warn" },
           { label: "Translation Status", val: active ? "ELONGATING ✓" : "BLOCKED (" + state.blocker.toUpperCase() + ")", cls: active ? "is-ok" : "is-danger" }
         ];
       },
@@ -1330,7 +1330,7 @@
         });
 
         // Growing N->C Polypeptide chain emerging from P-site
-        var chain = ["Met", "Ala", "Phe", "Arg"];
+        var chain = ["Arg", "Phe", "Ala", "Met"];
         chain.forEach(function (aa, idx) {
           var ax = cx - idx * 24 - Math.sin(t * 2 + idx) * 3;
           var ay = cy - 76 - idx * 14;

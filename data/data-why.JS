@@ -45,7 +45,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-1",
     "comparison": "Porcine vs Carnivores & Ruminants",
-    "why": "Pigs possess transcriptionally active <b>AMY1 genes</b> in their parotid salivary glands, secreting abundant <b>salivary alpha-amylase (ptyalin)</b> to initiate the cleavage of starch alpha(1->4) glycosidic bonds during chewing.<br><br>In strict carnivores (dogs, cats) and ruminants, AMY1 genes are unexpressed or lost. Carnivores evolved to bolt raw flesh without oral pre-digestion (relying entirely on pancreatic amylase), while ruminants evolved to deliver intact fermentable structural carbohydrates directly to reticuloruminal microflora.",
+    "why": "Pigs possess transcriptionally active <b>AMY1 genes</b> in their parotid salivary glands, secreting abundant <b>salivary alpha-amylase (ptyalin)</b> to initiate the cleavage of starch alpha(1->4) glycosidic bonds during chewing.<br><br>In carnivores (cats as obligate carnivores, dogs as facultative carnivores/omnivores) and ruminants, AMY1 genes are unexpressed or lost. Carnivores evolved to bolt raw flesh without oral pre-digestion (relying entirely on pancreatic amylase), while ruminants evolved to deliver intact fermentable structural carbohydrates directly to reticuloruminal microflora.",
     "clinical": "Oral starch pre-digestion does not occur in dogs or cattle; feeding large grain meals to dogs or cattle bypasses oral breakdown and risks acute intestinal overload or ruminal acidosis."
   },
   {
@@ -63,7 +63,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-1",
     "comparison": "Ruminants (Cow/Ewe) vs Equine (Mare)",
-    "why": "In ruminants, <b>90% to 99% of prostaglandin F2-alpha (PGF2a)</b> is enzymatically degraded and inactivated during a single pass through the pulmonary capillary bed by <b>15-hydroxyprostaglandin dehydrogenase</b>.<br><br>To protect PGF2a from pulmonary destruction, the ruminant utero-ovarian vein intimately coils around the ovarian artery, allowing direct local veno-arterial diffusion to the ipsilateral corpus luteum. In the mare, pulmonary degradation is minimal, allowing luteolytic PGF2a to circulate safely via the general arterial system.",
+    "why": "In ruminants (especially ewes, up to ~99%; cattle ~65–90%), most <b>prostaglandin F2-alpha (PGF2a)</b> is rapidly cleared in the pulmonary capillary bed by <b>15-hydroxyprostaglandin dehydrogenase</b> (plasma t1/2 ~29 s in cows).<br><br>To bypass pulmonary destruction, the ruminant utero-ovarian vein intimately coils around the ovarian artery for local veno-arterial countercurrent transfer to the ipsilateral corpus luteum. In the mare, pulmonary clearance of PGF2a is ~5-fold slower (t1/2 ~94 s; ~65% first-pass clearance) and the equine corpus luteum is highly sensitive to PGF2a, allowing systemic luteolysis via the general arterial circulation.",
     "clinical": "Unilateral uterine horn removal in a cow prevents luteolysis only on the surgically removed side, whereas in a mare, unilateral hysterectomy still allows bilateral luteolysis via systemic circulation."
   },
   {
@@ -72,7 +72,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-1",
     "comparison": "Bovine/Ovine vs Canine",
-    "why": "Ruminant fetuses synthesize a structurally distinct <b>fetal haemoglobin (HbF)</b> whose gamma-chains have very low binding affinity for <b>2,3-bisphosphoglycerate (2,3-BPG)</b>, shifting its oxygen-haemoglobin dissociation curve markedly to the left of maternal HbA.<br><br>This high oxygen affinity allows fetal blood to strip oxygen across the multi-layered syndesmochorial placenta. In dogs, the thin endotheliochorial placenta allows rapid gas diffusion, so canines synthesize adult haemoglobin (HbA) throughout fetal life.",
+    "why": "Unlike human HbF (which shifts left by binding 2,3-BPG poorly), both ruminant adult HbA and fetal <b>HbF</b> have negligible responsiveness to <b>2,3-bisphosphoglycerate (2,3-BPG)</b> (using chloride ions instead). Ruminant HbF achieves a markedly left-shifted oxygen-haemoglobin dissociation curve relative to maternal HbA through intrinsic globin-chain structural differences and reduced chloride sensitivity.<br><br>This high oxygen affinity allows fetal blood to strip oxygen across the multi-layered syndesmochorial placenta. In dogs, the thin endotheliochorial placenta allows rapid gas diffusion, so canines synthesize adult haemoglobin (HbA) throughout fetal life.",
     "clinical": "A cyanotic or hypoxic pregnant cow maintains fetal oxygenation far longer than a hypoxic bitch, as bovine HbF binds oxygen tightly even at low maternal venous partial pressures (pO2)."
   },
   {
@@ -81,7 +81,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-1",
     "comparison": "Equine vs Canine",
-    "why": "Equine lower limb joints (fetlock, carpus, hock) absorb massive peak ground reaction forces exceeding <b>20,000 Newtons</b> during galloping, generating immense fluid shear stresses.<br><br>To provide non-Newtonian boundary lubrication and prevent cartilage-on-cartilage friction, equine synovial fibroblasts polymerize <b>hyaluronic acid</b> into exceptionally large chains (>3–4 million Daltons). In small animals, lower mechanical loading requires a smaller hyaluronan polymer network to maintain articular fluid elastoviscosity.",
+    "why": "Equine lower limb joints (fetlock, carpus, hock) absorb peak vertical ground reaction forces of ~7,000–12,000 Newtons per limb (generating internal joint contact and tendon forces exceeding <b>20,000 Newtons</b>) during galloping, generating immense fluid shear stresses.<br><br>To provide non-Newtonian boundary lubrication and prevent cartilage-on-cartilage friction, equine synovial fibroblasts polymerize <b>hyaluronic acid</b> into exceptionally large chains (>3–4 million Daltons). In small animals, lower mechanical loading requires a smaller hyaluronan polymer network to maintain articular fluid elastoviscosity.",
     "clinical": "Synovial fluid degradation in equine arthritis is diagnosed by loss of viscous 'stringiness' (mucin clot test); intra-articular injection of high-molecular-weight hyaluronate is standard equine therapy."
   },
   {
@@ -95,11 +95,11 @@ window.whyData = whyData = [
   },
   {
     "id": 11,
-    "title": "Why do adult ruminants derive 90% of their blood glucose from propionate while monogastrics absorb glucose directly from food?",
+    "title": "Why do adult ruminants derive ~90% of their blood glucose from hepatic gluconeogenesis (led by propionate) while monogastrics absorb glucose directly?",
     "category": "species",
     "unit": "unit-2",
     "comparison": "Ruminants vs Monogastrics",
-    "why": "Reticuloruminal microbial fermentation converts dietary carbohydrates into volatile fatty acids (acetate, propionate, butyrate), leaving <b>virtually zero hexose sugars</b> to reach the abomasum and small intestine.<br><br>The adult ruminant exists in a <b>continuous, lifelong state of gluconeogenesis</b>. Hepatic conversion of absorbed <b>propionate</b> via propionyl-CoA, methylmalonyl-CoA, and succinyl-CoA into oxaloacetate supplies up to 90% of circulating blood glucose, with amino acids supplying the remainder.",
+    "why": "Reticuloruminal microbial fermentation converts dietary carbohydrates into volatile fatty acids (acetate, propionate, butyrate), leaving <b>virtually zero hexose sugars</b> to reach the abomasum and small intestine.<br><br>The adult ruminant exists in a <b>continuous, lifelong state of gluconeogenesis</b>. Hepatic gluconeogenesis supplies ~90% of circulating blood glucose: absorbed <b>propionate</b> (via propionyl-CoA, methylmalonyl-CoA, and succinyl-CoA into oxaloacetate) is the principal precursor (~50–65%, up to ~70–75% on high-grain diets), with glucogenic amino acids, lactate, and glycerol supplying the remainder.",
     "clinical": "When an inappetent dairy cow stops eating roughage, propionate supply ceases abruptly; oxaloacetate is rapidly depleted, stalling the Krebs cycle and triggering explosive clinical ketonaemia."
   },
   {
@@ -108,7 +108,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-2",
     "comparison": "Feline vs Canine & Livestock",
-    "why": "Feline hepatic <b>transaminases (ALT, AST)</b> and urea cycle enzymes (serine dehydratase, argininosuccinate synthetase) are constitutively expressed at <b>permanently high, non-adaptable levels</b>.<br><br>While dogs and livestock down-regulate amino acid catabolizing enzymes when dietary protein is low, the cat lacks this transcriptional repression mechanism. Feline hepatocytes continuously deaminate systemic amino acids for energy, forcing catabolism of endogenous structural muscle protein if dietary protein falls below 20%.",
+    "why": "Feline hepatic <b>amino acid catabolic enzymes (ALT, AST, serine dehydratase)</b> and urea cycle enzymes (e.g., argininosuccinate synthetase, arginase) are constitutively expressed at <b>permanently high, non-adaptable levels</b>.<br><br>While dogs and livestock down-regulate amino acid catabolizing enzymes when dietary protein is low, the cat lacks this transcriptional repression mechanism. Feline hepatocytes continuously deaminate systemic amino acids for energy, forcing catabolism of endogenous structural muscle protein if dietary protein falls below 20%.",
     "clinical": "Feeding a low-protein canine diet to a cat causes rapid cachexia, hypoproteinaemia, and generalized muscular atrophy because the cat cannot switch off hepatic amino acid catabolism."
   },
   {
@@ -135,7 +135,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-2",
     "comparison": "Avian vs Mammalian",
-    "why": "Birds lack a complete urea cycle because they possess no hepatic <b>carbamoyl phosphate synthetase I or arginase</b>; they are strictly <b>uricotelic</b>, converting all nitrogen into insoluble uric acid.<br><br>Because birds also lack the enzyme <b>uricase</b>, uric acid cannot be oxidized into soluble allantoin. When renal tubular secretion fails or water is withheld, blood uric acid supersaturates and precipitates directly onto serosal membranes as chalky white <b>monosodium urate crystals ('white frost')</b>.",
+    "why": "Birds lack a complete urea cycle because they lack functional hepatic <b>carbamoyl phosphate synthetase I (CPS-I) and ornithine transcarbamoylase (OTC)</b> (though renal arginase is present to catabolize dietary arginine); they are strictly <b>uricotelic</b>, converting all nitrogen into insoluble uric acid.<br><br>Because birds also lack the enzyme <b>uricase</b>, uric acid cannot be oxidized into soluble allantoin. When renal tubular secretion fails or water is withheld, blood uric acid supersaturates and precipitates directly onto serosal membranes as chalky white <b>monosodium urate crystals ('white frost')</b>.",
     "clinical": "On broiler necropsy, finding the pericardium, liver capsule, and air sacs plastered with a white chalky paint confirms Visceral Gout, caused by water deprivation, high protein, or nephropathic IBV."
   },
   {
@@ -153,7 +153,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-2",
     "comparison": "Avian vs Porcine & Ruminants",
-    "why": "Avian hepatocytes express exceptionally high levels of <b>ATP-citrate lyase</b> and <b>NADP-malate dehydrogenase (malic enzyme)</b>, generating cytosolic acetyl-CoA and NADPH for lipogenesis; avian adipose tissue lacks these enzymes.<br><br>In poultry, liver accounts for >90% of fatty acid synthesis, and triglycerides are transported to adipose stores via VLDL. In pigs and cattle, subcutaneous and visceral adipose tissue possess the complete lipogenic enzymatic machinery, synthesizing triglycerides locally from acetate.",
+    "why": "Avian hepatocytes express exceptionally high levels of <b>ATP-citrate lyase</b> and <b>NADP-malate dehydrogenase (malic enzyme)</b>, generating cytosolic acetyl-CoA and NADPH for lipogenesis; avian adipose tissue lacks these enzymes.<br><br>In poultry, liver accounts for >90% of fatty acid synthesis, and triglycerides are transported to adipose stores via VLDL. In both pigs and cattle, adipose tissue is the dominant site of de novo lipogenesis—however, pig adipose tissue possesses ATP-citrate lyase and malic enzyme to synthesize fatty acids primarily from <b>glucose</b>, whereas cattle (ruminants) lack those adipose enzymes and synthesize triglycerides locally from rumen-derived <b>acetate</b>.",
     "clinical": "Dietary fat composition directly changes the carcass fat firmness in pigs and poultry, but ruminal bacterial biohydrogenation in cattle saturates fatty acids before adipose incorporation."
   },
   {
@@ -239,11 +239,11 @@ window.whyData = whyData = [
   },
   {
     "id": 27,
-    "title": "Why is serum Gamma-Glutamyl Transferase (GGT) used to confirm colostral passive transfer in calves, but not in puppies?",
+    "title": "Why is serum Gamma-Glutamyl Transferase (GGT) used to confirm colostral passive transfer in calves and puppies, but not in foals?",
     "category": "species",
     "unit": "unit-3",
-    "comparison": "Bovine vs Canine",
-    "why": "Bovine mammary alveolar epithelium actively synthesizes and concentrates massive quantities of <b>GGT into colostrum</b>, reaching concentrations exceeding <b>20,000 U/L</b> (hundreds of times maternal serum).<br><br>During the first 24 hours of life, the calf's open neonatal enterocytes absorb intact macromolecular GGT directly into the lymphatic circulation. Canine colostrum has very low GGT activity, making serum GGT uninformative for monitoring canine colostrum intake.",
+    "comparison": "Bovine & Canine vs Equine",
+    "why": "Bovine mammary alveolar epithelium actively synthesizes and concentrates massive quantities of <b>GGT into colostrum</b>, reaching concentrations exceeding <b>20,000 U/L</b> (hundreds of times maternal serum).<br><br>During the first 24 hours of life, the calf's open neonatal enterocytes absorb intact macromolecular GGT directly into the lymphatic circulation. In contrast, mare colostrum has very low GGT activity, making serum GGT uninformative for assessing passive transfer in newborn foals (whereas canine colostrum also contains high GGT, producing a marked 100–1000-fold serum GGT surge in nursing puppies).",
     "clinical": "In a 24- to 48-hour-old dairy calf, a serum GGT level >200 U/L proves successful nursing and passive transfer of maternal colostral immunoglobulins (IgG), ruling out failure of passive transfer."
   },
   {
@@ -279,7 +279,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-3",
     "comparison": "Equine vs Bovine",
-    "why": "Equine type-II fast-twitch skeletal muscle fibers have an extraordinarily high density of <b>myoglobin</b> and glycogen.<br><br>When draft or performance horses rested on full grain rations suddenly exercise, intense anaerobic glycogenolysis generates acute intracellular lactic acidosis, ATP depletion, and explosive sarcolemmal rupture, dumping massive myoglobin that overwhelms renal haptoglobin and renal tubular reabsorption. In downer cows, ischemic pressure necrosis releases moderate myoglobin that rarely exceeds the renal threshold.",
+    "why": "Equine type-II fast-twitch skeletal muscle fibers have an extraordinarily high density of <b>myoglobin</b> and glycogen.<br><br>When draft or performance horses rested on full grain rations suddenly exercise, intense anaerobic glycogenolysis generates acute intracellular lactic acidosis, ATP depletion, and explosive sarcolemmal rupture, dumping massive myoglobin—a small (~17 kDa) monomer that does <b>not</b> bind plasma haptoglobin (unlike free haemoglobin)—so it freely crosses the glomerulus, overwhelms renal tubular reabsorption, and stains urine dark brown without turning plasma pink. In downer cows, ischemic pressure necrosis releases moderate myoglobin that rarely exceeds the renal threshold.",
     "clinical": "Dark brown 'coffee-coloured' urine in a stiff, sweating horse indicates exertional rhabdomyolysis ('azoturia'); aggressive IV fluid diuresis is critical to prevent acute pigment nephropathy."
   },
   {
@@ -298,7 +298,7 @@ window.whyData = whyData = [
     "unit": "unit-3",
     "comparison": "Equine vs Canine",
     "why": "Equine sweat is unique among domestic animals: it is <b>hypertonic to plasma</b>, rich in <b>potassium, sodium, chloride</b>, and the detergent protein <b>latherin</b>.<br><br>Heavy sweating rapidly depletes chloride and potassium, driving renal bicarbonate retention and metabolic alkalosis. Dogs possess no functional thermoregulatory sweat glands and cool themselves exclusively by <b>panting</b>, hyperventilating to blow off alveolar carbon dioxide and triggering acute respiratory alkalosis.",
-    "clinical": "Endurance horses collapsing from exhaustion require hypertonic or isotonic potassium chloride electrolyte solutions, whereas hyperthermic panting dogs require evaporative cooling and airway management."
+    "clinical": "Endurance horses collapsing from exhaustion require isotonic polyionic electrolyte solutions with controlled potassium chloride supplementation (<=0.5 mEq K+/kg/h; or hypertonic 7.2% NaCl for shock resuscitation followed by isotonic KCl-supplemented fluids), whereas hyperthermic panting dogs require evaporative cooling and airway management."
   },
   {
     "id": 34,
@@ -351,7 +351,7 @@ window.whyData = whyData = [
     "category": "species",
     "unit": "unit-3",
     "comparison": "Feline vs Canine & Livestock",
-    "why": "Feline renal proximal tubular cells express the testosterone-dependent enzyme <b>cauxin</b>, a specialized carboxylesterase that cleaves gamma-glutamylfelinylglycine to release <b>felinine</b> into urine.<br><br>Felinine degrades slowly into volatile sulfur compounds (including 3-mercapto-3-methylbutan-1-ol), the chemical basis of pungent tomcat territorial scent marking. This process imposes a heavy, continuous metabolic drain on feline dietary <b>cysteine and methionine</b>.",
+    "why": "In feline renal proximal tubules, gamma-glutamyltransferase (GGT) first cleaves gamma-glutamylfelinylglycine into felinylglycine, and the testosterone-dependent carboxylesterase <b>cauxin</b> then hydrolyzes felinylglycine to release <b>felinine</b> and glycine into urine.<br><br>Felinine degrades slowly into volatile sulfur compounds (including 3-mercapto-3-methylbutan-1-ol), the chemical basis of pungent tomcat territorial scent marking. This process imposes a heavy, continuous metabolic drain on feline dietary <b>cysteine and methionine</b>.",
     "clinical": "Tomcats excrete up to 95 mg of felinine daily; castrated males produce negligible felinine and lose the characteristic pungent tomcat urine odor within weeks of orchiectomy."
   },
   {

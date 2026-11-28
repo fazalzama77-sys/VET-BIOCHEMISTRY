@@ -718,7 +718,7 @@ var app = (function () {
     var isExpanded = elDrawer.classList.toggle("is-open");
     if (elBtn) {
       elBtn.innerHTML = isExpanded 
-        ? icon("check") + " Hide Pathogenesis Details" 
+        ? icon("check") + " Hide Biochemical &amp; Viva Details" 
         : icon("sparkle") + " Reveal Diagnostic Hallmarks & Viva Key";
     }
   }
@@ -752,7 +752,7 @@ var app = (function () {
   }
 
   function _renderGlossaryInner(term, def) {
-    var cat = "General Bacteriology";
+    var cat = "General Biochemistry";
     if (window.glossary && glossary.categories) {
       for (var c in glossary.categories) {
         if (glossary.categories[c].indexOf(term.toLowerCase()) !== -1) {
@@ -1019,7 +1019,7 @@ var app = (function () {
             '<span class="action-tile-tag">Labs</span>' +
           '</div>' +
           '<h3 class="action-tile-title">Clinical Spotter Hub</h3>' +
-          '<p class="action-tile-desc">Staining methods, bacterial cultures, biochemical tests &amp; serology.</p>' +
+          '<p class="action-tile-desc">Solutions, buffers, titrations, spectrophotometry &amp; clinical diagnostics.</p>' +
           '<span class="action-tile-arrow">Explore Labs →</span>' +
         '</a>' +
 
@@ -1029,7 +1029,7 @@ var app = (function () {
             '<span class="action-tile-tag">Model Q&amp;A</span>' +
           '</div>' +
           '<h3 class="action-tile-title">Written Exam Studio</h3>' +
-          '<p class="action-tile-desc">138+ Solved VCI Board past questions with gold-standard model answers.</p>' +
+          '<p class="action-tile-desc">75+ Solved VCI Board questions with gold-standard model answers.</p>' +
           '<span class="action-tile-arrow">Study Q&amp;A →</span>' +
         '</a>' +
       '</div>' +
@@ -1056,11 +1056,11 @@ var app = (function () {
         '<div id="spotter-details-drawer" class="spotter-details-drawer">' +
           '<div class="spotter-details-grid">' +
             '<div class="spotter-detail-item">' +
-              '<h5>' + icon("pulse") + ' Primary Etiology &amp; Pathogenesis</h5>' +
+              '<h5>' + icon("pulse") + ' Biochemical Defect &amp; Pathogenesis</h5>' +
               '<p>' + esc(spotter.etiology) + '</p>' +
             '</div>' +
             '<div class="spotter-detail-item">' +
-              '<h5>' + icon("microscope") + ' Histopathological &amp; Cellular Hallmark</h5>' +
+              '<h5>' + icon("microscope") + ' Laboratory Assay &amp; Cellular Hallmark</h5>' +
               '<p>' + esc(spotter.micro) + '</p>' +
             '</div>' +
             '<div class="spotter-detail-item" style="grid-column: 1 / -1;">' +
@@ -2385,13 +2385,13 @@ var app = (function () {
     {
       kicker: "WELCOME TO THE PLATFORM",
       title: "Veterinary Biochemistry Studio",
-      body: "Built specifically for 2nd-year B.V.Sc &amp; A.H. students. Covers all 5 VCI Theory Units, 5 Practical Units, bacterial pathogens, mycology, biotechnology, immunology, and viral diseases.",
+      body: "Built specifically for 2nd-year B.V.Sc &amp; A.H. students. Covers all 3 VCI Theory Units, 3 Practical Units, biomolecules, enzymology, intermediary metabolism, clinical diagnostics, and BioSim 3D labs.",
       icon: "book"
     },
     {
       kicker: "DUAL STUDY DEPTHS",
       title: "Standard vs Deep View",
-      body: "Every lesson features <b>Standard View</b> for high-yield exam revision and <b>Deep View</b> for comprehensive microbial pathogenesis, cultural characteristics, virulence factors, and diagnostic workflows. Switch anytime at the top of each lesson.",
+      body: "Every lesson features <b>Standard View</b> for high-yield exam revision and <b>Deep View</b> for molecular mechanisms, thermodynamics, kinetic derivations, species variations, and clinical correlations. Switch anytime at the top of each lesson.",
       icon: "sparkle"
     },
     {

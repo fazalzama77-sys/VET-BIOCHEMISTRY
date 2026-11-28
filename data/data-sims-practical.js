@@ -262,10 +262,10 @@
       startColor: "#1565c0", endColor: "#eceff1",
       startLabel: "Boiling Blue Benedict's Quant.", endLabel: "Pure Chalky White Endpoint!",
       resultLabel: "Milk Lactose (% w/v)",
-      calcFn: function (ep, v) { return v > 0 ? ((67.6 / v) * 0.85).toFixed(2) + " %" : "—"; },
+      calcFn: function (ep, v) { return v > 0 ? (67.6 / v).toFixed(2) + " %" : "—"; },
       samples: [
-        { label: "Normal Cow Milk (~4.8% Lactose)", endpoint: 12.0, info: "25 mL Benedict's Quantitative Reagent is completely reduced by 67.6 mg Lactose (or 50 mg Glucose). KSCN precipitates white CuSCN instead of red Cu₂O so the blue disappearance is sharp!" },
-        { label: "Mastitic Milk (Low Lactose ~3.2%)", endpoint: 18.0, info: "Mastitis damages mammary epithelium → lactose drops while Na⁺ and Cl⁻ leak from blood into milk (salty, alkaline milk)." }
+        { label: "Normal Cow Milk (~4.8% Lactose)", endpoint: 14.1, info: "For standard 1:10 deproteinized milk filtrate, Lactose (% w/v) = 67.6 / V (25 mL Benedict's Quantitative Reagent ≡ 67.6 mg lactose). KSCN precipitates white CuSCN instead of red Cu₂O so the blue disappearance is sharp!" },
+        { label: "Mastitic Milk (Low Lactose ~3.2%)", endpoint: 21.1, info: "Mastitis damages mammary epithelium → lactose drops (~3.2% requiring ~21.1 mL filtrate) while Na⁺ and Cl⁻ leak from blood into milk (salty, alkaline milk)." }
       ]
     }
   ];
@@ -276,10 +276,10 @@
       kind: "flame",
       title: "Flame Photometer Simulator: Serum Na⁺ (589 nm) & K⁺ (766 nm)",
       subtitle: "Switch between Sodium and Potassium optical filters and adjust serum concentration to observe characteristic flame emission spectra!",
-      minConc: 2, maxConc: 160, defaultConc: 142,
+      minConc: 100, maxConc: 170, defaultConc: 142,
       samples: [
         { label: "Sodium (Na⁺ · 589 nm Yellow)", info: "Atomized Na⁺ ions absorb thermal flame energy and emit intense 589 nm golden-yellow photons proportional to serum concentration (Normal: 135–148 mEq/L)." },
-        { label: "Potassium (K⁺ · 766 nm Lilac)", info: "K⁺ emits 766 nm lilac-violet light (Normal: 3.5–5.5 mEq/L). Never use haemolyzed serum in horses/pigs/cattle — RBCs leak K⁺ causing false hyperkalaemia!" }
+        { label: "Potassium (K⁺ · 766 nm Deep Red / Lilac Flame)", info: "K⁺ is quantified by flame photometer filter at 766 nm (deep-red/near-IR; visual lilac-violet flame arises at 404 nm; Normal: 3.5–5.5 mEq/L). Never use haemolyzed serum in horses/pigs/cattle — RBCs leak K⁺ causing false hyperkalaemia!" }
       ]
     }
   ];
@@ -491,6 +491,23 @@
             { label: "Urine Appearance", val: "Cloudy (CaCO₃ + Mucus)", cls: "is-info" },
             { label: "Liver Enzymes", val: "SDH, GLDH, GGT", cls: "is-ok" },
             { label: "Tying-Up Marker", val: "CK & AST ↑↑↑", cls: "is-danger" }
+          ]
+        },
+        {
+          id: "cat", label: "Cat (Feline)",
+          banner: "Feline Baseline: High Renal Threshold (~280 mg/dL), Short ALP t½ (~6 hr), Stress Hyperglycaemia",
+          bars: [
+            { label: "Blood Glucose", val: 105, max: 140, refMin: 70, refMax: 130, unit: "mg/dL" },
+            { label: "Total Protein", val: 6.8, max: 10, refMin: 5.7, refMax: 8.0, unit: "g/dL" },
+            { label: "Serum Ca²⁺", val: 9.6, max: 14, refMin: 8.2, refMax: 11.2, unit: "mg/dL" },
+            { label: "BUN (÷10)", val: 2.4, max: 4.0, refMin: 1.5, refMax: 3.4, unit: "(24 mg/dL)" }
+          ],
+          info: "Cats lack functional hepatic UGT1A6 (fatal paracetamol/phenol toxicity!), have very short serum ALP half-life (~6 hours — ANY ALP rise is significant!), and spike glucose (>250 mg/dL) during clinic stress (check Fructosamine).",
+          metrics: [
+            { label: "Renal Threshold", val: "~280–300 mg/dL", cls: "is-info" },
+            { label: "Liver ALP t½", val: "~6 hr (Always Significant!)", cls: "is-warn" },
+            { label: "Glucuronidation", val: "UGT1A6 Deficient!", cls: "is-danger" },
+            { label: "Feline Ketosis / Lipid.", val: "Hepatic Lipidosis", cls: "is-warn" }
           ]
         }
       ]

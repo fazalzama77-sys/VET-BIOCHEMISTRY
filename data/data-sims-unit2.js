@@ -163,7 +163,7 @@
         { label: "Glucose", sub: "6C", x: 0.12, y: 0.25, kind: "normal", enzyme: "GLUT Entry", info: "Enters cell via GLUT1-4 (GLUT4 is insulin-dependent in muscle/adipose)." },
         { label: "G-6-P", sub: "-1 ATP", x: 0.34, y: 0.25, kind: "rate", enzyme: "Hexokinase / Glucokinase", info: "Irreversible trapping step (-1 ATP). HK has low Km & is inhibited by G-6-P; hepatic Glucokinase has high Km & is induced by Insulin." },
         { label: "F-1,6-BP", sub: "-1 ATP (Committed)", x: 0.60, y: 0.25, kind: "rate", enzyme: "PFK-1 (Rate-Limiting!)", info: "Most important rate-limiting step! Activated by AMP & Fructose-2,6-BP; inhibited by ATP & Citrate." },
-        { label: "2 × GAP / 1,3-BPG", sub: "+2 NADH", x: 0.85, y: 0.25, kind: "energy", enzyme: "GAPDH", info: "Oxidation generates 2 NADH + H⁺ (worth 5 ATP via Malate-Aspartate shuttle or 3 ATP via Glycerol-3-P shuttle). Inhibited by Arsenate/Iodoacetate." },
+        { label: "2 × GAP / 1,3-BPG", sub: "+2 NADH", x: 0.85, y: 0.25, kind: "energy", enzyme: "GAPDH", info: "Oxidation generates 2 NADH + H⁺ (worth 5 ATP via Malate-Aspartate shuttle or 3 ATP via Glycerol-3-P shuttle). Inhibited by Iodoacetate; uncoupled from ATP synthesis by Arsenate (forms 1-arseno-3-PG, bypassing PGK)." },
         { label: "2 × PEP", sub: "+2 ATP (PGK)", x: 0.72, y: 0.72, kind: "energy", enzyme: "PGK → Enolase", info: "First substrate-level phosphorylation (+2 ATP). Enolase is inhibited by Fluoride (NaF used in blood glucose collection tubes!)." },
         { label: "2 × Pyruvate", sub: "+2 ATP (PK)", x: 0.40, y: 0.72, kind: "rate", enzyme: "Pyruvate Kinase", info: "Second substrate-level phosphorylation (+2 ATP). Feed-forward activated by F-1,6-BP; inhibited by ATP, Alanine, and Glucagon-mediated phosphorylation." },
         { label: "Lactate / Acetyl-CoA", sub: "End Fate", x: 0.14, y: 0.72, kind: "organ", enzyme: "LDH / PDH", info: "Aerobic: enters mitochondria via PDH (+5 ATP + TCA = 32 ATP/Glc). Anaerobic/RBC: LDH reduces pyruvate to Lactate regenerating NAD⁺ (Net 2 ATP)." }
@@ -337,7 +337,7 @@
           note: "Muscle glycolysis yields 2 ATP + Lactate; Liver spends 6 ATP-eq to convert 2 Lactate back to Glucose (net cost 4 ATP shifted to liver).",
           metrics: [
             { label: "Precursors", val: "Lactate, Glycerol, AAs", cls: "is-info" },
-            { label: "Energy Cost", val: "4 ATP + 2 GTP + 2 NADH", cls: "is-warn" },
+            { label: "Energy Cost", val: "4 ATP + 2 GTP (from Lactate; +2 NADH if from Pyruvate)", cls: "is-warn" },
             { label: "Hormone Driver", val: "Glucagon & Cortisol", cls: "is-ok" },
             { label: "G-6-Pase Site", val: "Liver & Kidney only", cls: "is-info" }
           ]
@@ -496,7 +496,7 @@
       edges: [
         { from: 0, to: 1, label: "+α-KG (PLP)" },
         { from: 1, to: 2, label: "GDH (NAD⁺/NADP⁺)" },
-        { from: 1, to: 3, label: "-CO₂ (PLP)" }
+        { from: 1, to: 3, label: "-CO₂ (PLP; Glu→GABA)" }
       ],
       modes: [
         {

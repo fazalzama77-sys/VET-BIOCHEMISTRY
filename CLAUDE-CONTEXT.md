@@ -34,13 +34,15 @@ This project follows the exact proven architecture and shared IVRI Academic ligh
 4. **Question & Answer** — Written-exam practice: short notes, long answers, differentiate-between tables, definitions, practical spotting.
 5. **Quiz** — MCQ / True-False / Fill-blank, with unit-wise, annual exam mode, grand test, practical, Exam Mode (timed) and Smart Review (spaced repetition).
 6. **Dashboard** — Coverage by unit, accuracy, streak, 12-week heatmap, Leitner boxes, 0–1000 XP Biochemistry Mastery Index.
-7. **Library** — Bookmarks · Notes · Highlights · 500 Term Veterinary Biochemistry Glossary with speech audio.
+7. **Library** — Bookmarks · Notes · Highlights · 549-Term Veterinary Biochemistry Glossary with speech audio.
 8. **Settings** — Theme, backup/restore, about.
 
 ### Exam Structure (VCI Annual Examination)
 | Paper | Units | Theory Marks | Practical Marks | Weightage |
 |---|---|---|---|---|
 | **Annual Examination** | Units 1, 2, 3 (General, Metabolism, Analytical) | 100 | 60 | 100 |
+
+> **Important Schema Constraint:** Keep `paper: "annual"` on all units in `data/data-syllabus.JS` (`js/quiz.js` and `js/app.js` filter `#/quiz/paper/annual` using `u.paper === id`), and keep `data/data-quiz.JS` question array order intact so Smart Review (`unit:format:index`) keys remain aligned.
 
 ### Syllabus Units Breakdown
 - **Theory Unit 1:** General Veterinary Biochemistry (17 topics: Biomembranes, transport, Donnan equilibrium, acids, pH, buffers, Henderson-Hasselbalch, carbohydrates, lipids, prostaglandins, proteins, amino acids, nucleic acids).
@@ -82,7 +84,7 @@ D:\VET BIOCHEMISTRY\
 ├── SYNC-TO-REPO.bat           Local offline robocopy mirror into repo/
 ├── index.html                 Single-page app shell. All sections live here.
 ├── manifest.json              PWA manifest
-├── service-worker.js          Offline cache (CACHE_VERSION = "vbioc-v34")
+├── service-worker.js          Offline cache (auto-versioned `BUILD_HASH` via `tools/build-version.js`)
 ├── README.md                  Content writing guide
 ├── REPO.md                    GitHub repository guide
 ├── CLAUDE-CONTEXT.md          THIS FILE (AI reads this first)
@@ -113,7 +115,7 @@ D:\VET BIOCHEMISTRY\
 │   ├── app.js                 Router + shell + section renderers + highlighter + audio
 │   ├── quiz.js                Quiz engine (window.quizApp)
 │   ├── dashboard.js           Analytics (window.dashboardApp)
-│   ├── glossary.js            500 term UG dictionary + tooltip decorator + SpeechSynthesis
+│   ├── glossary.js            549-term UG dictionary + tooltip decorator + SpeechSynthesis
 │   ├── search.js              Global search engine (Ctrl+K)
 │   ├── deep-guide.js          Contextual deep guide overlay controller
 │   ├── events.js              Department announcements renderer
@@ -132,6 +134,7 @@ D:\VET BIOCHEMISTRY\
 │
 ├── images/                    theory/ practical/ why/ qa/ figures
 └── tools/
+    ├── build-version.js       Computes SHA-256 `BUILD_HASH` for `service-worker.js`, `index.html`, and `version.json`
     ├── start-server.bat       Double-click → http://localhost:5199
     ├── make-data-files.bat    Double-click → scaffolds new topic blocks
     ├── make-data-files.py     Python topic block scaffolding script
@@ -180,4 +183,13 @@ Every one of the **77 syllabus topics** (55 Theory + 22 Practical) includes **1�
 1. **100% Exam Accuracy:** All stoichiometry, stereochemistry, kinetic equations, reference ranges, and veterinary clinical correlations must be strictly accurate — never approximate or oversimplify in a way that could mislead in exams.
 2. **No Crude Box-and-Line Placeholders:** Use true 3D renders or authentic microscopic/quantitative mechanisms, never lazy generic boxes.
 3. **Readable Typography:** Keep UI controls, metric readouts, explanation boxes, and Canvas labels comfortably large and high-contrast in both Light and Dark themes.
-4. **Offline Cache:** Whenever adding or modifying simulation JS/CSS files, update `PRECACHE` and bump `CACHE_VERSION` in `service-worker.js`.
+4. **Offline Cache:** Whenever modifying files, run `node tools/build-version.js` (done automatically by `1-CLICK-PUSH-TO-GITHUB.bat`) so `BUILD_HASH` in `service-worker.js`, `index.html`, and `version.json` stays current for offline PWA updates.
+
+---
+
+## ✅ COMPLETED ACCURACY AUDIT & VERIFICATION LOG (Units 1–3)
+
+A full word-by-word scientific and clinical accuracy audit covering all 55 Theory topics, 22 Practical labs, 40 WHY mechanisms, 75 Q&A items, 680 Quiz questions, 79 BioSim simulations + engines (`js/simulations.js`, `js/simulations-3d.js`), 549 Glossary terms (`js/glossary.js`), 77 Figure Atlas entries (`data/data-images.js`), and UI copy (`index.html`, `js/app.js`, `js/deep-guide.js`) has been completed and resolved:
+- **Stoichiometry, Equations & Kinetics:** Corrected oxidative ATP P/O equivalents (Palmitate net 106 ATP; β-oxidation acetyl-CoA accounting), HMP/urea/glutamine energetics, Complex IV half-reaction (`½O₂ + 2H⁺ + 2e⁻ → H₂O`), enzyme units (`U` instead of `U/min`), non-linear Lineweaver-Burk Hill plotting for allosteric enzymes, Benedict's quantitative milk lactose dilution math (`67.6 / V`), Na⁺/K⁺-ATPase Albers-Post step labels, and Double-Donnan `pumpOn` biophysical solver.
+- **Clinical & Species Physiology:** Corrected canine/feline/equine/ruminant/avian reference values, added the Feline reference panel in `p3-t07`, fixed analyte-specific `K⁺` vs `Na⁺` flame photometry slider bounds (`1.0–10.0 mEq/L`, step `0.1`), clarified Dalmatian `SLC2A9` urate defect vs uricase activity, fixed `createPathwayEngine` edge-blocking collisions (`u2-t15`, `u3-t13`, `u3-t15`), and updated the sucrose β-D-fructofuranose Haworth orientation and 70S ribosome nascent N→C polypeptide order.
+- **Content & UI Cleanup:** Removed duplicate misspelled glossary key (`edie-hofstee plot`), aligned figure captions (`p1-t05` Acid Number vs Saponification, `p2-t02` Fluoride–Oxalate, `p2-t06` 766 nm vs 404 nm, `p3-t07` species RBC K⁺), and replaced leftover sister-app UI strings in `index.html`, `js/app.js`, and `js/deep-guide.js`.

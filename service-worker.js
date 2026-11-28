@@ -4,7 +4,7 @@
    Network first, with a precached app shell for offline use.
    ============================================================ */
 
-var BUILD_HASH = "492ccf1338d5b5f6ae57ab3b4e83d7505afa9912527ec0a005c1eeb5306a2d48";
+var BUILD_HASH = "d81f83f74117a4b4e9ba80dd4801723358b8e04cd2236c10fc4d572f17d95cb2";
 var APP_SCOPE = self.registration.scope;
 var CACHE_PREFIX = "vbioc:" + new URL(APP_SCOPE).pathname + ":";
 var SHELL_CACHE = CACHE_PREFIX + BUILD_HASH;

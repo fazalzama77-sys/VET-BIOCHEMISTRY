@@ -9,7 +9,7 @@
     {
       engine: "clinical",
       title: "Diabetes Mellitus & Blood Glucose Hormonal Profile (Dog vs Cat)",
-      subtitle: "Compare Normal, Canine Type I (Insulin-Deficient), Feline Type II (Insulin-Resistant), and Diabetic Ketoacidosis (DKA) biochemical panels.",
+      subtitle: "Compare Healthy Dog/Cat, Canine Type I (Insulin-Deficient), and Diabetic Ketoacidosis (DKA) biochemical panels.",
       cases: [
         {
           id: "normal", label: "Healthy Dog / Cat",
@@ -70,7 +70,7 @@
     {
       engine: "clinical",
       title: "Bovine Ketosis & Ovine Pregnancy Toxaemia Diagnostic Panel",
-      subtitle: "Compare healthy dairy cow/ewe vs Subclinical Ketosis, Clinical Bovine Ketosis, and Twin-Lamb Pregnancy Toxaemia.",
+      subtitle: "Compare healthy dairy cow/ewe vs Clinical Bovine Ketosis and Twin-Lamb Ovine Pregnancy Toxaemia.",
       cases: [
         {
           id: "normal", label: "Healthy Cow / Ewe",
@@ -159,7 +159,7 @@
             { label: "Serum Insulin", val: 68, max: 80, refMin: 5, refMax: 25, unit: "µU/mL" },
             { label: "Body Temp", val: 38.5, max: 40, refMin: 38, refMax: 39.2, unit: "°C" }
           ],
-          info: "Normally insulin shuts off when glucose < 60 mg/dL. In canine insulinoma, paired blood glucose < 60 mg/dL with inappropriately high insulin (>20 µU/mL) satisfies Whipple's Triad!",
+          info: "Normally insulin shuts off when glucose < 60 mg/dL. Canine insulinoma satisfies Whipple's Triad (neuroglycopenic signs, glucose < 60 mg/dL, relief with glucose) and is confirmed by paired blood glucose < 60 mg/dL with inappropriately high serum insulin (>20 µU/mL).",
           metrics: [
             { label: "Whipple's Triad", val: "Hypoglc + Neuro + Relief", cls: "is-danger" },
             { label: "Insulin:Glucose", val: "Markedly Elevated", cls: "is-danger" },
@@ -237,14 +237,14 @@
       engine: "clinical",
       visual: "electrophoresis",
       title: "Serum Protein Electrophoresis (SPE) Densitometer & Acute-Phase Lab",
-      subtitle: "Compare live SPE traces for Normal, Acute-Phase Inflammation, Nephrotic Syndrome, Hepatic Cirrhosis, Multiple Myeloma, and Calf FPT.",
+      subtitle: "Compare live SPE traces for Normal, Acute-Phase Inflammation, Nephrotic Syndrome, Multiple Myeloma, and Calf FPT.",
       cases: [
         {
           id: "normal", label: "Normal SPE", peaks: [56, 6, 10, 12, 16],
-          info: "Albumin migrates fastest toward the Anode (+) due to highest negative charge & smallest MW (69 kDa). Normal A:G ratio ≈ 0.8–1.5 depending on species.",
+          info: "Albumin migrates fastest toward the Anode (+) due to highest negative charge & smallest MW (~69 kDa). Normal A:G ratio ≈ 0.8–1.5 depending on species.",
           metrics: [
-            { label: "Albumin", val: "52–58% (Tallest)", cls: "is-ok" },
-            { label: "A:G Ratio", val: "~1.15 (Normal)", cls: "is-ok" },
+            { label: "Albumin", val: "56% (Tallest)", cls: "is-ok" },
+            { label: "A:G Ratio", val: "1.27 (Normal)", cls: "is-ok" },
             { label: "Major APPs", val: "CRP (Dog), SAA (Cat/Horse)", cls: "is-info" },
             { label: "Bovine APP", val: "Haptoglobin & SAA", cls: "is-info" }
           ]
@@ -255,7 +255,7 @@
           metrics: [
             { label: "Albumin (Neg. APP)", val: "Decreased ↓", cls: "is-warn" },
             { label: "α₂-Globulin Peak", val: "Markedly Elevated ↑", cls: "is-danger" },
-            { label: "A:G Ratio", val: "0.58 (Decreased)", cls: "is-warn" },
+            { label: "A:G Ratio", val: "0.56 (Decreased)", cls: "is-warn" },
             { label: "Cytokine Trigger", val: "IL-6 / IL-1 / TNF-α", cls: "is-info" }
           ]
         },
@@ -275,7 +275,7 @@
           metrics: [
             { label: "γ-Region", val: "Tall Narrow M-Spike!", cls: "is-danger" },
             { label: "Bence-Jones", val: "Urine Light Chains", cls: "is-warn" },
-            { label: "A:G Ratio", val: "0.48 (Reversed)", cls: "is-danger" },
+            { label: "A:G Ratio", val: "0.54 (Reversed)", cls: "is-danger" },
             { label: "Hyperviscosity", val: "High Risk", cls: "is-danger" }
           ]
         },
@@ -285,7 +285,7 @@
           metrics: [
             { label: "γ-Globulin Peak", val: "ABSENT / Flat!", cls: "is-danger" },
             { label: "Serum IgG", val: "< 1000 mg/dL (FPT)", cls: "is-danger" },
-            { label: "A:G Ratio", val: "2.1 (High due to ↓ G)", cls: "is-warn" },
+            { label: "A:G Ratio", val: "1.86 (High due to ↓ G)", cls: "is-warn" },
             { label: "Prevention", val: "Colostrum < 6 hr of Birth", cls: "is-ok" }
           ]
         }
@@ -297,7 +297,7 @@
     {
       engine: "clinical",
       title: "Veterinary Clinical Lipid Profile Analyzer",
-      subtitle: "Evaluate Cholesterol, Triglycerides, and NEFA in Canine Hypothyroidism, Equine Hyperlipaemia, and Acute Pancreatitis.",
+      subtitle: "Evaluate Cholesterol, Triglycerides, and HDL fraction in Normal Canines, Canine Hypothyroidism, and Equine Pony Hyperlipaemia.",
       cases: [
         {
           id: "normal", label: "Normal Canine",
@@ -574,7 +574,7 @@
     {
       engine: "clinical",
       title: "Rumen Fermentation Biochemistry & Acidosis Simulator",
-      subtitle: "Switch between High-Roughage, Balanced Dairy, High-Concentrate, and Grain-Overload Rumen Lactic Acidosis to see VFA ratios and pH!",
+      subtitle: "Switch between High-Roughage, High-Concentrate, and Acute Rumen Lactic Acidosis diets to see VFA ratios and pH!",
       cases: [
         {
           id: "roughage", label: "High-Roughage Diet",
@@ -717,9 +717,9 @@
         },
         {
           id: "hypo", label: "5% Dextrose (D5W — Free Water)",
-          banner: "Glucose Metabolized → Free Water Distributes Across ALL Compartments (Mostly ICF!)",
-          comp: { icf: 72, isf: 21, ivf: 7 },
-          info: "Once dextrose is metabolized, D5W acts as pure water — 66% enters ICF and <10% stays in plasma! Useful for free-water deficit (hypernatraemia), NEVER for hypovolaemic shock!",
+          banner: "Glucose Metabolized → Free Water Distributes Proportionally Across TBW (2/3 ICF, 1/3 ECF!)",
+          comp: { icf: 67, isf: 25, ivf: 8 },
+          info: "Once dextrose is metabolized, D5W acts as pure free water (~67% enters ICF, ~25% ISF, ~8% stays in plasma — maintaining ~2/3 ICF : 1/3 ECF shares!). Useful for free-water deficit (hypernatraemia), NEVER for hypovolaemic shock!",
           metrics: [
             { label: "Plasma Retention", val: "< 10% (Poor for Shock!)", cls: "is-danger" },
             { label: "ICF Entry", val: "66% (Cell Swelling Risk)", cls: "is-warn" },
